@@ -147,7 +147,42 @@ const chapters={
     }
   },
 
-  commerce:{number:"Chapitre 4",type:"eco",title:"Quels sont les fondements du commerce international ?",questions:[],defs:{}},
+ commerce:{
+  number:"Chapitre 4",
+  type:"eco",
+  title:"Quels sont les fondements du commerce international et de l’internationalisation de la production ?",
+  questions:[
+    { q:"Quels sont les deux grands types d’échanges internationaux ?", expected:[["pays","différents"],["pays","comparables"]] },
+    { q:"Le commerce international repose en partie sur la ____ internationale.", expected:[["spécialisation"]] },
+    { q:"Selon Ricardo, un pays doit se spécialiser dans son avantage ____.", expected:[["comparatif"]] },
+    { q:"Les avantages comparatifs s’expliquent par les dotations ____ et ____.", expected:[["factorielles"],["technologiques"]] },
+    { q:"Les échanges entre pays comparables s’expliquent par la différenciation des produits, la ____ des produits et la fragmentation de la ____ de valeur.", expected:[["qualité"],["chaîne"]] },
+    { q:"Explique pourquoi la compétitivité d’un pays dépend de celle de ses entreprises.", expected:[["productivité"],["entreprises"],["compétitivité"]] },
+    { q:"Pourquoi seules certaines entreprises peuvent-elles exporter ?", expected:[["coûts"],["productives"],["grandes","entreprises"]] },
+    { q:"Énumère les deux stratégies utilisées par les entreprises pour internationaliser la chaîne de valeur.", expected:[["sous-traitance"],["investissements","directs","étranger"]] },
+    { q:"Énumère les trois effets du commerce international.", expected:[["gains","consommateurs"],["baisse","inégalités","entre","pays"],["hausse","inégalités","internes"]] },
+    { q:"Le ____ vise à supprimer les barrières commerciales tandis que le ____ vise à les renforcer.", expected:[["libre-échange"],["protectionnisme"]] },
+    { q:"Présente deux avantages et une limite du libre-échange.", expected:[["prix","faibles"],["diversité"],["inégalités"]] },
+    { q:"Présente un aspect positif et une limite du protectionnisme.", expected:[["protéger","emplois"],["hausse","prix"]] }
+  ],
+  defs:{
+    "Commerce international":"Échanges de marchandises entre pays.",
+    "Spécialisation internationale":"Concentration de la production d’un pays dans certains domaines destinés à l’exportation.",
+    "Avantage comparatif":"Domaine dans lequel un pays est relativement le plus efficace ou le moins inefficace.",
+    "Dotation factorielle":"Quantité et qualité des facteurs de production disponibles dans un pays.",
+    "Dotation technologique":"Niveau de technologies, de capital humain et d’innovation d’un pays.",
+    "Différenciation des produits":"Stratégie visant à distinguer un produit par la qualité ou les caractéristiques.",
+    "Chaîne de valeur":"Ensemble des étapes nécessaires à la production d’un bien ou service.",
+    "Fragmentation de la chaîne de valeur":"Répartition des étapes de production dans plusieurs pays.",
+    "Productivité":"Efficacité avec laquelle les facteurs de production sont utilisés.",
+    "Compétitivité":"Capacité à faire mieux que les concurrents sur les marchés internationaux.",
+    "Firmes":"Très grandes entreprises présentes dans plusieurs pays.",
+    "Internationalisation de la chaîne de valeur":"Dispersion mondiale des étapes de production.",
+    "Libre-échange":"Politique favorisant la suppression des barrières commerciales.",
+    "Protectionnisme":"Politique visant à limiter les importations pour protéger l’économie nationale."
+  }
+},
+  
   mobilite:{number:"Chapitre 5",type:"socio",title:"Quels sont les facteurs de la mobilité sociale ?",questions:[],defs:{}},
   chomage:{number:"Chapitre 6",type:"eco",title:"Comment lutter contre le chômage ?",questions:[],defs:{}},
   travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l’emploi ?",questions:[],defs:{}},
