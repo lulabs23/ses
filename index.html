@@ -14,7 +14,7 @@ h1{text-align:center;font-weight:800}
 .lead{text-align:center;color:#555}
 .card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
-.chapter-card{text-align:center;cursor:pointer}
+.chapter-card{text-align:center}
 .chapter-card.socio{border:3px solid var(--socio)}
 .chapter-card.eco{border:3px solid var(--eco)}
 .chapter-card.cross{border:3px solid var(--cross)}
@@ -47,15 +47,17 @@ input{width:100%;padding:10px;border-radius:12px;border:1px solid #ddd;margin-to
 
 <script>
 let currentChapter=null, questionIndex=0;
+let mode='questions';
 let allQuestions=[], answersLog=[];
 let session={success:0,total:0,last:null};
-const records={};
+const records=JSON.parse(localStorage.getItem('records')||'{}');
 
 const chapters={
   engagement:{
     number:"Chapitre 1",
     type:"socio",
     title:"Comment expliquer l'engagement politique dans les sociétés démocratiques ?",
+    details:"Objectifs d’apprentissage à compléter.",
     questions:[
       {q:"Présente les quatre formes de l'engagement politique.",expected:[["vote"],["engagement","associatif"],["militant","militantisme"],["consommation","engagée"]]},
       {q:"Explique le paradoxe de l'action collective.",expected:[["passagers","clandestins"],["absence","mobilisation"]]},
@@ -67,13 +69,18 @@ const chapters={
       {q:"Présente les quatre acteurs de l'action collective.",expected:[["partis","politiques"],["syndicats"],["associations"],["groupements","personnes"]]},
       {q:"Présente la diversité des répertoires de l'action collective.",expected:[["manifestations"],["grèves"],["actions","choc"],["pétitions"],["vote"],["non-respect","loi"]]}
     ],
-    defs:{}
+    defs:{
+      "Engagement politique":"Ensemble des actions visant à influencer les décisions politiques.",
+      "Action collective":"Action menée par plusieurs individus pour défendre un intérêt commun.",
+      "Passagers clandestins":"Individus qui bénéficient d’une action collective sans y participer."
+    }
   },
 
   croissance:{
     number:"Chapitre 2",
     type:"eco",
     title:"Quels sont les sources et les défis de la croissance économique ?",
+    details:"Comprendre les sources et les limites de la croissance.",
     questions:[
       {q:"Présente le processus historique de la croissance économique.",expected:[["avant","xviii"],["révolution","industrielle"],["1945","1970"],["stagnation","crises"]]},
       {q:"Comment se définit la croissance économique ?",expected:[["augmentation","durable"],["production"],["biens","services"]]},
@@ -116,6 +123,7 @@ const chapters={
     number:"Chapitre 3",
     type:"socio",
     title:"Comment est structurée la société française actuelle ?",
+    details:"Analyser la structuration et la hiérarchisation de l’espace social.",
     questions:[
       {q:"Distingue la structuration et la hiérarchisation de l’espace social.",expected:[["structuration"],["hiérarchisation"],["classement"],["inégalités"]]},
       {q:"Présente les sept facteurs qui permettent d’analyser l’espace social.",expected:[["revenu"],["diplôme"],["profession"],["âge"],["sexe"],["ménage"],["lieu","résidence"]]},
@@ -147,50 +155,51 @@ const chapters={
     }
   },
 
- commerce:{
-  number:"Chapitre 4",
-  type:"eco",
-  title:"Quels sont les fondements du commerce international et de l’internationalisation de la production ?",
-  questions:[
-    { q:"Quels sont les deux grands types d’échanges internationaux ?", expected:[["pays","différents"],["pays","comparables"]] },
-    { q:"Le commerce international repose en partie sur la ____ internationale.", expected:[["spécialisation"]] },
-    { q:"Selon Ricardo, un pays doit se spécialiser dans son avantage ____.", expected:[["comparatif"]] },
-    { q:"Les avantages comparatifs s’expliquent par les dotations ____ et ____.", expected:[["factorielles"],["technologiques"]] },
-    { q:"Les échanges entre pays comparables s’expliquent par la différenciation des produits, la ____ des produits et la fragmentation de la ____ de valeur.", expected:[["qualité"],["chaîne"]] },
-    { q:"Explique pourquoi la compétitivité d’un pays dépend de celle de ses entreprises.", expected:[["productivité"],["entreprises"],["compétitivité"]] },
-    { q:"Pourquoi seules certaines entreprises peuvent-elles exporter ?", expected:[["coûts"],["productives"],["grandes","entreprises"]] },
-    { q:"Énumère les deux stratégies utilisées par les entreprises pour internationaliser la chaîne de valeur.", expected:[["sous-traitance"],["investissements","directs","étranger"]] },
-    { q:"Énumère les trois effets du commerce international.", expected:[["gains","consommateurs"],["baisse","inégalités","entre","pays"],["hausse","inégalités","internes"]] },
-    { q:"Le ____ vise à supprimer les barrières commerciales tandis que le ____ vise à les renforcer.", expected:[["libre-échange"],["protectionnisme"]] },
-    { q:"Présente deux avantages et une limite du libre-échange.", expected:[["prix","faibles"],["diversité"],["inégalités"]] },
-    { q:"Présente un aspect positif et une limite du protectionnisme.", expected:[["protéger","emplois"],["hausse","prix"]] }
-  ],
-  defs:{
-    "Commerce international":"Échanges de marchandises entre pays.",
-    "Spécialisation internationale":"Concentration de la production d’un pays dans certains domaines destinés à l’exportation.",
-    "Avantage comparatif":"Domaine dans lequel un pays est relativement le plus efficace ou le moins inefficace.",
-    "Dotation factorielle":"Quantité et qualité des facteurs de production disponibles dans un pays.",
-    "Dotation technologique":"Niveau de technologies, de capital humain et d’innovation d’un pays.",
-    "Différenciation des produits":"Stratégie visant à distinguer un produit par la qualité ou les caractéristiques.",
-    "Chaîne de valeur":"Ensemble des étapes nécessaires à la production d’un bien ou service.",
-    "Fragmentation de la chaîne de valeur":"Répartition des étapes de production dans plusieurs pays.",
-    "Productivité":"Efficacité avec laquelle les facteurs de production sont utilisés.",
-    "Compétitivité":"Capacité à faire mieux que les concurrents sur les marchés internationaux.",
-    "Firmes":"Très grandes entreprises présentes dans plusieurs pays.",
-    "Internationalisation de la chaîne de valeur":"Dispersion mondiale des étapes de production.",
-    "Libre-échange":"Politique favorisant la suppression des barrières commerciales.",
-    "Protectionnisme":"Politique visant à limiter les importations pour protéger l’économie nationale."
-  }
-},
-  
-  mobilite:{number:"Chapitre 5",type:"socio",title:"Quels sont les facteurs de la mobilité sociale ?",questions:[],defs:{}},
-  chomage:{number:"Chapitre 6",type:"eco",title:"Comment lutter contre le chômage ?",questions:[],defs:{}},
-  travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l’emploi ?",questions:[],defs:{}},
-  europe:{number:"Chapitre 8",type:"eco",title:"Quelles politiques économiques dans le cadre européen ?",questions:[],defs:{}},
-  environnement:{number:"Chapitre 9",type:"cross",title:"Quelle action publique pour l’environnement ?",questions:[],defs:{}}
+  commerce:{
+    number:"Chapitre 4",
+    type:"eco",
+    title:"Quels sont les fondements du commerce international et de l’internationalisation de la production ?",
+    questions:[
+      {q:"Quels sont les deux grands types d’échanges internationaux ?", expected:[["pays","différents"],["pays","comparables"]]},
+      {q:"Sur quel élément le commerce international repose t-il en partie ?", expected:[["spécialisation","internationale"]]},
+      {q:"Selon Ricardo, dans quoi un pays doit-il se spécialiser ?", expected:[["avantage","comparatif"]]},
+      {q:"Par quoi les avantages comparatifs s’expliquent-ils ?", expected:[["dotations","factorielles"],["dotations","technologiques"]]},
+      {q:"Comment expliquer les échanges entre pays comparables ?", expected:[["différenciation","produits"],["différenciation","qualité","verticale"],["différenciation","caractéristiques","horizontale"],["fragmentation","chaine","valeur"]]},
+      {q:"Explique pourquoi la compétitivité d’un pays dépend de celle de ses entreprises.", expected:[["productivité"],["entreprises"],["compétitivité"]]},
+      {q:"Pourquoi seules certaines entreprises peuvent-elles exporter ?", expected:[["coûts"],["productives"],["grandes","entreprises"]]},
+      {q:"Énumère les deux stratégies utilisées par les entreprises pour internationaliser la chaîne de valeur.", expected:[["sous-traitance"],["investissements","directs","étranger"]]},
+      {q:"Énumère les trois effets du commerce international.", expected:[["gains","consommateurs"],["baisse","inégalités","entre","pays"],["hausse","inégalités","revenus","sein","pays"]]},
+      {q:"Le ____ vise à supprimer les barrières commerciales tandis que le ____ vise à les renforcer.", expected:[["libre-échange"],["protectionnisme"]]},
+      {q:"Présente deux avantages et une limite du libre-échange.", expected:[["prix","faibles"],["diversité"],["inégalités"]]},
+      {q:"Présente un aspect positif et une limite du protectionnisme.", expected:[["protéger","emplois"],["hausse","prix"]]}
+    ],
+    defs:{
+      "Commerce international":"Échanges de marchandises entre pays.",
+      "Spécialisation internationale":"Concentration de la production d’un pays dans certains domaines destinés à l’exportation.",
+      "Avantage comparatif":"Domaine dans lequel un pays est relativement le plus efficace ou le moins inefficace.",
+      "Dotation factorielle":"Quantité et qualité des facteurs de production disponibles dans un pays.",
+      "Dotation technologique":"Niveau de technologies, de capital humain et d’innovation d’un pays.",
+      "Différenciation des produits":"Stratégie visant à distinguer un produit par la qualité ou les caractéristiques.",
+      "Chaîne de valeur":"Ensemble des étapes nécessaires à la production d’un bien ou service.",
+      "Fragmentation de la chaîne de valeur":"Répartition des étapes de production dans plusieurs pays.",
+      "Productivité":"Efficacité avec laquelle les facteurs de production sont utilisés.",
+      "Compétitivité":"Capacité à faire mieux que les concurrents sur les marchés internationaux.",
+      "Firmes":"Très grandes entreprises présentes dans plusieurs pays.",
+      "Internationalisation de la chaîne de valeur":"Dispersion mondiale des étapes de production.",
+      "Libre-échange":"Politique favorisant la suppression des barrières commerciales.",
+      "Protectionnisme":"Politique visant à limiter les importations pour protéger l’économie nationale."
+    }
+  },
+
+  mobilite:{number:"Chapitre 5",type:"socio",title:"Quels sont les facteurs de la mobilité sociale ?",questions:[],defs:{},details:"À compléter."},
+  chomage:{number:"Chapitre 6",type:"eco",title:"Comment lutter contre le chômage ?",questions:[],defs:{},details:"À compléter."},
+  travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l’emploi ?",questions:[],defs:{},details:"À compléter."},
+  europe:{number:"Chapitre 8",type:"eco",title:"Quelles politiques économiques dans le cadre européen ?",questions:[],defs:{},details:"À compléter."},
+  environnement:{number:"Chapitre 9",type:"cross",title:"Quelle action publique pour l’environnement ?",questions:[],defs:{},details:"À compléter."}
 };
 
-Object.keys(chapters).forEach(k=>records[k]={best:0});
+Object.keys(chapters).forEach(k=>{if(!records[k])records[k]={best:0};});
+localStorage.setItem('records',JSON.stringify(records));
 
 const chaptersDiv=document.getElementById('chapters');
 window.addEventListener('DOMContentLoaded',renderChapters);
@@ -204,29 +213,61 @@ function renderChapters(){
     const percent=total?Math.round((best/total)*100):0;
     const card=document.createElement('div');
     card.className=`card chapter-card ${c.type}`;
-    card.innerHTML=`<svg class="progress-circle" viewBox="0 0 36 36"><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="4"/><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58cc02" stroke-width="4" stroke-dasharray="${percent},100"/><text x="18" y="20.5" text-anchor="middle" font-size="8">${best}/${total}</text></svg><h3>${c.number}</h3><p>${c.title}</p>`;
-    card.onclick=()=>startChapter(id);
+    card.innerHTML=`<svg class="progress-circle" viewBox="0 0 36 36"><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="4"/><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58cc02" stroke-width="4" stroke-dasharray="${percent},100"/><text x="18" y="20.5" text-anchor="middle" font-size="8">${best}/${total}</text></svg><h3>${c.number}</h3><p>${c.title}</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn-primary" onclick="startChapter('${id}')">Questions</button><button class="btn-secondary" onclick="startDefs('${id}')">Définitions</button><button class="btn-secondary" onclick="showDetails('${id}')">Détails</button></div>`;
     chaptersDiv.appendChild(card);
   });
 }
 
-function startChapter(id){currentChapter=id;questionIndex=0;allQuestions=[...chapters[id].questions];answersLog=[];session={success:0,total:0,last:null};chaptersDiv.style.display='none';showQuestion();}
+function startChapter(id){mode='questions';currentChapter=id;questionIndex=0;allQuestions=[...chapters[id].questions];answersLog=[];session={success:0,total:0,last:null};chaptersDiv.style.display='none';showQuestion();}
 
-function showQuestion(){const c=document.getElementById('content');c.innerHTML='';if(questionIndex>=allQuestions.length){endSession();return;}const q=allQuestions[questionIndex];const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>${q.q}</h3>`;q.expected.forEach(()=>card.innerHTML+=`<input placeholder="Réponse" />`);card.innerHTML+=`<div style="display:flex;gap:12px;margin-top:16px"><button class="btn-primary" onclick="validateQuestion()">Valider</button><button class="btn-secondary" onclick="skipQuestion()">Passer</button></div>`;c.appendChild(card);}
+function showQuestion(){
+  const c=document.getElementById('content');c.innerHTML='';
+  if(questionIndex>=allQuestions.length){endSession();return;}
+  const q=allQuestions[questionIndex];
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<h3>${q.q}</h3>`;
+  q.expected.forEach(()=>card.innerHTML+=`<input placeholder="Réponse" />`);
+  card.innerHTML+=`<div style="display:flex;gap:12px;margin-top:16px"><button class="btn-primary" onclick="validateQuestion()">Valider</button><button class="btn-secondary" onclick="skipQuestion()">Passer</button></div>`;
+  c.appendChild(card);
+}
 
-function validateQuestion(){const q=allQuestions[questionIndex];const inputs=[...document.querySelectorAll('#content input')].map(i=>i.value.toLowerCase());let used=Array(q.expected.length).fill(false);let ok=true;inputs.forEach(v=>{let found=false;q.expected.forEach((keys,i)=>{if(!used[i]&&keys.some(k=>v.includes(k))){used[i]=true;found=true;}});if(!found)ok=false;});if(used.some(u=>!u))ok=false;session.total++;if(ok)session.success++;answersLog.push({question:q.q,correct:ok,expected:q.expected});session.last=Date.now();updateHeader();questionIndex++;showQuestion();}
+function validateQuestion(){
+  const q=allQuestions[questionIndex];
+  const inputs=[...document.querySelectorAll('#content input')].map(i=>i.value.toLowerCase());
+  let used=Array(q.expected.length).fill(false);let ok=true;
+  inputs.forEach(v=>{let found=false;q.expected.forEach((keys,i)=>{if(!used[i]&&keys.some(k=>v.includes(k))){used[i]=true;found=true;}});if(!found)ok=false;});
+  if(used.some(u=>!u))ok=false;
+  session.total++;if(ok)session.success++;
+  answersLog.push({question:q.q,correct:ok,expected:q.expected});
+  session.last=Date.now();updateHeader();questionIndex++;showQuestion();
+}
 
 function skipQuestion(){session.total++;answersLog.push({question:allQuestions[questionIndex].q,correct:false,expected:allQuestions[questionIndex].expected});updateHeader();questionIndex++;showQuestion();}
 
-function endSession(){if(session.success>records[currentChapter].best){records[currentChapter].best=session.success;}renderChapters();const total=session.total;const percent=total?Math.round((session.success/total)*100):0;const c=document.getElementById('content');c.innerHTML=`<div class="card" style="text-align:center"><svg class="progress-circle" viewBox="0 0 36 36"><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="4"/><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58cc02" stroke-width="4" stroke-dasharray="${percent},100"/><text x="18" y="20.5" text-anchor="middle" font-size="8">${session.success}/${total}</text></svg><h2>Récapitulatif de la session</h2><p>${session.success} bonne(s) réponse(s) sur ${total}</p></div>`;answersLog.forEach(a=>{const div=document.createElement('div');div.className='recap-item '+(a.correct?'ok':'ko');let html=`${a.correct?'☑️':'❌'} ${a.question}`;if(!a.correct){const readable=a.expected.map(e=>e.join(' ')).join(', ');html+=`<br><small><strong>Réponses attendues :</strong> ${readable}</small>`;}div.innerHTML=html;c.appendChild(div);});const btn=document.createElement('button');btn.className='btn-primary';btn.style.marginTop='20px';btn.textContent='Retour à l’accueil';btn.onclick=back;c.appendChild(btn);}
+function endSession(){
+  if(session.success>records[currentChapter].best){records[currentChapter].best=session.success;localStorage.setItem('records',JSON.stringify(records));}
+  renderChapters();
+  const total=session.total;const percent=total?Math.round((session.success/total)*100):0;
+  const c=document.getElementById('content');c.innerHTML=`<div class="card" style="text-align:center"><svg class="progress-circle" viewBox="0 0 36 36"><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="4"/><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58cc02" stroke-width="4" stroke-dasharray="${percent},100"/><text x="18" y="20.5" text-anchor="middle" font-size="8">${session.success}/${total}</text></svg><h2>Récapitulatif de la session</h2></div>`;
+  answersLog.forEach(a=>{const div=document.createElement('div');div.className='recap-item '+(a.correct?'ok':'ko');div.innerHTML=`${a.correct?'☑️':'❌'} ${a.question}`;c.appendChild(div);});
+  const btn=document.createElement('button');btn.className='btn-primary';btn.style.marginTop='20px';btn.textContent='Retour à l’accueil';btn.onclick=back;c.appendChild(btn);
+}
 
 function updateHeader(){document.getElementById('scoreHeader').textContent=`${session.success} / ${session.total}`;document.getElementById('lastQuiz').textContent=session.last?'Dernière session : '+new Date(session.last).toLocaleString():'Session en cours';}
+
 function back(){document.getElementById('content').innerHTML='';chaptersDiv.style.display='grid';renderChapters();}
 
-console.assert(chapters.structure.questions.length>0,'Questions chapitre 3 absentes');
-console.assert(chapters.croissance.questions.length>0,'Questions chapitre 2 absentes');
-console.assert(typeof showQuestion==='function','showQuestion manquant');
-console.assert(typeof validateQuestion==='function','validateQuestion manquant');
+let defQuestions=[],defIndex=0;
+function startDefs(id){currentChapter=id;mode='defs';defIndex=0;answersLog=[];session={success:0,total:0,last:null};defQuestions=Object.keys(chapters[id].defs).map(k=>({term:k,def:chapters[id].defs[k]}));chaptersDiv.style.display='none';showDefQuestion();}
+function showDefQuestion(){const c=document.getElementById('content');c.innerHTML='';if(defIndex>=defQuestions.length){endSession();return;}const q=defQuestions[defIndex];const allDefs=Object.values(chapters[currentChapter].defs);const choices=[q.def,...allDefs.filter(d=>d!==q.def)].sort(()=>Math.random()-.5).slice(0,4);const card=document.createElement('div');card.className='card';card.innerHTML=`<h3>Définition de : <em>${q.term}</em></h3>`;choices.forEach(d=>{card.innerHTML+=`<button class="btn-secondary" style="display:block;width:100%;margin-top:8px" onclick="validateDef('${d.replace(/'/g,"\\'")}')">${d}</button>`});c.appendChild(card);} 
+function validateDef(answer){const q=defQuestions[defIndex];session.total++;const ok=answer===q.def;if(ok)session.success++;answersLog.push({question:q.term,correct:ok,expected:[[q.def]]});session.last=Date.now();updateHeader();defIndex++;showDefQuestion();}
+
+function showDetails(id){chaptersDiv.style.display='none';document.getElementById('content').innerHTML=`<div class="card"><h2>${chapters[id].number}</h2><p>${chapters[id].details||''}</p><button class="btn-primary" onclick="back()">Retour</button></div>`;}
+
+console.assert(chapters.engagement.questions.length>0,'Chapitre 1 vide');
+console.assert(chapters.croissance.questions.length>0,'Chapitre 2 vide');
+console.assert(chapters.structure.questions.length>0,'Chapitre 3 vide');
+console.assert(chapters.commerce.questions.length>0,'Chapitre 4 vide');
 </script>
 </body>
 </html>
