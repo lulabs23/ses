@@ -26,6 +26,7 @@ input{width:100%;padding:10px;border-radius:12px;border:1px solid #ddd;margin-to
 .recap-item{padding:12px;border-radius:12px;margin-bottom:10px;background:#f1f5f9}
 .recap-item.ok{border-left:6px solid #16a34a}
 .recap-item.ko{border-left:6px solid #dc2626}
+.qcm-choice.active{outline:2px solid var(--primary)}
 </style>
 </head>
 <body>
@@ -50,6 +51,7 @@ input{width:100%;padding:10px;border-radius:12px;border:1px solid #ddd;margin-to
  * DONNÉES
  *********************/
 let currentChapter=null, questionIndex=0, defIndex=0;
+let selectedChoices = [];
 let mode='questions';
 let allQuestions=[], defQuestions=[], answersLog=[];
 let session={success:0,total:0,last:null};
@@ -173,8 +175,9 @@ const chapters={
       {q:"Énumère les deux stratégies utilisées par les entreprises pour internationaliser la chaîne de valeur.",expected:[["sous-traitance"],["investissements","directs","étranger"]]},
       {q:"Énumère les trois effets du commerce international.",expected:[["gains","consommateurs"],["baisse","inégalités","entre","pays"],["hausse","inégalités","revenus","sein","pays"]]},
       {q:"Quels sont les stratégies qui peuvent influer sur les barrières commerciales",expected:[["libre-échange"],["protectionnisme"]]},
-      {q:"Présente deux avantages et une limite du libre-échange.",expected:[["prix","faibles"],["diversité"],["inégalités"]]},
-      {q:"Présente un aspect positif et une limite du protectionnisme.",expected:[["protéger","emplois"],["hausse","prix"]]}
+      {q:"Quels sont les types de protectionnisme ?",expected:[["tarifaire"],["non-tarifaire"]]},
+      {q:"Quels sont les arguments qui justifient le protectionnisme ?",expected:[["protection","protéger","emploi"],["sécurité","nationale"],["sécurité","alimentaire"],["protection","protéger","dumping","concurrence","déloyale"]]},
+      {q:"Quel est la principale limite du protectionnisme ?",expected:[["guerre, commerciale"]]}
     ],
     defs:{
       "Commerce international":"Échanges de marchandises entre pays.",
@@ -194,47 +197,47 @@ const chapters={
     }
   },
 
- mobilite:{
-  number:"Chapitre 5",
-  type:"socio",
-  title:"Quels sont les facteurs de la mobilité sociale ?",
-  details:"Analyser et comprendre les déterminants de la mobilité sociale.",
-  questions:[
-    {q:"Quelles sont les différentes formes de mobilités ?", expected:[["géographique","lieu"],["professionnelle","métier"],["sociale","position","sociale"]]},
-    {q:"Comment mesure-t-on la mobilité sociale ?", expected:[["tables","destinée"],["insee"],["tables","origine","recrutement"]]},
-    {q:"Distingue la table des destinées de la table de recrutement.", expected:[["destinée","enfants","deviennent"],["recrutement","origine","parents"]]},
-    {q:"Quel est l’intérêt principal des tables de mobilité ?", expected:[["mesurer","mobilité","observée"],["ensemble","pays"]]},
-    {q:"Présente deux limites des tables de mobilité.", expected:[["population","partielle"],["csp","france"],["revenus","non","pris","en","compte"]]},
-    {q:"Distingue mobilité ascendante, descendante et déclassement.", expected:[["ascendante","position","supérieure"],["descendante","inférieure"],["déclassement","diplôme","supérieur","emploi","inférieur"]]},
-    {q:"Distingue mobilité verticale, horizontale et immobilité.", expected:[["verticale","hiérarchie"],["horizontale","csp","équivalente"],["immobilité","même","csp"]]},
-    {q:"Qu’est-ce que la reproduction sociale ?", expected:[["même","position","parents"]]},
-    {q:"Caractérise les mobilités masculine et féminine.", expected:[["femmes","mobilité","ascendante"],["plafond","verre"]]},
-    {q:"Distingue mobilité sociale et fluidité sociale.", expected:[["mobilité","changement","csp"],["fluidité","égalité","chances"]]},
-    {q:"Pourquoi la mobilité sociale observée dépend-elle de la mobilité structurelle ?", expected:[["évolution","structure","socioprofessionnelle"],["création","disparition","emplois"]]},
-    {q:"Explique l’impact de l’évolution des structures socioprofessionnelles sur la mobilité sociale.", expected:[["tertiairisation"],["féminisation"],["qualification"]]},
-    {q:"Explique le rôle des niveaux de formation sur la mobilité sociale.", expected:[["diplôme"],["mobilité","ascendante"],["déclassement"]]},
-    {q:"Explique le rôle de la famille sur la mobilité sociale.", expected:[["ressources","familiales"],["configurations","familiales"]]}
-    {q:"Quels sont les trois capitaux possédés par la famille ?", expected:[["économique"],["social"],["culturel"]]}
-  ],
-  defs:{
-    "Mobilité sociale / intergénérationnelle":"Mobilité entre la position sociale des parents et celle des enfants.",
-    "Mobilité professionelle / intragénérationnelle":"Changement de profession au cours de la vie d’un individu.",
-    "Mobilité géographique":"Déplacement d'un lieu à un autre.",
-    "Tables de mobilité":"Tableaux statistiques mesurant les changements de CSP entre générations.",
-    "Table de destinée":"Table indiquant ce que deviennent les enfants d’une CSP.",
-    "Table de recrutement":"Table indiquant l’origine sociale des individus d’une CSP.",
-    "Mobilité observée":"Part des individus ayant changé de CSP par rapport à leurs parents.",
-    "Mobilité ascendante":"Position sociale plus élevée par rapport à celle de ses parents.",
-    "Mobilité descendante / Déclassement":"Position sociale inférieure par rapport à celle de ses parents.",
-    "Mobilité horizontale":"Changement de CSP sans modification de la hiérarchie sociale.",
-    "Mobilité verticale":"Changement de position dans la hiérarchie sociale.",
-    "Reproduction sociale":"Maintien de la même position sociale que les parents.",
-    "Mobilité structurelle":"Mobilité liée aux transformations de la structure socioprofessionnelle.",
-    "Configuration familiale":"Structure de la famille (taille, type, organisation).",
-    "Ressources familiales":"Possesions des capitaux économiques, culturels et sociaux d’une famille.",
-    "Niveaux de formation":"Diplômes et qualifications obtenus par un individu."
-  }
-},
+  mobilite:{
+    number:"Chapitre 5",
+    type:"socio",
+    title:"Quels sont les facteurs de la mobilité sociale ?",
+    details:"Analyser et comprendre les déterminants de la mobilité sociale.",
+    questions:[
+      {q:"Quelles sont les différentes formes de mobilités ?", expected:[["géographique","lieu"],["professionnelle","métier"],["sociale","position","sociale"]]},
+      {q:"Comment mesure-t-on la mobilité sociale ?", expected:[["tables","destinée"],["insee"],["tables","origine","recrutement"]]},
+      {q:"Distingue la table des destinées de la table de recrutement.", expected:[["destinée","enfants","deviennent"],["recrutement","origine","parents"]]},
+      {q:"Quel est l’intérêt principal des tables de mobilité ?", expected:[["mesurer","mobilité","observée"],["ensemble","pays"]]},
+      {q:"Quels sont les limites des tables de mobilité ?", expected:[["population","partielle"],["csp","france"],["revenus","non","pris","en","compte"]]},
+      {q:"Distingue mobilité ascendante, descendante et déclassement.", expected:[["ascendante","position","supérieure"],["descendante","inférieure"],["déclassement","diplôme","supérieur","emploi","inférieur"]]},
+      {q:"Distingue mobilité verticale, horizontale et immobilité.", expected:[["verticale","hiérarchie"],["horizontale","csp","équivalente"],["immobilité","même","csp"]]},
+      {q:"Caractérise les mobilités masculine et féminine.", choices:["femmes","mobilité","ascendante","plafond","verre"],correct:[0,2]},
+      {q:"Distingue mobilité sociale et fluidité sociale.", expected:[["mobilité","changement","csp"],["fluidité","égalité","chances"]]},
+      {q:"Pourquoi la mobilité sociale observée dépend-elle de la mobilité structurelle ?", expected:[["évolution","structure","socioprofessionnelle"],["création","disparition","emplois"]]},
+      {q:"Explique l’impact de l’évolution des structures socioprofessionnelles sur la mobilité sociale.", expected:[["tertiairisation"],["féminisation"],["qualification"]]},
+      {q:"Explique le rôle des niveaux de formation sur la mobilité sociale.", expected:[["diplôme"],["mobilité","ascendante"],["déclassement"]]},
+      {q:"Explique le rôle de la famille sur la mobilité sociale.", expected:[["ressources","familiales"],["configurations","familiales"]]},
+      {q:"Quels sont les trois capitaux possédés par la famille ?", expected:[["économique"],["social"],["culturel"]]}
+    ],
+    defs:{
+      "Mobilité sociale / intergénérationnelle":"Mobilité entre la position sociale des parents et celle des enfants.",
+      "Mobilité professionelle / intragénérationnelle":"Changement de profession au cours de la vie d’un individu.",
+      "Mobilité géographique":"Déplacement d'un lieu à un autre.",
+      "Tables de mobilité":"Tableaux statistiques mesurant les changements de CSP entre générations.",
+      "Table de destinée":"Table indiquant ce que deviennent les enfants d’une CSP.",
+      "Table de recrutement":"Table indiquant l’origine sociale des individus d’une CSP.",
+      "Mobilité observée":"Part des individus ayant changé de CSP par rapport à leurs parents.",
+      "Mobilité ascendante":"Position sociale plus élevée par rapport à celle de ses parents.",
+      "Mobilité descendante / Déclassement":"Position sociale inférieure par rapport à celle de ses parents.",
+      "Mobilité horizontale":"Changement de CSP sans modification de la hiérarchie sociale.",
+      "Mobilité verticale":"Changement de position dans la hiérarchie sociale.",
+      "Reproduction sociale":"Maintien de la même position sociale que les parents.",
+      "Mobilité structurelle":"Mobilité liée aux transformations de la structure socioprofessionnelle.",
+      "Configuration familiale":"Structure de la famille (taille, type, organisation).",
+      "Ressources familiales":"Possesions des capitaux économiques, culturels et sociaux d’une famille.",
+      "Niveaux de formation":"Diplômes et qualifications obtenus par un individu."
+    }
+  },
+
   chomage:{number:"Chapitre 6",type:"eco",title:"Comment lutter contre le chômage ?",questions:[],defs:{},details:"À compléter."},
   travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l’emploi ?",questions:[],defs:{},details:"À compléter."},
   europe:{number:"Chapitre 8",type:"eco",title:"Quelles politiques économiques dans le cadre européen ?",questions:[],defs:{},details:"À compléter."},
@@ -288,17 +291,54 @@ function startQuestions(id){
 }
 
 function showQuestion(){
-  const c=document.getElementById('content');c.innerHTML='';
+  const c=document.getElementById('content');
+  c.innerHTML='';
   if(questionIndex>=allQuestions.length){endSession();return;}
+
   const q=allQuestions[questionIndex];
-  const card=document.createElement('div');card.className='card';
+  const card=document.createElement('div');
+  card.className='card';
   card.innerHTML=`<h3>${q.q}</h3>`;
-  q.expected.forEach(()=>card.innerHTML+=`<input placeholder="Réponse" />`);
-  card.innerHTML+=`<div style="display:flex;gap:12px;margin-top:16px">
-    <button class="btn-primary" onclick="validateQuestion()">Valider</button>
-    <button class="btn-secondary" onclick="skipQuestion()">Passer</button>
-  </div>`;
+
+  // QCM
+  if(q.choices){
+    selectedChoices = [];
+    q.choices.forEach((choice,i)=>{
+      card.innerHTML+=`
+        <button class="btn-secondary qcm-choice"
+          data-index="${i}"
+          style="display:block;width:100%;margin-top:8px"
+          onclick="toggleChoice(${i}, this)">
+          ${choice}
+        </button>`;
+    });
+    card.innerHTML+=`
+      <div style="display:flex;gap:12px;margin-top:16px">
+        <button id="validateQCMBtn" class="btn-primary" disabled onclick="validateQCM()">Valider</button>
+        <button class="btn-secondary" onclick="skipQuestion()">Passer</button>
+      </div>`;
+  }
+  // TEXTE
+  else{
+    q.expected.forEach(()=>{
+      card.innerHTML+=`<input placeholder="Réponse" />`;
+    });
+    card.innerHTML+=`
+      <div style="display:flex;gap:12px;margin-top:16px">
+        <button class="btn-primary" onclick="validateQuestion()">Valider</button>
+        <button class="btn-secondary" onclick="skipQuestion()">Passer</button>
+      </div>`;
+  }
+
   c.appendChild(card);
+}
+
+function toggleChoice(i, btn){
+  const idx = selectedChoices.indexOf(i);
+  if(idx>=0){ selectedChoices.splice(idx,1); btn.classList.remove('active'); }
+  else{ selectedChoices.push(i); btn.classList.add('active'); }
+  const vBtn=document.getElementById('validateQCMBtn');
+  if(vBtn) vBtn.disabled = selectedChoices.length===0;
 }
 
 function validateQuestion(){
@@ -317,6 +357,27 @@ function validateQuestion(){
   answersLog.push({question:q.q,correct:ok,expected:q.expected});
   session.last=Date.now(); updateHeader();
   questionIndex++; showQuestion();
+}
+
+function validateQCM(){
+  const q=allQuestions[questionIndex];
+  const good=q.correct.slice().sort().join(',');
+  const user=selectedChoices.slice().sort().join(',');
+  const ok = good===user;
+
+  session.total++;
+  if(ok) session.success++;
+
+  answersLog.push({
+    question:q.q,
+    correct:ok,
+    expected:q.correct.map(i=>[q.choices[i]])
+  });
+
+  session.last=Date.now();
+  updateHeader();
+  questionIndex++;
+  showQuestion();
 }
 
 function skipQuestion(){
@@ -404,9 +465,13 @@ function showDetails(id){
 /*********************
  * TESTS
  *********************/
+console.assert(typeof toggleChoice==='function','toggleChoice manquant');
+console.assert(typeof validateQCM==='function','validateQCM manquant');
 console.assert(chapters.engagement.questions.length>0,'Chapitre 1 vide');
 console.assert(chapters.croissance.questions.length>0,'Chapitre 2 vide');
 console.assert(chapters.structure.questions.length>0,'Chapitre 3 vide');
+console.assert(chapters.mobilite.questions.length>0,'Chapitre 5 vide');
+console.assert(Object.keys(chapters).length>=9,'Chapitres insuffisants');
 </script>
 </body>
 </html>
