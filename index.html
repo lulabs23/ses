@@ -2,48 +2,347 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<title>SES</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SES — Révisions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --primary:#58cc02;--bg:#f7f8fa;--text:#1f2937;--card:#fff;
-  --socio:#3b82f6;--eco:#ef4444;--cross:#8b5cf6;
+:root {
+  --socio: #2563eb;
+  --socio-light: #dbeafe;
+  --eco: #dc2626;
+  --eco-light: #fee2e2;
+  --cross: #7c3aed;
+  --cross-light: #ede9fe;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --bg: #0f0e13;
+  --surface: #1a1825;
+  --surface2: #231f30;
+  --border: rgba(255,255,255,0.07);
+  --text: #f0eef8;
+  --muted: #8b879e;
+  --accent: #f0c040;
 }
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;background:var(--bg);color:var(--text)}
-#app{max-width:900px;margin:40px auto;padding:24px}
-h1{text-align:center;font-weight:800}
-.lead{text-align:center;color:#555}
-.card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
-.chapter-card{text-align:center}
-.chapter-card.socio{border:3px solid var(--socio)}
-.chapter-card.eco{border:3px solid var(--eco)}
-.chapter-card.cross{border:3px solid var(--cross)}
-button{padding:12px 18px;border-radius:999px;border:none;cursor:pointer;font-weight:600}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-secondary{background:#fff;border:1px solid #ddd}
-.progress-circle{width:110px;height:110px;margin:0 auto 14px}
-input{width:100%;padding:10px;border-radius:12px;border:1px solid #ddd;margin-top:8px}
-.recap-item{padding:12px;border-radius:12px;margin-bottom:10px;background:#f1f5f9}
-.recap-item.ok{border-left:6px solid #16a34a}
-.recap-item.ko{border-left:6px solid #dc2626}
-.qcm-choice.active{outline:2px solid var(--primary)}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(37,99,235,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(220,38,38,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(124,58,237,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* ── HEADER BAR ── */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 22px;
+  margin-bottom: 52px;
+  backdrop-filter: blur(12px);
+}
+
+.top-bar-left { display: flex; flex-direction: column; gap: 2px; }
+.session-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+#lastQuiz { font-size: 0.85rem; color: var(--muted); }
+#scoreHeader { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 500; color: var(--accent); }
+
+/* ── HERO ── */
+.hero { text-align: center; margin-bottom: 52px; }
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; font-weight: 600;
+  color: var(--accent);
+  border: 1px solid rgba(240,192,64,0.3);
+  padding: 5px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, #f0eef8 30%, #c4bfdb);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p { font-size: 1rem; color: var(--muted); font-weight: 300; }
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* ── CHAPTER CARD ── */
+.chapter-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeUp 0.5s ease both;
+}
+.chapter-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+
+.chapter-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 20px 20px 0 0;
+}
+.chapter-card.socio::before { background: var(--socio); }
+.chapter-card.eco::before { background: var(--eco); }
+.chapter-card.cross::before { background: var(--cross); }
+
+.chapter-card.socio { --chip-color: var(--socio); --chip-bg: rgba(37,99,235,0.12); }
+.chapter-card.eco   { --chip-color: var(--eco);   --chip-bg: rgba(220,38,38,0.12); }
+.chapter-card.cross { --chip-color: var(--cross); --chip-bg: rgba(124,58,237,0.12); }
+
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+
+.chapter-chip {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+  background: var(--chip-bg); color: var(--chip-color);
+}
+
+/* Ring */
+.ring-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+.ring-wrap svg { width: 52px; height: 52px; transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 4; }
+.ring-fill { fill: none; stroke: var(--chip-color); stroke-width: 4; stroke-linecap: round; transition: stroke-dasharray 0.8s ease; }
+.ring-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+
+.chapter-card h3 { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; line-height: 1.35; color: var(--text); margin-bottom: 18px; }
+
+.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  padding: 8px 16px; border-radius: 10px;
+  border: none; cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+.btn-primary { background: var(--accent); color: #1a1100; }
+.btn-primary:hover { background: #f8d060; transform: scale(1.03); }
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  color: var(--muted); border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+.btn-large { font-size: 0.9rem; padding: 12px 24px; border-radius: 12px; }
+
+/* ── CONTENT AREA ── */
+#content { margin-top: 8px; }
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 680px;
+  margin: 0 auto;
+  animation: fadeUp 0.35s ease both;
+}
+
+.q-counter {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.q-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; line-height: 1.4;
+  margin-bottom: 24px; color: var(--text);
+}
+
+.q-input {
+  width: 100%; padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem; margin-top: 8px;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.q-input:focus { border-color: var(--accent); }
+.q-input::placeholder { color: var(--muted); }
+
+.input-hint { font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; margin-top: 14px; }
+
+.q-actions { display: flex; gap: 10px; margin-top: 22px; }
+
+/* QCM choices */
+.qcm-choice {
+  width: 100%; text-align: left; display: block;
+  padding: 12px 16px; border-radius: 12px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; font-weight: 400;
+  cursor: pointer; transition: all 0.15s ease;
+  margin-top: 10px;
+}
+.qcm-choice:hover { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.05); }
+.qcm-choice.active { border-color: var(--accent); background: rgba(240,192,64,0.1); color: var(--accent); font-weight: 600; }
+
+/* ── RECAP ── */
+.recap-header {
+  text-align: center; max-width: 680px; margin: 0 auto 28px;
+  animation: fadeUp 0.3s ease both;
+}
+.recap-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; margin-top: 16px; margin-bottom: 6px;
+}
+.score-display {
+  font-family: 'DM Mono', monospace;
+  font-size: 3rem; font-weight: 500;
+  color: var(--accent); line-height: 1;
+}
+
+.recap-item {
+  max-width: 680px; margin: 0 auto 10px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  font-size: 0.88rem;
+  animation: fadeUp 0.3s ease both;
+}
+.recap-item.ok { border-left-color: var(--green); }
+.recap-item.ko { border-left-color: var(--eco); }
+
+.recap-item .recap-q { font-weight: 500; margin-bottom: 4px; }
+.recap-item .recap-correction { color: var(--muted); font-size: 0.82rem; margin-top: 6px; }
+.recap-item .recap-correction strong { color: #f87171; }
+
+/* ── DEF CARD ── */
+.def-definition {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px;
+  font-size: 1rem; font-style: italic;
+  color: #c4bfdb; margin-bottom: 22px; line-height: 1.6;
+}
+.def-choices-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.def-choice {
+  text-align: center; padding: 12px 14px;
+  border-radius: 12px; font-size: 0.82rem; font-weight: 500;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); cursor: pointer; transition: all 0.15s;
+}
+.def-choice:hover { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.06); }
+
+/* ── DETAILS ── */
+.details-card {
+  max-width: 640px; margin: 0 auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 32px;
+  animation: fadeUp 0.3s ease both;
+}
+.details-card h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 8px; }
+.details-card p { color: var(--muted); line-height: 1.65; }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex; gap: 20px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 28px;
+}
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-dot.socio { background: var(--socio); }
+.legend-dot.eco   { background: var(--eco); }
+.legend-dot.cross { background: var(--cross); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.grid .chapter-card:nth-child(1) { animation-delay: 0.05s; }
+.grid .chapter-card:nth-child(2) { animation-delay: 0.10s; }
+.grid .chapter-card:nth-child(3) { animation-delay: 0.15s; }
+.grid .chapter-card:nth-child(4) { animation-delay: 0.20s; }
+.grid .chapter-card:nth-child(5) { animation-delay: 0.25s; }
+.grid .chapter-card:nth-child(6) { animation-delay: 0.30s; }
+.grid .chapter-card:nth-child(7) { animation-delay: 0.35s; }
+.grid .chapter-card:nth-child(8) { animation-delay: 0.40s; }
+.grid .chapter-card:nth-child(9) { animation-delay: 0.45s; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 999px; height: 4px; margin-bottom: 28px; max-width: 680px; margin-left: auto; margin-right: auto; }
+.progress-bar-fill { height: 4px; border-radius: 999px; background: var(--accent); transition: width 0.4s ease; }
+
+/* ── BADGE empty/complete ── */
+.badge-empty { opacity: 0.4; }
 </style>
 </head>
 <body>
 <div id="app">
-  <div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div>
-      <h2 style="margin:0">Session</h2>
-      <div id="lastQuiz" style="font-size:.9rem;color:#555">Aucune session</div>
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="session-label">Sciences Économiques et Sociales</span>
+      <span id="lastQuiz">Aucune session récente</span>
     </div>
-    <div id="scoreHeader" style="font-size:1.3rem;font-weight:800">0 / 0</div>
+    <div id="scoreHeader">— / —</div>
   </div>
 
-  <h1>Réviser en s'entraînant</h1>
-  <p class="lead">Choisis un chapitre pour commencer</p>
- 
+  <div class="hero">
+    <div class="hero-eyebrow">Terminale SES</div>
+    <h1>Réviser en s'entraînant</h1>
+    <p>Choisis un chapitre pour commencer ta session</p>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot socio"></div> Sociologie</div>
+    <div class="legend-item"><div class="legend-dot eco"></div> Économie</div>
+    <div class="legend-item"><div class="legend-dot cross"></div> Regards croisés</div>
+  </div>
+
   <div id="chapters" class="grid"></div>
-  <div id="content" style="margin-top:24px"></div>
+  <div id="content"></div>
 </div>
 
 <script>
@@ -59,10 +358,9 @@ const records=JSON.parse(localStorage.getItem('records')||'{}');
 
 const chapters={
   engagement:{
-    number:"Chapitre 1",
-    type:"socio",
+    number:"Chapitre 1",type:"socio",
     title:"Comment expliquer l'engagement politique dans les sociétés démocratiques ?",
-    details:"Objectifs d’apprentissage à compléter.",
+    details:"Objectifs d'apprentissage à compléter.",
     questions:[
       {q:"Présente les quatre formes de l'engagement politique.",expected:[["vote"],["engagement","associatif"],["militant","militantisme"],["consommation","engagée"]]},
       {q:"Explique le paradoxe de l'action collective.",expected:[["passagers","clandestins"],["absence","mobilisation"]]},
@@ -77,20 +375,18 @@ const chapters={
     defs:{
       "Engagement politique":"Ensemble des actions visant à influencer les décisions politiques.",
       "Action collective":"Action menée par plusieurs individus pour défendre un intérêt commun.",
-      "Passagers clandestins":"Individus qui bénéficient d’une action collective sans y participer."
+      "Passagers clandestins":"Individus qui bénéficient d'une action collective sans y participer."
     }
   },
-
   croissance:{
-    number:"Chapitre 2",
-    type:"eco",
+    number:"Chapitre 2",type:"eco",
     title:"Quels sont les sources et les défis de la croissance économique ?",
     details:"Comprendre les sources et les limites de la croissance.",
     questions:[
       {q:"Présente le processus historique de la croissance économique.",expected:[["avant","xviii"],["révolution","industrielle"],["1945","1970"],["stagnation","crises"]]},
       {q:"Comment se définit la croissance économique ?",expected:[["augmentation","durable"],["production"],["biens","services"]]},
       {q:"Par quel indicateur mesure-t-on la croissance économique ?",expected:[["pib"],["valeurs","ajoutées"]]},
-      {q:"Qu’est-ce que le taux de croissance économique ?",expected:[["variation"],["pourcentage"],["pib"]]},
+      {q:"Qu'est-ce que le taux de croissance économique ?",expected:[["variation"],["pourcentage"],["pib"]]},
       {q:"Quels sont les deux facteurs de production ?",expected:[["travail"],["capital"]]},
       {q:"Quelles sont les deux sources de la croissance économique ?",expected:[["accumulation","facteurs"],["productivité","globale","facteurs"]]},
       {q:"À quoi correspond la croissance extensive ?",expected:[["augmentation"],["quantité","facteurs"]]},
@@ -101,9 +397,9 @@ const chapters={
       {q:"Quel est le rôle des institutions dans la croissance économique ?",expected:[["règles"],["confiance"],["échanges"]]},
       {q:"Pourquoi les droits de propriété incitent-ils à investir et innover ?",expected:[["sécurité"],["brevets"],["investissements"]]},
       {q:"Présente le processus de destruction créatrice.",expected:[["création"],["nouveaux","produits"],["destruction"],["obsolète"]]},
-      {q:"Quel est l’impact du progrès technique sur les inégalités de revenus ?",expected:[["qualifiés"],["salaires","élevés"],["inégalités"]]},
+      {q:"Quel est l'impact du progrès technique sur les inégalités de revenus ?",expected:[["qualifiés"],["salaires","élevés"],["inégalités"]]},
       {q:"Quelles sont les trois principales limites écologiques de la croissance soutenable ?",expected:[["épuisement","ressources"],["pollution"],["réchauffement","climatique"]]},
-      {q:"Comment l’innovation peut-elle permettre une croissance soutenable ?",expected:[["énergies","renouvelables"],["réduction","pollution"],["progrès","technique"]]}
+      {q:"Comment l'innovation peut-elle permettre une croissance soutenable ?",expected:[["énergies","renouvelables"],["réduction","pollution"],["progrès","technique"]]}
     ],
     defs:{
       "Croissance économique":"Augmentation durable de la production de biens et de services.",
@@ -111,33 +407,31 @@ const chapters={
       "Taux de croissance économique":"Variation en pourcentage du PIB.",
       "Facteurs de production":"Travail et capital utilisés pour produire.",
       "Croissance extensive":"Croissance par augmentation de la quantité de facteurs.",
-      "Croissance intensive":"Croissance par amélioration de l’efficacité des facteurs.",
+      "Croissance intensive":"Croissance par amélioration de l'efficacité des facteurs.",
       "Productivité globale des facteurs":"Efficacité combinée du travail et du capital.",
       "Progrès technique":"Amélioration des techniques de production.",
       "Gains de productivité":"Production supplémentaire sans augmenter les facteurs.",
-      "Innovation":"Application d’une invention à la production.",
-      "Endogène":"Lié au fonctionnement interne de l’économie.",
+      "Innovation":"Application d'une invention à la production.",
+      "Endogène":"Lié au fonctionnement interne de l'économie.",
       "Institution":"Règles formelles et informelles encadrant les échanges.",
-      "Droits de propriété":"Droits d’utiliser, modifier, vendre un bien.",
+      "Droits de propriété":"Droits d'utiliser, modifier, vendre un bien.",
       "Croissance soutenable":"Croissance respectant les générations futures.",
       "Limites écologiques":"Contraintes environnementales à la croissance."
     }
   },
-
   structure:{
-    number:"Chapitre 3",
-    type:"socio",
+    number:"Chapitre 3",type:"socio",
     title:"Comment est structurée la société française actuelle ?",
-    details:"Analyser la structuration et la hiérarchisation de l’espace social.",
+    details:"Analyser la structuration et la hiérarchisation de l'espace social.",
     questions:[
-      {q:"Distingue la structuration et la hiérarchisation de l’espace social.",expected:[["structuration"],["hiérarchisation"],["classement"],["inégalités"]]},
-      {q:"Présente les sept facteurs qui permettent d’analyser l’espace social.",expected:[["revenu"],["diplôme"],["profession"],["âge"],["sexe"],["ménage"],["lieu","résidence"]]},
+      {q:"Distingue la structuration et la hiérarchisation de l'espace social.",expected:[["structuration"],["hiérarchisation"],["classement"],["inégalités"]]},
+      {q:"Présente les sept facteurs qui permettent d'analyser l'espace social.",expected:[["revenu"],["diplôme"],["profession"],["âge"],["sexe"],["ménage"],["lieu","résidence"]]},
       {q:"Explique les quatre évolutions de la structure socioprofessionnelle française.",expected:[["salarisation"],["tertiairisation"],["qualification"],["féminisation"]]},
       {q:"Présente la théorie des classes sociales selon Karl Marx.",expected:[["classe","en","soi"],["classe","pour","soi"],["lutte","classes"]]},
       {q:"Présente la théorie de la stratification sociale de Max Weber.",expected:[["économique"],["social"],["politique"]]},
       {q:"Explique les différences entre les visions de Marx et Weber.",expected:[["monodimensionnelle"],["multidimensionnelle"]]},
       {q:"Quels arguments remettent en cause la pertinence des classes sociales ?",expected:[["moyennisation"],["individualisation"],["intra-classes"]]},
-      {q:"Explique en quoi les classes sociales n’ont pas totalement disparu.",expected:[["inter-classes"],["élites"],["classes","populaires"]]},
+      {q:"Explique en quoi les classes sociales n'ont pas totalement disparu.",expected:[["inter-classes"],["élites"],["classes","populaires"]]},
       {q:"Explique la différence entre distance inter-classes et intra-classes.",expected:[["entre"],["au","sein"]]}
     ],
     defs:{
@@ -149,82 +443,78 @@ const chapters={
       "Salarisation":"Hausse de la part des salariés.",
       "Tertiarisation":"Hausse du secteur des services.",
       "Qualification":"Niveau de compétences ou de diplôme.",
-      "Féminisation":"Augmentation de la part des femmes dans l’emploi.",
+      "Féminisation":"Augmentation de la part des femmes dans l'emploi.",
       "Classes sociales":"Groupes hiérarchisés partageant des caractéristiques communes.",
       "Stratification sociale":"Hiérarchie sociale multidimensionnelle.",
       "Distance inter-classes":"Écarts entre groupes sociaux.",
-      "Distance intra-classes":"Écarts au sein d’un même groupe.",
+      "Distance intra-classes":"Écarts au sein d'un même groupe.",
       "Individualisation":"Affaiblissement des appartenances collectives.",
-      "Identification subjective":"Sentiment d’appartenance à un groupe.",
+      "Identification subjective":"Sentiment d'appartenance à un groupe.",
       "Rapports sociaux de genre":"Inégalités construites entre hommes et femmes."
     }
   },
-
   commerce:{
-    number:"Chapitre 4",
-    type:"eco",
-    title:"Quels sont les fondements du commerce international et de l’internationalisation de la production ?",
+    number:"Chapitre 4",type:"eco",
+    title:"Quels sont les fondements du commerce international et de l'internationalisation de la production ?",
+    details:"À compléter.",
     questions:[
-      {q:"Quels sont les deux grands types d’échanges internationaux ?",expected:[["pays","différents"],["pays","comparables"]]},
+      {q:"Quels sont les deux grands types d'échanges internationaux ?",expected:[["pays","différents"],["pays","comparables"]]},
       {q:"Sur quel élément le commerce international repose t-il en partie ?",expected:[["spécialisation","internationale"]]},
       {q:"Selon Ricardo, dans quoi un pays doit-il se spécialiser ?",expected:[["avantage","comparatif"]]},
-      {q:"Par quoi les avantages comparatifs s’expliquent-ils ?",expected:[["dotations","factorielles"],["dotations","technologiques"]]},
+      {q:"Par quoi les avantages comparatifs s'expliquent-ils ?",expected:[["dotations","factorielles"],["dotations","technologiques"]]},
       {q:"Comment expliquer les échanges entre pays comparables ?",expected:[["différenciation","produits"],["différenciation","qualité","verticale"],["différenciation","caractéristiques","horizontale"],["fragmentation","chaine","valeur"]]},
-      {q:"Explique pourquoi la compétitivité d’un pays dépend de celle de ses entreprises.",expected:[["productivité"],["entreprises"],["compétitivité"]]},
+      {q:"Explique pourquoi la compétitivité d'un pays dépend de celle de ses entreprises.",expected:[["productivité"],["entreprises"],["compétitivité"]]},
       {q:"Pourquoi seules certaines entreprises peuvent-elles exporter ?",expected:[["coûts"],["productives"],["grandes","entreprises"]]},
       {q:"Énumère les deux stratégies utilisées par les entreprises pour internationaliser la chaîne de valeur.",expected:[["sous-traitance"],["investissements","directs","étranger"]]},
       {q:"Énumère les trois effets du commerce international.",expected:[["gains","consommateurs"],["baisse","inégalités","entre","pays"],["hausse","inégalités","revenus","sein","pays"]]},
       {q:"Quels sont les stratégies qui peuvent influer sur les barrières commerciales",expected:[["libre-échange"],["protectionnisme"]]},
-      {q:"Quels sont les types de protectionnisme ?",expected:[["tarifaire"],["non-tarifaire"]]},
-      {q:"Quels sont les arguments qui justifient le protectionnisme ?",expected:[["protection","protéger","emploi"],["sécurité","nationale"],["sécurité","alimentaire"],["protection","protéger","dumping","concurrence","déloyale"]]},
-      {q:"Quel est la principale limite du protectionnisme ?",expected:[["guerre, commerciale"]]}
+      {q:"Présente deux avantages et une limite du libre-échange.",expected:[["prix","faibles"],["diversité"],["inégalités"]]},
+      {q:"Présente un aspect positif et une limite du protectionnisme.",expected:[["protéger","emplois"],["hausse","prix"]]}
     ],
     defs:{
       "Commerce international":"Échanges de marchandises entre pays.",
-      "Spécialisation internationale":"Concentration de la production d’un pays dans certains domaines destinés à l’exportation.",
+      "Spécialisation internationale":"Concentration de la production d'un pays dans certains domaines destinés à l'exportation.",
       "Avantage comparatif":"Domaine dans lequel un pays est relativement le plus efficace ou le moins inefficace.",
       "Dotation factorielle":"Quantité et qualité des facteurs de production disponibles dans un pays.",
-      "Dotation technologique":"Niveau de technologies, de capital humain et d’innovation d’un pays.",
+      "Dotation technologique":"Niveau de technologies, de capital humain et d'innovation d'un pays.",
       "Différenciation des produits":"Stratégie visant à distinguer un produit par la qualité ou les caractéristiques.",
-      "Chaîne de valeur":"Ensemble des étapes nécessaires à la production d’un bien ou service.",
+      "Chaîne de valeur":"Ensemble des étapes nécessaires à la production d'un bien ou service.",
       "Fragmentation de la chaîne de valeur":"Répartition des étapes de production dans plusieurs pays.",
       "Productivité":"Efficacité avec laquelle les facteurs de production sont utilisés.",
       "Compétitivité":"Capacité à faire mieux que les concurrents sur les marchés internationaux.",
       "Firmes":"Très grandes entreprises présentes dans plusieurs pays.",
       "Internationalisation de la chaîne de valeur":"Dispersion mondiale des étapes de production.",
       "Libre-échange":"Politique favorisant la suppression des barrières commerciales.",
-      "Protectionnisme":"Politique visant à limiter les importations pour protéger l’économie nationale."
+      "Protectionnisme":"Politique visant à limiter les importations pour protéger l'économie nationale."
     }
   },
-
   mobilite:{
-    number:"Chapitre 5",
-    type:"socio",
+    number:"Chapitre 5",type:"socio",
     title:"Quels sont les facteurs de la mobilité sociale ?",
     details:"Analyser et comprendre les déterminants de la mobilité sociale.",
     questions:[
-      {q:"Quelles sont les différentes formes de mobilités ?", expected:[["géographique","lieu"],["professionnelle","métier"],["sociale","position","sociale"]]},
-      {q:"Comment mesure-t-on la mobilité sociale ?", expected:[["tables","destinée"],["insee"],["tables","origine","recrutement"]]},
-      {q:"Distingue la table des destinées de la table de recrutement.", expected:[["destinée","enfants","deviennent"],["recrutement","origine","parents"]]},
-      {q:"Quel est l’intérêt principal des tables de mobilité ?", expected:[["mesurer","mobilité","observée"],["ensemble","pays"]]},
-      {q:"Quels sont les limites des tables de mobilité ?", expected:[["population","partielle"],["csp","france"],["revenus","non","pris","en","compte"]]},
-      {q:"Distingue mobilité ascendante, descendante et déclassement.", expected:[["ascendante","position","supérieure"],["descendante","inférieure"],["déclassement","diplôme","supérieur","emploi","inférieur"]]},
-      {q:"Distingue mobilité verticale, horizontale et immobilité.", expected:[["verticale","hiérarchie"],["horizontale","csp","équivalente"],["immobilité","même","csp"]]},
-      {q:"Caractérise les mobilités masculine et féminine.", choices:["femmes","mobilité","ascendante","plafond","verre"],correct:[0,2]},
-      {q:"Distingue mobilité sociale et fluidité sociale.", expected:[["mobilité","changement","csp"],["fluidité","égalité","chances"]]},
-      {q:"Pourquoi la mobilité sociale observée dépend-elle de la mobilité structurelle ?", expected:[["évolution","structure","socioprofessionnelle"],["création","disparition","emplois"]]},
-      {q:"Explique l’impact de l’évolution des structures socioprofessionnelles sur la mobilité sociale.", expected:[["tertiairisation"],["féminisation"],["qualification"]]},
-      {q:"Explique le rôle des niveaux de formation sur la mobilité sociale.", expected:[["diplôme"],["mobilité","ascendante"],["déclassement"]]},
-      {q:"Explique le rôle de la famille sur la mobilité sociale.", expected:[["ressources","familiales"],["configurations","familiales"]]},
-      {q:"Quels sont les trois capitaux possédés par la famille ?", expected:[["économique"],["social"],["culturel"]]}
+      {q:"Quelles sont les différentes formes de mobilités ?",expected:[["géographique","lieu"],["professionnelle","métier"],["sociale","position","sociale"]]},
+      {q:"Comment mesure-t-on la mobilité sociale ?",expected:[["tables","destinée"],["insee"],["tables","origine","recrutement"]]},
+      {q:"Distingue la table des destinées de la table de recrutement.",expected:[["destinée","enfants","deviennent"],["recrutement","origine","parents"]]},
+      {q:"Quel est l'intérêt principal des tables de mobilité ?",expected:[["mesurer","mobilité","observée"],["ensemble","pays"]]},
+      {q:"Quels sont les limites des tables de mobilité ?",expected:[["population","partielle"],["csp","france"],["revenus","non","pris","en","compte"]]},
+      {q:"Distingue mobilité ascendante, descendante et déclassement.",expected:[["ascendante","position","supérieure"],["descendante","inférieure"],["déclassement","diplôme","supérieur","emploi","inférieur"]]},
+      {q:"Distingue mobilité verticale, horizontale et immobilité.",expected:[["verticale","hiérarchie"],["horizontale","csp","équivalente"],["immobilité","même","csp"]]},
+      {q:"Caractérise les mobilités masculine et féminine.",choices:["femmes","mobilité","ascendante","plafond","verre"],correct:[0,2]},
+      {q:"Distingue mobilité sociale et fluidité sociale.",expected:[["mobilité","changement","csp"],["fluidité","égalité","chances"]]},
+      {q:"Pourquoi la mobilité sociale observée dépend-elle de la mobilité structurelle ?",expected:[["évolution","structure","socioprofessionnelle"],["création","disparition","emplois"]]},
+      {q:"Explique l'impact de l'évolution des structures socioprofessionnelles sur la mobilité sociale.",expected:[["tertiairisation"],["féminisation"],["qualification"]]},
+      {q:"Explique le rôle des niveaux de formation sur la mobilité sociale.",expected:[["diplôme"],["mobilité","ascendante"],["déclassement"]]},
+      {q:"Explique le rôle de la famille sur la mobilité sociale.",expected:[["ressources","familiales"],["configurations","familiales"]]},
+      {q:"Quels sont les trois capitaux possédés par la famille ?",expected:[["économique"],["social"],["culturel"]]}
     ],
     defs:{
       "Mobilité sociale / intergénérationnelle":"Mobilité entre la position sociale des parents et celle des enfants.",
-      "Mobilité professionelle / intragénérationnelle":"Changement de profession au cours de la vie d’un individu.",
+      "Mobilité professionelle / intragénérationnelle":"Changement de profession au cours de la vie d'un individu.",
       "Mobilité géographique":"Déplacement d'un lieu à un autre.",
       "Tables de mobilité":"Tableaux statistiques mesurant les changements de CSP entre générations.",
-      "Table de destinée":"Table indiquant ce que deviennent les enfants d’une CSP.",
-      "Table de recrutement":"Table indiquant l’origine sociale des individus d’une CSP.",
+      "Table de destinée":"Table indiquant ce que deviennent les enfants d'une CSP.",
+      "Table de recrutement":"Table indiquant l'origine sociale des individus d'une CSP.",
       "Mobilité observée":"Part des individus ayant changé de CSP par rapport à leurs parents.",
       "Mobilité ascendante":"Position sociale plus élevée par rapport à celle de ses parents.",
       "Mobilité descendante / Déclassement":"Position sociale inférieure par rapport à celle de ses parents.",
@@ -233,15 +523,14 @@ const chapters={
       "Reproduction sociale":"Maintien de la même position sociale que les parents.",
       "Mobilité structurelle":"Mobilité liée aux transformations de la structure socioprofessionnelle.",
       "Configuration familiale":"Structure de la famille (taille, type, organisation).",
-      "Ressources familiales":"Possesions des capitaux économiques, culturels et sociaux d’une famille.",
+      "Ressources familiales":"Possesions des capitaux économiques, culturels et sociaux d'une famille.",
       "Niveaux de formation":"Diplômes et qualifications obtenus par un individu."
     }
   },
-
   chomage:{number:"Chapitre 6",type:"eco",title:"Comment lutter contre le chômage ?",questions:[],defs:{},details:"À compléter."},
-  travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l’emploi ?",questions:[],defs:{},details:"À compléter."},
+  travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l'emploi ?",questions:[],defs:{},details:"À compléter."},
   europe:{number:"Chapitre 8",type:"eco",title:"Quelles politiques économiques dans le cadre européen ?",questions:[],defs:{},details:"À compléter."},
-  environnement:{number:"Chapitre 9",type:"cross",title:"Quelle action publique pour l’environnement ?",questions:[],defs:{},details:"À compléter."}
+  environnement:{number:"Chapitre 9",type:"cross",title:"Quelle action publique pour l'environnement ?",questions:[],defs:{},details:"À compléter."}
 };
 
 Object.keys(chapters).forEach(k=>{if(!records[k])records[k]={best:0};});
@@ -260,20 +549,32 @@ function renderChapters(){
     const total=c.questions.length + Object.keys(c.defs).length;
     const best=records[id].best;
     const percent=total?Math.round((best/total)*100):0;
+    const circumference=100;
+    const isEmpty=total===0;
+
     const card=document.createElement('div');
-    card.className=`card chapter-card ${c.type}`;
+    card.className=`chapter-card ${c.type}${isEmpty?' badge-empty':''}`;
+
     card.innerHTML=`
-      <svg class="progress-circle" viewBox="0 0 36 36">
-        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="4"/>
-        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58cc02" stroke-width="4" stroke-dasharray="${percent},100"/>
-        <text x="18" y="20.5" text-anchor="middle" font-size="8">${best}/${total}</text>
-      </svg>
-      <h3>${c.number}</h3>
-      <p>${c.title}</p>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button class="btn-primary" onclick="startQuestions('${id}')">Questions</button>
-        <button class="btn-secondary" onclick="startDefs('${id}')">Définitions</button>
-        <button class="btn-secondary" onclick="showDetails('${id}')">Détails</button>
+      <div class="card-top">
+        <span class="chapter-chip">${c.number}</span>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 36 36">
+            <circle class="ring-track" cx="18" cy="18" r="15.9"/>
+            <circle class="ring-fill" cx="18" cy="18" r="15.9"
+              stroke-dasharray="${percent},${circumference}"
+              style="stroke:${c.type==='socio'?'#2563eb':c.type==='eco'?'#dc2626':'#7c3aed'}"/>
+          </svg>
+          <div class="ring-text">${best}/${total}</div>
+        </div>
+      </div>
+      <h3>${c.title}</h3>
+      <div class="card-actions">
+        ${total>0
+          ? `<button class="btn btn-primary" onclick="startQuestions('${id}')">Questions</button>
+             <button class="btn btn-secondary" onclick="startDefs('${id}')">Définitions</button>`
+          : `<span style="font-size:0.78rem;color:var(--muted);font-style:italic">À compléter</span>`}
+        <button class="btn btn-secondary" onclick="showDetails('${id}')">Détails</button>
       </div>`;
     chaptersDiv.appendChild(card);
   });
@@ -285,7 +586,7 @@ function renderChapters(){
 function startQuestions(id){
   mode='questions';currentChapter=id;questionIndex=0;
   allQuestions=[...chapters[id].questions];answersLog=[];
-  session={success:0,total:0,last:null};
+  session={success:0,total:allQuestions.length,last:null};
   chaptersDiv.style.display='none';
   showQuestion();
 }
@@ -296,104 +597,95 @@ function showQuestion(){
   if(questionIndex>=allQuestions.length){endSession();return;}
 
   const q=allQuestions[questionIndex];
+  const total=allQuestions.length;
+  const progressPct=Math.round((questionIndex/total)*100);
+
+  const bar=document.createElement('div');
+  bar.className='progress-bar-wrap';
+  bar.innerHTML=`<div class="progress-bar-fill" style="width:${progressPct}%"></div>`;
+  c.appendChild(bar);
+
   const card=document.createElement('div');
-  card.className='card';
-  card.innerHTML=`<h3>${q.q}</h3>`;
+  card.className='q-card';
 
-  // QCM
+  let html=`<div class="q-counter">Question ${questionIndex+1} / ${total}</div>
+    <h3>${q.q}</h3>`;
+
   if(q.choices){
-    selectedChoices = [];
-    q.choices.forEach((choice,i)=>{
-      card.innerHTML+=`
-        <button class="btn-secondary qcm-choice"
-          data-index="${i}"
-          style="display:block;width:100%;margin-top:8px"
-          onclick="toggleChoice(${i}, this)">
-          ${choice}
-        </button>`;
+    selectedChoices=[];
+    q.choices.forEach((ch,i)=>{
+      html+=`<button class="qcm-choice" data-index="${i}" onclick="toggleChoice(${i},this)">${ch}</button>`;
     });
-    card.innerHTML+=`
-      <div style="display:flex;gap:12px;margin-top:16px">
-        <button id="validateQCMBtn" class="btn-primary" disabled onclick="validateQCM()">Valider</button>
-        <button class="btn-secondary" onclick="skipQuestion()">Passer</button>
-      </div>`;
-  }
-  // TEXTE
-  else{
-    q.expected.forEach(()=>{
-      card.innerHTML+=`<input placeholder="Réponse" />`;
+    html+=`<div class="q-actions">
+      <button id="validateQCMBtn" class="btn btn-primary btn-large" disabled onclick="validateQCM()">Valider</button>
+      <button class="btn btn-secondary btn-large" onclick="skipQuestion()">Passer</button>
+    </div>`;
+  } else {
+    q.expected.forEach((exp,i)=>{
+      html+=`<div class="input-hint">Élément ${i+1}</div>
+        <input class="q-input" placeholder="Votre réponse…" />`;
     });
-    card.innerHTML+=`
-      <div style="display:flex;gap:12px;margin-top:16px">
-        <button class="btn-primary" onclick="validateQuestion()">Valider</button>
-        <button class="btn-secondary" onclick="skipQuestion()">Passer</button>
-      </div>`;
+    html+=`<div class="q-actions">
+      <button class="btn btn-primary btn-large" onclick="validateQuestion()">Valider</button>
+      <button class="btn btn-secondary btn-large" onclick="skipQuestion()">Passer</button>
+    </div>`;
   }
 
+  card.innerHTML=html;
   c.appendChild(card);
 }
 
-function toggleChoice(i, btn){
-  const idx = selectedChoices.indexOf(i);
-  if(idx>=0){ selectedChoices.splice(idx,1); btn.classList.remove('active'); }
-  else{ selectedChoices.push(i); btn.classList.add('active'); }
+function toggleChoice(i,btn){
+  const idx=selectedChoices.indexOf(i);
+  if(idx>=0){selectedChoices.splice(idx,1);btn.classList.remove('active');}
+  else{selectedChoices.push(i);btn.classList.add('active');}
   const vBtn=document.getElementById('validateQCMBtn');
-  if(vBtn) vBtn.disabled = selectedChoices.length===0;
+  if(vBtn)vBtn.disabled=selectedChoices.length===0;
 }
 
 function validateQuestion(){
   const q=allQuestions[questionIndex];
-  const inputs=[...document.querySelectorAll('#content input')].map(i=>i.value.toLowerCase());
+  const inputs=[...document.querySelectorAll('#content .q-input')].map(i=>i.value.toLowerCase());
   let used=Array(q.expected.length).fill(false);let ok=true;
   inputs.forEach(v=>{
     let found=false;
     q.expected.forEach((keys,i)=>{
-      if(!used[i] && keys.some(k=>v.includes(k))){used[i]=true;found=true;}
+      if(!used[i]&&keys.some(k=>v.includes(k))){used[i]=true;found=true;}
     });
     if(!found)ok=false;
   });
   if(used.some(u=>!u))ok=false;
-  session.total++; if(ok)session.success++;
+  session.success=session.success||0; if(ok)session.success++;
   answersLog.push({question:q.q,correct:ok,expected:q.expected});
-  session.last=Date.now(); updateHeader();
-  questionIndex++; showQuestion();
+  session.last=Date.now();updateHeader();
+  questionIndex++;showQuestion();
 }
 
 function validateQCM(){
   const q=allQuestions[questionIndex];
   const good=q.correct.slice().sort().join(',');
   const user=selectedChoices.slice().sort().join(',');
-  const ok = good===user;
-
-  session.total++;
-  if(ok) session.success++;
-
-  answersLog.push({
-    question:q.q,
-    correct:ok,
-    expected:q.correct.map(i=>[q.choices[i]])
-  });
-
-  session.last=Date.now();
-  updateHeader();
-  questionIndex++;
-  showQuestion();
+  const ok=good===user;
+  session.success=session.success||0; if(ok)session.success++;
+  answersLog.push({question:q.q,correct:ok,expected:q.correct.map(i=>[q.choices[i]])});
+  session.last=Date.now();updateHeader();
+  questionIndex++;showQuestion();
 }
 
 function skipQuestion(){
   const q=allQuestions[questionIndex];
-  session.total++;
-  answersLog.push({question:q.q,correct:false,expected:q.expected});
-  updateHeader(); questionIndex++; showQuestion();
+  answersLog.push({question:q.q,correct:false,expected:q.expected||[]});
+  updateHeader();questionIndex++;showQuestion();
 }
 
 /*********************
- * DÉFINITIONS (appariement)
+ * DÉFINITIONS
  *********************/
 function startDefs(id){
-  mode='defs'; currentChapter=id; defIndex=0;
-  answersLog=[]; session={success:0,total:0,last:null};
+  mode='defs';currentChapter=id;defIndex=0;
+  answersLog=[];session={success:0,total:0,last:null};
   defQuestions=Object.entries(chapters[id].defs).map(e=>({term:e[0],def:e[1]}));
+  session.total=defQuestions.length;
   chaptersDiv.style.display='none';
   showDef();
 }
@@ -401,23 +693,39 @@ function startDefs(id){
 function showDef(){
   const c=document.getElementById('content');c.innerHTML='';
   if(defIndex>=defQuestions.length){endSession();return;}
+
   const q=defQuestions[defIndex];
+  const total=defQuestions.length;
+  const progressPct=Math.round((defIndex/total)*100);
+
+  const bar=document.createElement('div');
+  bar.className='progress-bar-wrap';
+  bar.innerHTML=`<div class="progress-bar-fill" style="width:${progressPct}%"></div>`;
+  c.appendChild(bar);
+
+  const card=document.createElement('div');
+  card.className='q-card';
+
   const terms=Object.keys(chapters[currentChapter].defs);
-  const card=document.createElement('div');card.className='card';
-  card.innerHTML=`<h3>À quel terme correspond cette définition ?</h3><p><em>${q.def}</em></p>`;
+  let html=`<div class="q-counter">Définition ${defIndex+1} / ${total}</div>
+    <h3>À quel terme correspond cette définition ?</h3>
+    <div class="def-definition">${q.def}</div>
+    <div class="def-choices-grid">`;
   terms.forEach(t=>{
-    card.innerHTML+=`<button class="btn-secondary" style="display:block;width:100%;margin-top:8px" onclick="validateDef('${t.replace(/'/g,"\\'")}')">${t}</button>`;
+    html+=`<button class="def-choice" onclick="validateDef('${t.replace(/'/g,"\\'")}')">${t}</button>`;
   });
+  html+=`</div>`;
+  card.innerHTML=html;
   c.appendChild(card);
 }
 
 function validateDef(term){
   const q=defQuestions[defIndex];
-  const ok = term===q.term;
-  session.total++; if(ok)session.success++;
+  const ok=term===q.term;
+  session.success=session.success||0; if(ok)session.success++;
   answersLog.push({question:q.term,correct:ok,expected:[[q.term+" : "+q.def]]});
-  session.last=Date.now(); updateHeader();
-  defIndex++; showDef();
+  session.last=Date.now();updateHeader();
+  defIndex++;showDef();
 }
 
 /*********************
@@ -425,46 +733,78 @@ function validateDef(term){
  *********************/
 function endSession(){
   const total=session.total;
-  if(session.success>records[currentChapter].best){
-    records[currentChapter].best=session.success;
+  const succ=session.success||0;
+  if(succ>records[currentChapter].best){
+    records[currentChapter].best=succ;
     localStorage.setItem('records',JSON.stringify(records));
   }
   renderChapters();
-  const percent=total?Math.round((session.success/total)*100):0;
+
+  const percent=total?Math.round((succ/total)*100):0;
   const c=document.getElementById('content');
-  c.innerHTML=`<div class="card" style="text-align:center">
-    <svg class="progress-circle" viewBox="0 0 36 36">
-      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e5e7eb" stroke-width="4"/>
-      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58cc02" stroke-width="4" stroke-dasharray="${percent},100"/>
-      <text x="18" y="20.5" text-anchor="middle" font-size="8">${session.success}/${total}</text>
-    </svg>
-    <h2>Récapitulatif de la session</h2>
-  </div>`;
-  answersLog.forEach(a=>{
+  c.innerHTML='';
+
+  const header=document.createElement('div');
+  header.className='recap-header';
+  const emoji=percent>=80?'🏆':percent>=50?'✨':'💪';
+  header.innerHTML=`
+    <div style="font-size:2.5rem">${emoji}</div>
+    <h2>Session terminée</h2>
+    <div class="score-display">${succ}<span style="font-size:1.5rem;color:var(--muted)"> / ${total}</span></div>
+    <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">${percent}% de réussite</div>`;
+  c.appendChild(header);
+
+  answersLog.forEach((a,idx)=>{
     const div=document.createElement('div');
     div.className='recap-item '+(a.correct?'ok':'ko');
-    let html=`${a.correct?'☑️':'❌'} ${a.question}`;
-    if(!a.correct){html+=`<div style="font-size:.9rem;color:#555;margin-top:6px"><strong>Correction :</strong> ${a.expected.map(e=>e.join(' / ')).join(' ; ')}</div>`;}
-    div.innerHTML=html; c.appendChild(div);
+    div.style.animationDelay=`${idx*0.04}s`;
+    let html=`<div class="recap-q">${a.correct?'✓':'✗'} ${a.question}</div>`;
+    if(!a.correct&&a.expected){
+      html+=`<div class="recap-correction"><strong>Correction :</strong> ${a.expected.map(e=>Array.isArray(e)?e.join(' / '):e).join(' ; ')}</div>`;
+    }
+    div.innerHTML=html;
+    c.appendChild(div);
   });
-  const btn=document.createElement('button');btn.className='btn-primary';btn.style.marginTop='20px';btn.textContent='Retour à l’accueil';btn.onclick=back;c.appendChild(btn);
+
+  const btn=document.createElement('button');
+  btn.className='btn btn-primary btn-large';
+  btn.style.cssText='display:block;margin:28px auto 0;max-width:680px;width:100%;';
+  btn.textContent='← Retour à l\'accueil';
+  btn.onclick=back;
+  c.appendChild(btn);
 }
 
 function updateHeader(){
-  document.getElementById('scoreHeader').textContent=`${session.success} / ${session.total}`;
-  document.getElementById('lastQuiz').textContent=session.last?('Dernière session : '+new Date(session.last).toLocaleString()):'Session en cours';
+  const succ=session.success||0;
+  const tot=session.total||0;
+  document.getElementById('scoreHeader').textContent=`${succ} / ${tot}`;
+  if(session.last){
+    document.getElementById('lastQuiz').textContent='Session en cours – '+new Date(session.last).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  }
 }
 
-function back(){document.getElementById('content').innerHTML='';chaptersDiv.style.display='grid';renderChapters();}
+function back(){
+  document.getElementById('content').innerHTML='';
+  chaptersDiv.style.display='grid';
+  renderChapters();
+}
 
 function showDetails(id){
   chaptersDiv.style.display='none';
-  document.getElementById('content').innerHTML=`<div class="card"><h2>${chapters[id].number}</h2><p>${chapters[id].details||''}</p><button class="btn-primary" onclick="back()">Retour</button></div>`;
+  const c=chapters[id];
+  document.getElementById('content').innerHTML=`
+    <div class="details-card">
+      <span class="chapter-chip ${c.type}" style="background:var(--chip-bg,rgba(255,255,255,0.08));color:var(--muted);margin-bottom:12px;display:inline-block">${c.number}</span>
+      <h2>${c.title}</h2>
+      <p style="margin-top:12px">${c.details||'Aucun détail disponible.'}</p>
+      <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="back()">← Retour</button>
+        ${c.questions.length>0?`<button class="btn btn-secondary" onclick="startQuestions('${id}')">Commencer les questions</button>`:''}
+      </div>
+    </div>`;
 }
 
-/*********************
- * TESTS
- *********************/
+// Self-tests
 console.assert(typeof toggleChoice==='function','toggleChoice manquant');
 console.assert(typeof validateQCM==='function','validateQCM manquant');
 console.assert(chapters.engagement.questions.length>0,'Chapitre 1 vide');
