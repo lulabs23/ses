@@ -8,354 +8,332 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --socio: #2563eb;
-  --socio-light: #dbeafe;
-  --eco: #dc2626;
-  --eco-light: #fee2e2;
-  --cross: #7c3aed;
-  --cross-light: #ede9fe;
-  --green: #16a34a;
-  --green-light: #dcfce7;
-  --bg: #0f0e13;
-  --surface: #1a1825;
-  --surface2: #231f30;
+  --socio: #2563eb; --eco: #dc2626; --cross: #7c3aed;
+  --bg: #0f0e13; --surface: #1a1825; --surface2: #231f30;
   --border: rgba(255,255,255,0.07);
-  --text: #f0eef8;
-  --muted: #8b879e;
-  --accent: #f0c040;
+  --text: #f0eef8; --muted: #8b879e; --accent: #f0c040;
+  --known: #16a34a; --learning: #f59e0b;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
 }
-
-/* Animated background */
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
+  content: ''; position: fixed; inset: 0;
   background:
     radial-gradient(ellipse 80% 50% at 20% -10%, rgba(37,99,235,0.15) 0%, transparent 60%),
     radial-gradient(ellipse 60% 40% at 80% 100%, rgba(220,38,38,0.1) 0%, transparent 60%),
     radial-gradient(ellipse 50% 50% at 50% 50%, rgba(124,58,237,0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+  pointer-events: none; z-index: 0;
 }
-
 #app {
-  position: relative;
-  z-index: 1;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 32px 24px 80px;
+  position: relative; z-index: 1;
+  max-width: 980px; margin: 0 auto; padding: 40px 24px 80px;
 }
-
-/* ── HEADER BAR ── */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 14px 22px;
-  margin-bottom: 52px;
-  backdrop-filter: blur(12px);
-}
-
-.top-bar-left { display: flex; flex-direction: column; gap: 2px; }
-.session-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
-#lastQuiz { font-size: 0.85rem; color: var(--muted); }
-#scoreHeader { font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 500; color: var(--accent); }
 
 /* ── HERO ── */
 .hero { text-align: center; margin-bottom: 52px; }
 .hero-eyebrow {
-  display: inline-block;
-  font-size: 0.72rem; letter-spacing: 0.18em;
-  text-transform: uppercase; font-weight: 600;
-  color: var(--accent);
-  border: 1px solid rgba(240,192,64,0.3);
-  padding: 5px 14px; border-radius: 999px;
-  margin-bottom: 18px;
+  display: inline-block; font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; font-weight: 600; color: var(--accent);
+  border: 1px solid rgba(240,192,64,0.3); padding: 5px 14px; border-radius: 999px; margin-bottom: 18px;
 }
 .hero h1 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 14px;
+  font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 14px;
   background: linear-gradient(135deg, #f0eef8 30%, #c4bfdb);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 .hero p { font-size: 1rem; color: var(--muted); font-weight: 300; }
 
-/* ── GRID ── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
-}
-
-/* ── CHAPTER CARD ── */
-.chapter-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  animation: fadeUp 0.5s ease both;
-}
-.chapter-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-
-.chapter-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: 20px 20px 0 0;
-}
-.chapter-card.socio::before { background: var(--socio); }
-.chapter-card.eco::before { background: var(--eco); }
-.chapter-card.cross::before { background: var(--cross); }
-
-.chapter-card.socio { --chip-color: var(--socio); --chip-bg: rgba(37,99,235,0.12); }
-.chapter-card.eco   { --chip-color: var(--eco);   --chip-bg: rgba(220,38,38,0.12); }
-.chapter-card.cross { --chip-color: var(--cross); --chip-bg: rgba(124,58,237,0.12); }
-
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-
-.chapter-chip {
-  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
-  background: var(--chip-bg); color: var(--chip-color);
-}
-
-/* Ring */
-.ring-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
-.ring-wrap svg { width: 52px; height: 52px; transform: rotate(-90deg); }
-.ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 4; }
-.ring-fill { fill: none; stroke: var(--chip-color); stroke-width: 4; stroke-linecap: round; transition: stroke-dasharray 0.8s ease; }
-.ring-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); }
-
-.chapter-card h3 { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; line-height: 1.35; color: var(--text); margin-bottom: 18px; }
-
-.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-/* ── BUTTONS ── */
-.btn {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem; font-weight: 600;
-  padding: 8px 16px; border-radius: 10px;
-  border: none; cursor: pointer;
-  transition: all 0.15s ease;
-  letter-spacing: 0.02em;
-}
-.btn-primary { background: var(--accent); color: #1a1100; }
-.btn-primary:hover { background: #f8d060; transform: scale(1.03); }
-.btn-secondary {
-  background: rgba(255,255,255,0.06);
-  color: var(--muted); border: 1px solid var(--border);
-}
-.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text); }
-.btn-large { font-size: 0.9rem; padding: 12px 24px; border-radius: 12px; }
-
-/* ── CONTENT AREA ── */
-#content { margin-top: 8px; }
-
-/* ── QUESTION CARD ── */
-.q-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 32px;
-  max-width: 680px;
-  margin: 0 auto;
-  animation: fadeUp 0.35s ease both;
-}
-
-.q-counter {
-  font-size: 0.72rem; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 10px;
-}
-.q-card h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.25rem; line-height: 1.4;
-  margin-bottom: 24px; color: var(--text);
-}
-
-.q-input {
-  width: 100%; padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  color: var(--text); font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem; margin-top: 8px;
-  transition: border-color 0.2s;
-  outline: none;
-}
-.q-input:focus { border-color: var(--accent); }
-.q-input::placeholder { color: var(--muted); }
-
-.input-hint { font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; margin-top: 14px; }
-
-.q-actions { display: flex; gap: 10px; margin-top: 22px; }
-
-/* QCM choices */
-.qcm-choice {
-  width: 100%; text-align: left; display: block;
-  padding: 12px 16px; border-radius: 12px;
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); font-family: 'DM Sans', sans-serif;
-  font-size: 0.88rem; font-weight: 400;
-  cursor: pointer; transition: all 0.15s ease;
-  margin-top: 10px;
-}
-.qcm-choice:hover { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.05); }
-.qcm-choice.active { border-color: var(--accent); background: rgba(240,192,64,0.1); color: var(--accent); font-weight: 600; }
-
-/* ── RECAP ── */
-.recap-header {
-  text-align: center; max-width: 680px; margin: 0 auto 28px;
-  animation: fadeUp 0.3s ease both;
-}
-.recap-header h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem; margin-top: 16px; margin-bottom: 6px;
-}
-.score-display {
-  font-family: 'DM Mono', monospace;
-  font-size: 3rem; font-weight: 500;
-  color: var(--accent); line-height: 1;
-}
-
-.recap-item {
-  max-width: 680px; margin: 0 auto 10px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left-width: 4px;
-  font-size: 0.88rem;
-  animation: fadeUp 0.3s ease both;
-}
-.recap-item.ok { border-left-color: var(--green); }
-.recap-item.ko { border-left-color: var(--eco); }
-
-.recap-item .recap-q { font-weight: 500; margin-bottom: 4px; }
-.recap-item .recap-correction { color: var(--muted); font-size: 0.82rem; margin-top: 6px; }
-.recap-item .recap-correction strong { color: #f87171; }
-
-/* ── DEF CARD ── */
-.def-definition {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px 20px;
-  font-size: 1rem; font-style: italic;
-  color: #c4bfdb; margin-bottom: 22px; line-height: 1.6;
-}
-.def-choices-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-}
-.def-choice {
-  text-align: center; padding: 12px 14px;
-  border-radius: 12px; font-size: 0.82rem; font-weight: 500;
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); cursor: pointer; transition: all 0.15s;
-}
-.def-choice:hover { border-color: rgba(240,192,64,0.4); background: rgba(240,192,64,0.06); }
-
-/* ── DETAILS ── */
-.details-card {
-  max-width: 640px; margin: 0 auto;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 24px; padding: 32px;
-  animation: fadeUp 0.3s ease both;
-}
-.details-card h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 8px; }
-.details-card p { color: var(--muted); line-height: 1.65; }
-
 /* ── LEGEND ── */
-.legend {
-  display: flex; gap: 20px; justify-content: center;
-  flex-wrap: wrap; margin-bottom: 28px;
-}
+.legend { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
 .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--muted); }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 .legend-dot.socio { background: var(--socio); }
 .legend-dot.eco   { background: var(--eco); }
 .legend-dot.cross { background: var(--cross); }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ── GRID ── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+
+/* ── CHAPTER CARD ── */
+.chapter-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px; position: relative; overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; animation: fadeUp 0.5s ease both;
+}
+.chapter-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.chapter-card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; border-radius:20px 20px 0 0; }
+.chapter-card.socio::before { background: var(--socio); }
+.chapter-card.eco::before   { background: var(--eco); }
+.chapter-card.cross::before { background: var(--cross); }
+.chapter-card.socio { --chip-color: var(--socio); --chip-bg: rgba(37,99,235,0.12); }
+.chapter-card.eco   { --chip-color: var(--eco);   --chip-bg: rgba(220,38,38,0.12); }
+.chapter-card.cross { --chip-color: var(--cross); --chip-bg: rgba(124,58,237,0.12); }
+.card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+.chapter-chip {
+  font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+  padding:4px 10px; border-radius:999px; background:var(--chip-bg); color:var(--chip-color);
+}
+.ring-wrap { position:relative; width:52px; height:52px; flex-shrink:0; }
+.ring-wrap svg { width:52px; height:52px; transform:rotate(-90deg); }
+.ring-track { fill:none; stroke:rgba(255,255,255,0.08); stroke-width:4; }
+.ring-fill  { fill:none; stroke-width:4; stroke-linecap:round; transition:stroke-dasharray 0.8s ease; }
+.ring-text  { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--muted); }
+.chapter-card h3 { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; line-height:1.35; color:var(--text); margin-bottom:18px; }
+.card-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.badge-empty { opacity:0.4; }
+
+/* Learning badge on chapter card */
+.learning-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.7rem; font-weight: 600; color: var(--learning);
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  padding: 3px 9px; border-radius: 999px; margin-bottom: 10px;
 }
 
-.grid .chapter-card:nth-child(1) { animation-delay: 0.05s; }
-.grid .chapter-card:nth-child(2) { animation-delay: 0.10s; }
-.grid .chapter-card:nth-child(3) { animation-delay: 0.15s; }
-.grid .chapter-card:nth-child(4) { animation-delay: 0.20s; }
-.grid .chapter-card:nth-child(5) { animation-delay: 0.25s; }
-.grid .chapter-card:nth-child(6) { animation-delay: 0.30s; }
-.grid .chapter-card:nth-child(7) { animation-delay: 0.35s; }
-.grid .chapter-card:nth-child(8) { animation-delay: 0.40s; }
-.grid .chapter-card:nth-child(9) { animation-delay: 0.45s; }
+/* ── BUTTONS ── */
+.btn {
+  font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600;
+  padding:8px 16px; border-radius:10px; border:none; cursor:pointer;
+  transition:all 0.15s ease; letter-spacing:0.02em;
+}
+.btn-primary { background:var(--accent); color:#1a1100; }
+.btn-primary:hover { background:#f8d060; transform:scale(1.03); }
+.btn-secondary { background:rgba(255,255,255,0.06); color:var(--muted); border:1px solid var(--border); }
+.btn-secondary:hover { background:rgba(255,255,255,0.1); color:var(--text); }
+.btn-defs {
+  background: rgba(37,99,235,0.15); color: #93c5fd;
+  border: 1px solid rgba(37,99,235,0.35);
+}
+.btn-defs:hover { background: rgba(37,99,235,0.28); color: #bfdbfe; }
+.btn-review {
+  background: rgba(245,158,11,0.12); color: #fbbf24;
+  border: 1px solid rgba(245,158,11,0.3); font-size: 0.78rem;
+}
+.btn-review:hover { background: rgba(245,158,11,0.22); color: #fde68a; }
+.btn-large { font-size:0.9rem; padding:12px 24px; border-radius:12px; }
+.btn-known {
+  background:rgba(22,163,74,0.15); color:#4ade80;
+  border:1px solid rgba(22,163,74,0.35);
+  font-size:0.88rem; padding:13px 26px; border-radius:12px; font-weight:600; flex:1;
+}
+.btn-known:hover { background:rgba(22,163,74,0.28); transform:translateY(-1px); }
+.btn-learning-action {
+  background:rgba(245,158,11,0.12); color:#fbbf24;
+  border:1px solid rgba(245,158,11,0.3);
+  font-size:0.88rem; padding:13px 26px; border-radius:12px; font-weight:600; flex:1;
+}
+.btn-learning-action:hover { background:rgba(245,158,11,0.24); transform:translateY(-1px); }
 
-/* ── PROGRESS BAR ── */
-.progress-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 999px; height: 4px; margin-bottom: 28px; max-width: 680px; margin-left: auto; margin-right: auto; }
-.progress-bar-fill { height: 4px; border-radius: 999px; background: var(--accent); transition: width 0.4s ease; }
+/* ── PROGRESS TRACKER ── */
+.progress-tracker {
+  max-width: 680px; margin: 0 auto 24px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; padding: 18px 22px; animation: fadeUp 0.3s ease both;
+}
+.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.progress-title { font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+.progress-count { font-family:'DM Mono',monospace; font-size:0.88rem; color:var(--accent); }
+.seg-bar {
+  height:7px; border-radius:999px;
+  background:rgba(255,255,255,0.06); overflow:hidden; display:flex;
+}
+.seg-known    { height:100%; background:var(--known); transition:width 0.5s ease; }
+.seg-learning { height:100%; background:var(--learning); transition:width 0.5s ease; }
+.seg-unseen   { height:100%; flex:1; }
+.dot-strip { display:flex; flex-wrap:wrap; gap:5px; margin-top:14px; }
+.dot {
+  width:11px; height:11px; border-radius:50%; flex-shrink:0; cursor:default;
+  transition:background 0.3s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.dot.unseen   { background:rgba(255,255,255,0.13); }
+.dot.current  { background:var(--accent); transform:scale(1.5); box-shadow:0 0 8px rgba(240,192,64,0.75); }
+.dot.known    { background:var(--known); }
+.dot.learning { background:var(--learning); }
+.progress-legend { display:flex; gap:18px; margin-top:12px; flex-wrap:wrap; }
+.prog-legend-item { display:flex; align-items:center; gap:6px; font-size:0.74rem; color:var(--muted); }
+.prog-legend-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
-/* ── BADGE empty/complete ── */
-.badge-empty { opacity: 0.4; }
+/* ── FLASHCARD ── */
+.fc-actions-inner {
+  display: flex; gap: 12px; width: 100%; margin-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.07); padding-top: 18px;
+}
+.flashcard-scene {
+  max-width: 680px; margin: 0 auto;
+  perspective: 1400px; animation: fadeUp 0.35s ease both;
+}
+/* The outer wrapper sets the height so the scene has proper dimensions */
+.flashcard-wrapper {
+  position: relative; width: 100%;
+}
+.flashcard {
+  position: relative; width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.flashcard.flipped { transform: rotateX(180deg); cursor: default; }
+
+/* Faces use padding-based natural height; we sync both via JS */
+.flashcard-face {
+  /* front: absolute so flip works, back: also absolute */
+  position: absolute; inset: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 40px;
+  backface-visibility: hidden;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center; text-align: center;
+}
+.flashcard-back {
+  transform: rotateX(180deg);
+  background: var(--surface2); border-color: rgba(255,255,255,0.1);
+  justify-content: flex-start; align-items: flex-start; text-align: left;
+}
+/* Sizer divs: not absolutely positioned, used purely to push height */
+.fc-sizer { visibility: hidden; padding: 40px; pointer-events: none; }
+.fc-sizer-front { display:flex; flex-direction:column; align-items:center; text-align:center; }
+.fc-sizer-back  { display:flex; flex-direction:column; align-items:flex-start; text-align:left; }
+
+.fc-label { font-size:0.7rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
+.fc-question { font-family:'Playfair Display',serif; font-size:clamp(1.05rem,2.5vw,1.4rem); line-height:1.45; color:var(--text); }
+.fc-hint {
+  margin-top:24px; font-size:0.78rem; color:var(--muted);
+  display:flex; align-items:center; gap:6px;
+  border:1px dashed rgba(255,255,255,0.12); padding:7px 14px; border-radius:999px;
+}
+.fc-answer-label { font-size:0.7rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+.fc-answer-list { list-style:none; width:100%; }
+.fc-answer-list li {
+  padding:10px 16px; border-radius:11px;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  margin-bottom:8px; font-size:0.92rem; line-height:1.5; color:var(--text);
+  display:flex; align-items:flex-start; gap:10px;
+}
+.fc-answer-list li::before { content:'›'; color:var(--accent); font-weight:700; flex-shrink:0; font-size:1.1rem; line-height:1.4; }
+
+/* ── QCM ── */
+.q-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:24px; padding:32px; max-width:680px; margin:0 auto;
+  animation:fadeUp 0.35s ease both;
+}
+.q-counter { font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+.q-card h3 { font-family:'Playfair Display',serif; font-size:1.25rem; line-height:1.4; margin-bottom:24px; color:var(--text); }
+.qcm-choice {
+  width:100%; text-align:left; display:block;
+  padding:12px 16px; border-radius:12px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:400;
+  cursor:pointer; transition:all 0.15s ease; margin-top:10px;
+}
+.qcm-choice:hover { border-color:rgba(240,192,64,0.4); background:rgba(240,192,64,0.05); }
+.qcm-choice.active { border-color:var(--accent); background:rgba(240,192,64,0.1); color:var(--accent); font-weight:600; }
+.q-actions { display:flex; gap:10px; margin-top:22px; }
+
+/* ── RECAP ── */
+.recap-header { text-align:center; max-width:680px; margin:0 auto 28px; animation:fadeUp 0.3s ease both; }
+.recap-header h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-top:16px; margin-bottom:6px; }
+.score-display { font-family:'DM Mono',monospace; font-size:3rem; font-weight:500; color:var(--accent); line-height:1; }
+.recap-item {
+  max-width:680px; margin:0 auto 10px; padding:14px 18px;
+  border-radius:14px; background:var(--surface); border:1px solid var(--border); border-left-width:4px;
+  font-size:0.88rem; animation:fadeUp 0.3s ease both;
+}
+.recap-item.ok { border-left-color:var(--known); }
+.recap-item.ko { border-left-color:var(--eco); }
+.recap-item .recap-q { font-weight:500; margin-bottom:4px; }
+.recap-item .recap-correction { color:var(--muted); font-size:0.82rem; margin-top:6px; }
+.recap-item .recap-correction strong { color:#f87171; }
+
+/* ── DETAILS ── */
+.details-card {
+  max-width:640px; margin:0 auto;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:24px; padding:32px; animation:fadeUp 0.3s ease both;
+}
+.details-card h2 { font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:8px; }
+
+/* ── DEFS ── */
+.def-choices-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.def-choice {
+  text-align:center; padding:12px 14px; border-radius:12px; font-size:0.82rem; font-weight:500;
+  background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer; transition:all 0.15s;
+}
+.def-choice:hover { border-color:rgba(240,192,64,0.4); background:rgba(240,192,64,0.06); }
+.def-definition {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:14px; padding:18px 20px;
+  font-size:1rem; font-style:italic; color:#c4bfdb; margin-bottom:22px; line-height:1.6;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  max-width:480px; margin:60px auto; text-align:center;
+  background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:40px;
+  animation:fadeUp 0.3s ease both;
+}
+.empty-state .icon { font-size:2.5rem; margin-bottom:16px; }
+.empty-state h3 { font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:10px; }
+.empty-state p { color:var(--muted); line-height:1.6; margin-bottom:24px; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.grid .chapter-card:nth-child(1){animation-delay:.05s}
+.grid .chapter-card:nth-child(2){animation-delay:.10s}
+.grid .chapter-card:nth-child(3){animation-delay:.15s}
+.grid .chapter-card:nth-child(4){animation-delay:.20s}
+.grid .chapter-card:nth-child(5){animation-delay:.25s}
+.grid .chapter-card:nth-child(6){animation-delay:.30s}
+.grid .chapter-card:nth-child(7){animation-delay:.35s}
+.grid .chapter-card:nth-child(8){animation-delay:.40s}
+.grid .chapter-card:nth-child(9){animation-delay:.45s}
 </style>
 </head>
 <body>
 <div id="app">
-  <div class="top-bar">
-    <div class="top-bar-left">
-      <span class="session-label">Sciences Économiques et Sociales</span>
-      <span id="lastQuiz">Aucune session récente</span>
-    </div>
-    <div id="scoreHeader">— / —</div>
-  </div>
-
   <div class="hero">
     <div class="hero-eyebrow">Terminale SES</div>
     <h1>Réviser en s'entraînant</h1>
     <p>Choisis un chapitre pour commencer ta session</p>
   </div>
-
   <div class="legend">
     <div class="legend-item"><div class="legend-dot socio"></div> Sociologie</div>
     <div class="legend-item"><div class="legend-dot eco"></div> Économie</div>
     <div class="legend-item"><div class="legend-dot cross"></div> Regards croisés</div>
   </div>
-
   <div id="chapters" class="grid"></div>
   <div id="content"></div>
 </div>
 
 <script>
-/*********************
- * DONNÉES
- *********************/
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
 let currentChapter=null, questionIndex=0, defIndex=0;
-let selectedChoices = [];
-let mode='questions';
+let selectedChoices=[];
+let mode='questions';         // 'questions' | 'defs'
+let reviewMode=false;         // true = only 'learning' questions
 let allQuestions=[], defQuestions=[], answersLog=[];
-let session={success:0,total:0,last:null};
-const records=JSON.parse(localStorage.getItem('records')||'{}');
+let session={success:0,total:0};
+// Per-question status: 'unseen'|'known'|'learning'
+// Stored in localStorage per chapter
+let questionStatus=[];
+let defStatus=[];
+let isFlipped=false;
 
+const records = JSON.parse(localStorage.getItem('records')||'{}');
+const statusStore = JSON.parse(localStorage.getItem('statusStore')||'{}');
+
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
 const chapters={
   engagement:{
     number:"Chapitre 1",type:"socio",
@@ -533,27 +511,56 @@ const chapters={
   environnement:{number:"Chapitre 9",type:"cross",title:"Quelle action publique pour l'environnement ?",questions:[],defs:{},details:"À compléter."}
 };
 
-Object.keys(chapters).forEach(k=>{if(!records[k])records[k]={best:0};});
-localStorage.setItem('records',JSON.stringify(records));
+Object.keys(chapters).forEach(k=>{
+  if(!records[k]) records[k]={best:0};
+  if(!statusStore[k]) statusStore[k]={q:[],d:[]};
+});
+saveAll();
 
-/*********************
- * AFFICHAGE ACCUEIL
- *********************/
+function saveAll(){
+  localStorage.setItem('records', JSON.stringify(records));
+  localStorage.setItem('statusStore', JSON.stringify(statusStore));
+}
+
+/* ── Fisher-Yates shuffle ── */
+function shuffle(arr){ 
+  const a=[...arr]; 
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } 
+  return a; 
+}
+
+/* ═══════════════════════════════════════
+   ACCUEIL
+═══════════════════════════════════════ */
 const chaptersDiv=document.getElementById('chapters');
-window.addEventListener('DOMContentLoaded',renderChapters);
+window.addEventListener('DOMContentLoaded', renderChapters);
+
+function getLearningCount(id, type){
+  const stored = statusStore[id];
+  if(!stored) return 0;
+  const arr = type==='q' ? stored.q : stored.d;
+  return arr.filter(s=>s==='learning').length;
+}
 
 function renderChapters(){
   chaptersDiv.innerHTML='';
   Object.keys(chapters).forEach(id=>{
     const c=chapters[id];
-    const total=c.questions.length + Object.keys(c.defs).length;
+    const total=c.questions.length+Object.keys(c.defs).length;
     const best=records[id].best;
     const percent=total?Math.round((best/total)*100):0;
-    const circumference=100;
     const isEmpty=total===0;
+    const typeColor=c.type==='socio'?'#2563eb':c.type==='eco'?'#dc2626':'#7c3aed';
+
+    const qLearning=getLearningCount(id,'q');
+    const dLearning=getLearningCount(id,'d');
+    const hasLearning=(qLearning+dLearning)>0;
 
     const card=document.createElement('div');
     card.className=`chapter-card ${c.type}${isEmpty?' badge-empty':''}`;
+
+    let learningBadge='';
+    if(hasLearning) learningBadge=`<div class="learning-badge">⏳ ${qLearning+dLearning} en cours</div>`;
 
     card.innerHTML=`
       <div class="card-top">
@@ -562,77 +569,232 @@ function renderChapters(){
           <svg viewBox="0 0 36 36">
             <circle class="ring-track" cx="18" cy="18" r="15.9"/>
             <circle class="ring-fill" cx="18" cy="18" r="15.9"
-              stroke-dasharray="${percent},${circumference}"
-              style="stroke:${c.type==='socio'?'#2563eb':c.type==='eco'?'#dc2626':'#7c3aed'}"/>
+              stroke-dasharray="${percent},100" style="stroke:${typeColor}"/>
           </svg>
           <div class="ring-text">${best}/${total}</div>
         </div>
       </div>
+      ${learningBadge}
       <h3>${c.title}</h3>
       <div class="card-actions">
-        ${total>0
-          ? `<button class="btn btn-primary" onclick="startQuestions('${id}')">Questions</button>
-             <button class="btn btn-secondary" onclick="startDefs('${id}')">Définitions</button>`
-          : `<span style="font-size:0.78rem;color:var(--muted);font-style:italic">À compléter</span>`}
+        ${total>0 ? `
+          <button class="btn btn-primary" onclick="startQuestions('${id}',false)">Questions</button>
+          <button class="btn btn-defs" onclick="startDefs('${id}',false)">Définitions</button>
+          ${qLearning>0 ? `<button class="btn btn-review" onclick="startQuestions('${id}',true)" title="Réviser uniquement les questions en cours d'apprentissage">⏳ Réviser</button>` : ''}
+        ` : `<span style="font-size:0.78rem;color:var(--muted);font-style:italic">À compléter</span>`}
         <button class="btn btn-secondary" onclick="showDetails('${id}')">Détails</button>
       </div>`;
     chaptersDiv.appendChild(card);
   });
 }
 
-/*********************
- * QUESTIONS
- *********************/
-function startQuestions(id){
-  mode='questions';currentChapter=id;questionIndex=0;
-  allQuestions=[...chapters[id].questions];answersLog=[];
-  session={success:0,total:allQuestions.length,last:null};
+/* ═══════════════════════════════════════
+   QUESTIONS SESSION
+═══════════════════════════════════════ */
+function startQuestions(id, onlyLearning){
+  mode='questions'; currentChapter=id; reviewMode=!!onlyLearning;
+  answersLog=[]; isFlipped=false;
+
+  // Load saved statuses
+  const saved=statusStore[id].q;
+  const raw=chapters[id].questions;
+  // Pair each question with its stored status
+  let pairs=raw.map((q,i)=>({q, origIndex:i, status: saved[i]||'unseen'}));
+
+  if(onlyLearning){
+    pairs=pairs.filter(p=>p.status==='learning');
+    if(pairs.length===0){
+      showEmptyLearning(); return;
+    }
+  }
+
+  // Shuffle
+  pairs=shuffle(pairs);
+
+  allQuestions=pairs.map(p=>p.q);
+  // We'll track statuses separately in the session
+  questionStatus=pairs.map(p=>p.status);
+  // origIndexes to write back statuses
+  const origIndexes=pairs.map(p=>p.origIndex);
+  window._origIndexes=origIndexes;
+
+  session={success:0,total:allQuestions.length};
+  questionIndex=0;
   chaptersDiv.style.display='none';
   showQuestion();
+}
+
+function showEmptyLearning(){
+  chaptersDiv.style.display='none';
+  document.getElementById('content').innerHTML=`
+    <div class="empty-state">
+      <div class="icon">✅</div>
+      <h3>Aucune question en cours</h3>
+      <p>Tu n'as pas de questions marquées « en cours d'apprentissage » pour ce chapitre. Lance une session complète pour commencer.</p>
+      <button class="btn btn-primary btn-large" onclick="back()">← Retour</button>
+    </div>`;
 }
 
 function showQuestion(){
   const c=document.getElementById('content');
   c.innerHTML='';
   if(questionIndex>=allQuestions.length){endSession();return;}
-
   const q=allQuestions[questionIndex];
+  c.appendChild(buildProgressTracker());
+  if(q.choices) renderQCM(q,c);
+  else renderFlashcard(q,c);
+}
+
+/* ── Progress tracker ── */
+function buildProgressTracker(){
   const total=allQuestions.length;
-  const progressPct=Math.round((questionIndex/total)*100);
+  const knownCount=questionStatus.filter(s=>s==='known').length;
+  const learningCount=questionStatus.filter(s=>s==='learning').length;
+  const unseenCount=total-knownCount-learningCount;
+  const knownW=Math.round((knownCount/total)*100);
+  const learningW=Math.round((learningCount/total)*100);
 
-  const bar=document.createElement('div');
-  bar.className='progress-bar-wrap';
-  bar.innerHTML=`<div class="progress-bar-fill" style="width:${progressPct}%"></div>`;
-  c.appendChild(bar);
-
-  const card=document.createElement('div');
-  card.className='q-card';
-
-  let html=`<div class="q-counter">Question ${questionIndex+1} / ${total}</div>
-    <h3>${q.q}</h3>`;
-
-  if(q.choices){
-    selectedChoices=[];
-    q.choices.forEach((ch,i)=>{
-      html+=`<button class="qcm-choice" data-index="${i}" onclick="toggleChoice(${i},this)">${ch}</button>`;
-    });
-    html+=`<div class="q-actions">
-      <button id="validateQCMBtn" class="btn btn-primary btn-large" disabled onclick="validateQCM()">Valider</button>
-      <button class="btn btn-secondary btn-large" onclick="skipQuestion()">Passer</button>
-    </div>`;
-  } else {
-    q.expected.forEach((exp,i)=>{
-      html+=`<div class="input-hint">Élément ${i+1}</div>
-        <input class="q-input" placeholder="Votre réponse…" />`;
-    });
-    html+=`<div class="q-actions">
-      <button class="btn btn-primary btn-large" onclick="validateQuestion()">Valider</button>
-      <button class="btn btn-secondary btn-large" onclick="skipQuestion()">Passer</button>
-    </div>`;
+  let dots='';
+  for(let i=0;i<total;i++){
+    const st=i===questionIndex?'current':questionStatus[i];
+    dots+=`<div class="dot ${st}" title="Q${i+1}"></div>`;
   }
 
+  const label=reviewMode?'Révision – en cours':'Progression de la session';
+  const wrap=document.createElement('div');
+  wrap.className='progress-tracker';
+  wrap.innerHTML=`
+    <div class="progress-top">
+      <span class="progress-title">${label}</span>
+      <span class="progress-count">${questionIndex+1}<span style="color:var(--muted);font-weight:400"> / ${total}</span></span>
+    </div>
+    <div class="seg-bar">
+      <div class="seg-known"    style="width:${knownW}%"></div>
+      <div class="seg-learning" style="width:${learningW}%"></div>
+      <div class="seg-unseen"></div>
+    </div>
+    <div class="dot-strip">${dots}</div>
+    <div class="progress-legend">
+      <div class="prog-legend-item"><div class="prog-legend-dot" style="background:var(--known)"></div>${knownCount} maîtrisée${knownCount>1?'s':''}</div>
+      <div class="prog-legend-item"><div class="prog-legend-dot" style="background:var(--learning)"></div>${learningCount} en cours</div>
+      <div class="prog-legend-item"><div class="prog-legend-dot" style="background:rgba(255,255,255,0.18)"></div>${unseenCount} à voir</div>
+    </div>`;
+  return wrap;
+}
+
+/* ── Flashcard with adaptive height ── */
+function renderFlashcard(q, container){
+  isFlipped=false;
+  const answers=q.expected.map(exp=>`<li>${exp.join(' / ')}</li>`).join('');
+
+  const scene=document.createElement('div');
+  scene.className='flashcard-scene';
+
+  // Buttons markup (will live inside the back face)
+  const actionsBtns=`
+    <div class="fc-actions-inner" id="fcActionsInner">
+      <button class="btn btn-learning-action" onclick="event.stopPropagation();markStatus('learning')">⏳&nbsp; En cours</button>
+      <button class="btn btn-known"           onclick="event.stopPropagation();markStatus('known')">✓&nbsp; Je maîtrise</button>
+    </div>`;
+
+  scene.innerHTML=`
+    <div class="flashcard-wrapper" id="fcWrapper">
+      <!-- Sizer: front face -->
+      <div class="fc-sizer fc-sizer-front" id="sizerFront">
+        <div class="fc-label">Flashcard · Question ${questionIndex+1}</div>
+        <div class="fc-question">${q.q}</div>
+        <div class="fc-hint">Clique pour révéler la réponse</div>
+      </div>
+      <!-- Sizer: back face (includes buttons for accurate height) -->
+      <div class="fc-sizer fc-sizer-back" id="sizerBack" style="display:none">
+        <div class="fc-answer-label">Éléments de réponse</div>
+        <ul class="fc-answer-list">${answers}</ul>
+        <div style="display:flex;gap:12px;width:100%;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07)">
+          <div style="flex:1;height:46px;background:rgba(245,158,11,0.12);border-radius:12px;"></div>
+          <div style="flex:1;height:46px;background:rgba(22,163,74,0.15);border-radius:12px;"></div>
+        </div>
+      </div>
+      <!-- Actual flip card -->
+      <div class="flashcard" id="theCard" onclick="flipCard()">
+        <div class="flashcard-face">
+          <div class="fc-label">Flashcard · Question ${questionIndex+1}</div>
+          <div class="fc-question">${q.q}</div>
+          <div class="fc-hint">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+            Clique pour révéler la réponse
+          </div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="fc-answer-label">Éléments de réponse</div>
+          <ul class="fc-answer-list">${answers}</ul>
+          ${actionsBtns}
+        </div>
+      </div>
+    </div>`;
+  container.appendChild(scene);
+
+  // Set wrapper height to the taller of the two faces
+  requestAnimationFrame(()=>{
+    const front=document.getElementById('sizerFront');
+    const wrapper=document.getElementById('fcWrapper');
+    const card=document.getElementById('theCard');
+    if(!front||!wrapper||!card) return;
+
+    const backSizer=document.getElementById('sizerBack');
+    backSizer.style.display='flex';
+    front.style.display='none';
+    const backH=backSizer.offsetHeight;
+    backSizer.style.display='none';
+    front.style.display='flex';
+    const frontH=front.offsetHeight;
+
+    const h=Math.max(frontH, backH, 220);
+    wrapper.style.height=h+'px';
+    card.style.height=h+'px';
+    card.querySelectorAll('.flashcard-face').forEach(f=>f.style.height=h+'px');
+  });
+}
+
+function flipCard(){
+  const card=document.getElementById('theCard');
+  if(!card||isFlipped) return;
+  isFlipped=true;
+  card.classList.add('flipped');
+}
+
+function markStatus(status){
+  // Update in-session status
+  questionStatus[questionIndex]=status;
+  // Write back to persistent store
+  const origIdx=window._origIndexes[questionIndex];
+  if(!statusStore[currentChapter].q[origIdx]) statusStore[currentChapter].q=statusStore[currentChapter].q||[];
+  statusStore[currentChapter].q[origIdx]=status;
+  saveAll();
+
+  const ok=(status==='known');
+  if(ok) session.success=(session.success||0)+1;
+  answersLog.push({question:allQuestions[questionIndex].q, correct:ok, expected:allQuestions[questionIndex].expected});
+  questionIndex++;
+  isFlipped=false;
+  showQuestion();
+}
+
+/* ── QCM ── */
+function renderQCM(q,container){
+  selectedChoices=[];
+  const card=document.createElement('div');
+  card.className='q-card';
+  let html=`<div class="q-counter">QCM · Question ${questionIndex+1} / ${allQuestions.length}</div>
+    <h3>${q.q}</h3>`;
+  q.choices.forEach((ch,i)=>{
+    html+=`<button class="qcm-choice" data-index="${i}" onclick="toggleChoice(${i},this)">${ch}</button>`;
+  });
+  html+=`<div class="q-actions">
+    <button id="validateQCMBtn" class="btn btn-primary btn-large" disabled onclick="validateQCM()">Valider</button>
+    <button class="btn btn-secondary btn-large" onclick="skipQCM()">Passer</button>
+  </div>`;
   card.innerHTML=html;
-  c.appendChild(card);
+  container.appendChild(card);
 }
 
 function toggleChoice(i,btn){
@@ -640,73 +802,70 @@ function toggleChoice(i,btn){
   if(idx>=0){selectedChoices.splice(idx,1);btn.classList.remove('active');}
   else{selectedChoices.push(i);btn.classList.add('active');}
   const vBtn=document.getElementById('validateQCMBtn');
-  if(vBtn)vBtn.disabled=selectedChoices.length===0;
-}
-
-function validateQuestion(){
-  const q=allQuestions[questionIndex];
-  const inputs=[...document.querySelectorAll('#content .q-input')].map(i=>i.value.toLowerCase());
-  let used=Array(q.expected.length).fill(false);let ok=true;
-  inputs.forEach(v=>{
-    let found=false;
-    q.expected.forEach((keys,i)=>{
-      if(!used[i]&&keys.some(k=>v.includes(k))){used[i]=true;found=true;}
-    });
-    if(!found)ok=false;
-  });
-  if(used.some(u=>!u))ok=false;
-  session.success=session.success||0; if(ok)session.success++;
-  answersLog.push({question:q.q,correct:ok,expected:q.expected});
-  session.last=Date.now();updateHeader();
-  questionIndex++;showQuestion();
+  if(vBtn) vBtn.disabled=selectedChoices.length===0;
 }
 
 function validateQCM(){
   const q=allQuestions[questionIndex];
-  const good=q.correct.slice().sort().join(',');
-  const user=selectedChoices.slice().sort().join(',');
-  const ok=good===user;
-  session.success=session.success||0; if(ok)session.success++;
+  const ok=q.correct.slice().sort().join(',')===selectedChoices.slice().sort().join(',');
+  if(ok) session.success=(session.success||0)+1;
+  const newStatus=ok?'known':'learning';
+  questionStatus[questionIndex]=newStatus;
+  const origIdx=window._origIndexes[questionIndex];
+  statusStore[currentChapter].q[origIdx]=newStatus;
+  saveAll();
   answersLog.push({question:q.q,correct:ok,expected:q.correct.map(i=>[q.choices[i]])});
-  session.last=Date.now();updateHeader();
-  questionIndex++;showQuestion();
+  questionIndex++; showQuestion();
 }
 
-function skipQuestion(){
+function skipQCM(){
   const q=allQuestions[questionIndex];
-  answersLog.push({question:q.q,correct:false,expected:q.expected||[]});
-  updateHeader();questionIndex++;showQuestion();
+  questionStatus[questionIndex]='learning';
+  const origIdx=window._origIndexes[questionIndex];
+  statusStore[currentChapter].q[origIdx]='learning';
+  saveAll();
+  answersLog.push({question:q.q,correct:false,expected:q.correct?q.correct.map(i=>[q.choices[i]]):[]});
+  questionIndex++; showQuestion();
 }
 
-/*********************
- * DÉFINITIONS
- *********************/
-function startDefs(id){
-  mode='defs';currentChapter=id;defIndex=0;
-  answersLog=[];session={success:0,total:0,last:null};
-  defQuestions=Object.entries(chapters[id].defs).map(e=>({term:e[0],def:e[1]}));
+/* ═══════════════════════════════════════
+   DÉFINITIONS
+═══════════════════════════════════════ */
+function startDefs(id, onlyLearning){
+  mode='defs'; currentChapter=id;
+  answersLog=[]; session={success:0,total:0};
+
+  const saved=statusStore[id].d||[];
+  const raw=Object.entries(chapters[id].defs).map(([term,def],i)=>({term,def,origIndex:i,status:saved[i]||'unseen'}));
+  let pairs=onlyLearning ? raw.filter(p=>p.status==='learning') : raw;
+  if(onlyLearning && pairs.length===0){ showEmptyLearning(); return; }
+  pairs=shuffle(pairs);
+
+  defQuestions=pairs.map(p=>({term:p.term,def:p.def}));
+  defStatus=pairs.map(p=>p.status);
+  window._origDefIndexes=pairs.map(p=>p.origIndex);
   session.total=defQuestions.length;
+  defIndex=0;
   chaptersDiv.style.display='none';
   showDef();
 }
 
 function showDef(){
-  const c=document.getElementById('content');c.innerHTML='';
+  const c=document.getElementById('content'); c.innerHTML='';
   if(defIndex>=defQuestions.length){endSession();return;}
-
   const q=defQuestions[defIndex];
   const total=defQuestions.length;
-  const progressPct=Math.round((defIndex/total)*100);
+  const pct=Math.round((defIndex/total)*100);
 
   const bar=document.createElement('div');
-  bar.className='progress-bar-wrap';
-  bar.innerHTML=`<div class="progress-bar-fill" style="width:${progressPct}%"></div>`;
+  bar.style.cssText='max-width:680px;margin:0 auto 20px;background:rgba(255,255,255,0.06);border-radius:999px;height:6px;';
+  bar.innerHTML=`<div style="width:${pct}%;height:6px;border-radius:999px;background:var(--accent);transition:width .4s ease;"></div>`;
   c.appendChild(bar);
 
+  // Fixed sorted term list — same position every time
+  const terms=Object.keys(chapters[currentChapter].defs).slice().sort((a,b)=>a.localeCompare(b,'fr'));
   const card=document.createElement('div');
   card.className='q-card';
-
-  const terms=Object.keys(chapters[currentChapter].defs);
   let html=`<div class="q-counter">Définition ${defIndex+1} / ${total}</div>
     <h3>À quel terme correspond cette définition ?</h3>
     <div class="def-definition">${q.def}</div>
@@ -722,36 +881,40 @@ function showDef(){
 function validateDef(term){
   const q=defQuestions[defIndex];
   const ok=term===q.term;
-  session.success=session.success||0; if(ok)session.success++;
-  answersLog.push({question:q.term,correct:ok,expected:[[q.term+" : "+q.def]]});
-  session.last=Date.now();updateHeader();
-  defIndex++;showDef();
+  if(ok) session.success=(session.success||0)+1;
+  const newStatus=ok?'known':'learning';
+  defStatus[defIndex]=newStatus;
+  const origIdx=window._origDefIndexes[defIndex];
+  if(!statusStore[currentChapter].d) statusStore[currentChapter].d=[];
+  statusStore[currentChapter].d[origIdx]=newStatus;
+  saveAll();
+  answersLog.push({question:q.term,correct:ok,expected:[[q.term+' : '+q.def]]});
+  defIndex++; showDef();
 }
 
-/*********************
- * FIN DE SESSION
- *********************/
+/* ═══════════════════════════════════════
+   FIN DE SESSION
+═══════════════════════════════════════ */
 function endSession(){
   const total=session.total;
   const succ=session.success||0;
   if(succ>records[currentChapter].best){
     records[currentChapter].best=succ;
-    localStorage.setItem('records',JSON.stringify(records));
+    saveAll();
   }
   renderChapters();
-
   const percent=total?Math.round((succ/total)*100):0;
+  const emoji=percent>=80?'🏆':percent>=50?'✨':'💪';
   const c=document.getElementById('content');
   c.innerHTML='';
 
   const header=document.createElement('div');
   header.className='recap-header';
-  const emoji=percent>=80?'🏆':percent>=50?'✨':'💪';
   header.innerHTML=`
     <div style="font-size:2.5rem">${emoji}</div>
     <h2>Session terminée</h2>
     <div class="score-display">${succ}<span style="font-size:1.5rem;color:var(--muted)"> / ${total}</span></div>
-    <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">${percent}% de réussite</div>`;
+    <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">${percent}% de maîtrise</div>`;
   c.appendChild(header);
 
   answersLog.forEach((a,idx)=>{
@@ -769,18 +932,9 @@ function endSession(){
   const btn=document.createElement('button');
   btn.className='btn btn-primary btn-large';
   btn.style.cssText='display:block;margin:28px auto 0;max-width:680px;width:100%;';
-  btn.textContent='← Retour à l\'accueil';
+  btn.textContent="← Retour à l'accueil";
   btn.onclick=back;
   c.appendChild(btn);
-}
-
-function updateHeader(){
-  const succ=session.success||0;
-  const tot=session.total||0;
-  document.getElementById('scoreHeader').textContent=`${succ} / ${tot}`;
-  if(session.last){
-    document.getElementById('lastQuiz').textContent='Session en cours – '+new Date(session.last).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  }
 }
 
 function back(){
@@ -794,24 +948,15 @@ function showDetails(id){
   const c=chapters[id];
   document.getElementById('content').innerHTML=`
     <div class="details-card">
-      <span class="chapter-chip ${c.type}" style="background:var(--chip-bg,rgba(255,255,255,0.08));color:var(--muted);margin-bottom:12px;display:inline-block">${c.number}</span>
+      <span style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.08);color:var(--muted);display:inline-block;margin-bottom:12px">${c.number}</span>
       <h2>${c.title}</h2>
-      <p style="margin-top:12px">${c.details||'Aucun détail disponible.'}</p>
+      <p style="margin-top:12px;color:var(--muted);line-height:1.65">${c.details||'Aucun détail disponible.'}</p>
       <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="back()">← Retour</button>
-        ${c.questions.length>0?`<button class="btn btn-secondary" onclick="startQuestions('${id}')">Commencer les questions</button>`:''}
+        ${c.questions.length>0?`<button class="btn btn-secondary" onclick="startQuestions('${id}',false)">Commencer</button>`:''}
       </div>
     </div>`;
 }
-
-// Self-tests
-console.assert(typeof toggleChoice==='function','toggleChoice manquant');
-console.assert(typeof validateQCM==='function','validateQCM manquant');
-console.assert(chapters.engagement.questions.length>0,'Chapitre 1 vide');
-console.assert(chapters.croissance.questions.length>0,'Chapitre 2 vide');
-console.assert(chapters.structure.questions.length>0,'Chapitre 3 vide');
-console.assert(chapters.mobilite.questions.length>0,'Chapitre 5 vide');
-console.assert(Object.keys(chapters).length>=9,'Chapitres insuffisants');
 </script>
 </body>
 </html>
