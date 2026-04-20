@@ -129,9 +129,16 @@ body::before {
 }
 .btn-learning-action:hover { background:rgba(245,158,11,0.24); transform:translateY(-1px); }
 
+/* Hide hero, legend, chapter grid when a session is active */
+body.in-session .hero,
+body.in-session .legend,
+body.in-session #chapters {
+  display: none !important;
+}
+
 /* ── PROGRESS TRACKER ── */
 .progress-tracker {
-  max-width: 680px; margin: 0 auto 4px;
+  max-width: 680px; margin: 0 auto 0;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 18px; padding: 14px 20px;
   animation: fadeUp 0.3s ease both;
@@ -203,8 +210,8 @@ body::before {
   background: var(--surface2); border-color: rgba(255,255,255,0.1);
   justify-content: flex-start; align-items: flex-start; text-align: left;
 }
-/* Sizer divs: not absolutely positioned, used purely to push height */
-.fc-sizer { visibility: hidden; padding: 40px; pointer-events: none; }
+/* Sizer divs: position absolute so they don't take layout space */
+.fc-sizer { visibility: hidden; padding: 40px; pointer-events: none; position: absolute; top: 0; left: 0; right: 0; }
 .fc-sizer-front { display:flex; flex-direction:column; align-items:center; text-align:center; }
 .fc-sizer-back  { display:flex; flex-direction:column; align-items:flex-start; text-align:left; }
 
@@ -867,6 +874,7 @@ function startQuestions(id, onlyLearning){
   session={success:0,total:allQuestions.length};
   questionIndex=0;
   chaptersDiv.style.display='none';
+  document.body.classList.add('in-session');
   showQuestion();
 }
 
@@ -1146,6 +1154,7 @@ function startDefs(id, onlyLearning){
   session.total=defQuestions.length;
   defIndex=0;
   chaptersDiv.style.display='none';
+  document.body.classList.add('in-session');
   showDef();
 }
 
@@ -1212,6 +1221,7 @@ function endSession(){
     records[currentChapter].best=succ;
     saveAll();
   }
+  document.body.classList.remove('in-session');
   renderChapters();
   const percent=total?Math.round((succ/total)*100):0;
   const emoji=percent>=80?'🏆':percent>=50?'✨':'💪';
@@ -1249,6 +1259,7 @@ function endSession(){
 
 function back(){
   document.getElementById('content').innerHTML='';
+  document.body.classList.remove('in-session');
   chaptersDiv.style.display='grid';
   renderChapters();
 }
