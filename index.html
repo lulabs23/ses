@@ -30,26 +30,26 @@ body::before {
 }
 #app {
   position: relative; z-index: 1;
-  max-width: 980px; margin: 0 auto; padding: 40px 24px 80px;
+  max-width: 980px; margin: 0 auto; padding: 10px 24px 80px;
 }
 
 /* ── HERO ── */
-.hero { text-align: center; margin-bottom: 52px; }
+.hero { text-align: center; margin-bottom: 6px; }
 .hero-eyebrow {
   display: inline-block; font-size: 0.72rem; letter-spacing: 0.18em;
   text-transform: uppercase; font-weight: 600; color: var(--accent);
-  border: 1px solid rgba(240,192,64,0.3); padding: 5px 14px; border-radius: 999px; margin-bottom: 18px;
+  border: 1px solid rgba(240,192,64,0.3); padding: 4px 12px; border-radius: 999px; margin-bottom: 6px;
 }
 .hero h1 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 14px;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; line-height: 1.1; margin-bottom: 4px;
   background: linear-gradient(135deg, #f0eef8 30%, #c4bfdb);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.hero p { font-size: 1rem; color: var(--muted); font-weight: 300; }
+.hero p { font-size: 0.88rem; color: var(--muted); font-weight: 300; }
 
 /* ── LEGEND ── */
-.legend { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+.legend { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
 .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--muted); }
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 .legend-dot.socio { background: var(--socio); }
@@ -131,11 +131,15 @@ body::before {
 
 /* ── PROGRESS TRACKER ── */
 .progress-tracker {
-  max-width: 680px; margin: 0 auto 24px;
+  max-width: 680px; margin: 0 auto 4px;
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 18px; padding: 18px 22px; animation: fadeUp 0.3s ease both;
+  border-radius: 18px; padding: 14px 20px;
+  animation: fadeUp 0.3s ease both;
 }
-.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.progress-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
 .progress-title { font-size:0.72rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
 .progress-count { font-family:'DM Mono',monospace; font-size:0.88rem; color:var(--accent); }
 .seg-bar {
@@ -179,9 +183,14 @@ body::before {
 }
 .flashcard.flipped { transform: rotateX(180deg); cursor: default; }
 
-/* Faces use padding-based natural height; we sync both via JS */
+.fc-back-question {
+  font-size: 0.8rem; color: var(--muted); font-style: italic;
+  margin-bottom: 14px; padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  line-height: 1.4; width: 100%;
+}
+/* Flashcard face: full rounded corners */
 .flashcard-face {
-  /* front: absolute so flip works, back: also absolute */
   position: absolute; inset: 0;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 24px; padding: 40px;
@@ -271,6 +280,16 @@ body::before {
   font-size:1rem; font-style:italic; color:#c4bfdb; margin-bottom:22px; line-height:1.6;
 }
 
+/* ── BACK HOME (inside tracker header) ── */
+.session-back-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600;
+  color: var(--muted); background: transparent; border: none; padding: 0;
+  cursor: pointer; transition: color 0.15s ease; letter-spacing: 0.02em;
+}
+.session-back-btn:hover { color: var(--text); }
+.session-nav { display: none; } /* hidden — back btn lives inside tracker now */
+
 /* ── EMPTY STATE ── */
 .empty-state {
   max-width:480px; margin:60px auto; text-align:center;
@@ -338,177 +357,404 @@ const chapters={
   engagement:{
     number:"Chapitre 1",type:"socio",
     title:"Comment expliquer l'engagement politique dans les sociétés démocratiques ?",
-    details:"Objectifs d'apprentissage à compléter.",
+    details:"Comprendre les formes, les raisons et les transformations de l'engagement politique.",
     questions:[
-      {q:"Présente les quatre formes de l'engagement politique.",expected:[["vote"],["engagement","associatif"],["militant","militantisme"],["consommation","engagée"]]},
-      {q:"Explique le paradoxe de l'action collective.",expected:[["passagers","clandestins"],["absence","mobilisation"]]},
-      {q:"Présente les trois raisons de l'engagement politique des individus.",expected:[["incitations","sélectives"],["rétributions","symboliques"],["structure","opportunités","politiques"]]},
-      {q:"Présente les cinq variables sociodémographiques qui influencent l'engagement politique.",expected:[["csp"],["diplôme"],["âge"],["génération"],["sexe"]]},
-      {q:"Explique l'évolution de l'action collective (avant 1970).",expected:[["centrée","travail"],["syndicats","ouvriers"],["partis","politiques"],["grèves","manifestations"],["vote"]]},
-      {q:"Explique la diversité de l'action collective.",expected:[["objets"],["acteurs"],["répertoires"]]},
-      {q:"Présente les trois objets de l'action collective.",expected:[["conflits","travail"],["luttes","minoritaires"],["nouveaux","enjeux"]]},
-      {q:"Présente les quatre acteurs de l'action collective.",expected:[["partis","politiques"],["syndicats"],["associations"],["groupements","personnes"]]},
-      {q:"Présente la diversité des répertoires de l'action collective.",expected:[["manifestations"],["grèves"],["actions","choc"],["pétitions"],["vote"],["non-respect","loi"]]}
+      {q:"Présente les quatre formes de l'engagement politique.",expected:[["le vote"],["l'engagement associatif"],["le militantisme"],["la consommation engagée"]]},
+      {q:"Distingue les formes conventionnelles et non conventionnelles de l'engagement politique.",expected:[["Conventionnelles : formes instituées comme le vote et les meetings politiques"],["Non-conventionnelles : actions protestataires légales ou illégales comme les grèves ou les blocages"]]},
+      {q:"Explique le paradoxe de l'action collective.",expected:[["Tous les individus ont intérêt à se mobiliser, mais chacun préfère profiter des efforts des autres (passagers clandestins), ce qui aboutit à une absence de mobilisation"]]},
+      {q:"Explique le calcul coût-avantage qui conduit au comportement de passager clandestin.",expected:[["Les coûts de l'engagement sont certains (financiers, danger, temps) alors que les avantages sont incertains (succès de l'action), ce qui incite les individus à ne pas participer"]]},
+      {q:"Présente les trois raisons qui poussent les individus à s'engager malgré le paradoxe.",expected:[["les incitations sélectives : récompenses matérielles ou sanctions pour les participants"],["les rétributions symboliques : récompenses non matérielles comme le sentiment d'utilité ou les rencontres"],["la structure des opportunités politiques : contexte politique et juridique favorable"]]},
+      {q:"Présente les quatre éléments de la structure des opportunités politiques.",expected:[["le degré d'ouverture du système politique"],["le degré de stabilité du régime politique"],["le relais dont dispose le groupe mobilisé au sein du pouvoir"],["la capacité du gouvernement à répondre à l'action collective"]]},
+      {q:"Comment la CSP et le diplôme influencent-ils l'engagement politique ?",expected:[["Les cadres et les plus diplômés sont les plus engagés politiquement, car ils disposent de davantage de capital économique, culturel et social"]]},
+      {q:"Distingue l'effet d'âge et l'effet de génération sur l'engagement politique.",expected:[["L'effet d'âge est lié à la position dans le cycle de vie : les jeunes sont plus protestataires"],["L'effet de génération est lié aux événements vécus en commun : méfiance envers les représentants, usage des réseaux sociaux, engagement de court terme"]]},
+      {q:"Présente les différences d'engagement politique entre hommes et femmes.",expected:[["Il n'y a pas de différence au niveau du vote mais les hommes sont plus présents dans les actions protestataires et les postes à responsabilité"],["Les hommes et les femmes ne s'engagent pas pour les mêmes thèmes de revendications"]]},
+      {q:"Présente les trois objets de l'action collective.",expected:[["les conflits liés au travail (syndicats contre direction)"],["les luttes minoritaires (droits des minorités comme #MeToo)"],["les nouveaux enjeux de mobilisation (environnement, pauvreté, politique)"]]},
+      {q:"Explique l'évolution des objets de l'action collective selon le développement économique.",expected:[["Dans les pays en développement, les revendications portent sur des valeurs matérialistes (salaire, logement)"],["Dans les pays développés, elles portent sur des valeurs post-matérialistes (droits, environnement)"]]},
+      {q:"Présente les quatre acteurs de l'action collective.",expected:[["les adhérents aux partis politiques"],["les membres des syndicats"],["les membres des associations"],["les groupements de personnes (Gilets Jaunes, BLM, #MeToo)"]]},
+      {q:"Présente l'évolution des acteurs de l'action collective.",expected:[["Il y a une baisse de l'importance des acteurs traditionnels (partis politiques et syndicats) et une hausse des groupements de personnes"]]},
+      {q:"Présente les répertoires d'action collective et leur diversité.",expected:[["les manifestations et grèves"],["les actions choc et médiatiques"],["le non-respect de la loi avec ou sans violence"],["les pétitions et le vote"]]},
     ],
     defs:{
-      "Engagement politique":"Ensemble des actions visant à influencer les décisions politiques.",
-      "Action collective":"Action menée par plusieurs individus pour défendre un intérêt commun.",
-      "Passagers clandestins":"Individus qui bénéficient d'une action collective sans y participer."
+      "Engagement politique":"Ensemble des actions visant à influencer la démocratie au niveau local, national ou mondial.",
+      "Formes conventionnelles":"Formes d'engagement instituées comme le vote, les meetings politiques.",
+      "Formes non conventionnelles":"Actions protestataires légales ou illégales comme les grèves ou les blocages.",
+      "Consommation engagée":"Utilisation de sa consommation pour mettre en avant ses convictions, en boycottant certains produits ou en en achetant d'autres volontairement.",
+      "Militantisme":"Lutte active pour défendre une cause politique ou sociale.",
+      "Action collective":"Action commune d'un groupe d'individus partageant un objectif.",
+      "Paradoxe de l'action collective":"Situation où tous les individus ont intérêt à se mobiliser, mais chacun préfère profiter des efforts des autres, aboutissant à une absence de mobilisation.",
+      "Passagers clandestins":"Individus qui profitent des bénéfices d'une action collective sans y participer.",
+      "Incitations sélectives":"Récompenses matérielles accordées aux participants d'une action collective ou sanctions pour les non-participants.",
+      "Rétributions symboliques":"Récompenses non matérielles à la participation : sentiment d'utilité, rencontres, défense de ses valeurs.",
+      "Structure des opportunités politiques":"Contexte politique et juridique d'un pays qui influence la facilité de mener une action collective.",
+      "Répertoire d'action collective":"Ensemble des moyens d'action disponibles pour les contestataires à chaque époque et en chaque lieu.",
+      "Objets de l'action collective":"Thèmes des revendications portées par une action collective.",
+      "Valeurs matérialistes":"Valeurs centrées sur les besoins matériels (salaire, logement), présentes dans les pays en développement.",
+      "Valeurs post-matérialistes":"Valeurs centrées sur la qualité de vie et les droits individuels, présentes dans les pays développés."
     }
   },
   croissance:{
     number:"Chapitre 2",type:"eco",
     title:"Quels sont les sources et les défis de la croissance économique ?",
-    details:"Comprendre les sources et les limites de la croissance.",
+    details:"Comprendre les sources de la croissance et ses défis écologiques et sociaux.",
     questions:[
-      {q:"Présente le processus historique de la croissance économique.",expected:[["avant","xviii"],["révolution","industrielle"],["1945","1970"],["stagnation","crises"]]},
-      {q:"Comment se définit la croissance économique ?",expected:[["augmentation","durable"],["production"],["biens","services"]]},
-      {q:"Par quel indicateur mesure-t-on la croissance économique ?",expected:[["pib"],["valeurs","ajoutées"]]},
-      {q:"Qu'est-ce que le taux de croissance économique ?",expected:[["variation"],["pourcentage"],["pib"]]},
-      {q:"Quels sont les deux facteurs de production ?",expected:[["travail"],["capital"]]},
-      {q:"Quelles sont les deux sources de la croissance économique ?",expected:[["accumulation","facteurs"],["productivité","globale","facteurs"]]},
-      {q:"À quoi correspond la croissance extensive ?",expected:[["augmentation"],["quantité","facteurs"]]},
-      {q:"À quoi correspond la croissance intensive ?",expected:[["efficacité"],["facteurs","production"]]},
-      {q:"Comment le progrès technique crée-t-il des gains de productivité ?",expected:[["innovation"],["amélioration","production"],["pgf"]]},
-      {q:"Pourquoi le progrès technique est-il dit endogène ?",expected:[["investissements"],["entreprises"],["etat"]]},
-      {q:"En quoi les investissements rendent-ils la croissance auto-entretenue ?",expected:[["rendements","croissants"],["innovation"],["richesse"]]},
-      {q:"Quel est le rôle des institutions dans la croissance économique ?",expected:[["règles"],["confiance"],["échanges"]]},
-      {q:"Pourquoi les droits de propriété incitent-ils à investir et innover ?",expected:[["sécurité"],["brevets"],["investissements"]]},
-      {q:"Présente le processus de destruction créatrice.",expected:[["création"],["nouveaux","produits"],["destruction"],["obsolète"]]},
-      {q:"Quel est l'impact du progrès technique sur les inégalités de revenus ?",expected:[["qualifiés"],["salaires","élevés"],["inégalités"]]},
-      {q:"Quelles sont les trois principales limites écologiques de la croissance soutenable ?",expected:[["épuisement","ressources"],["pollution"],["réchauffement","climatique"]]},
-      {q:"Comment l'innovation peut-elle permettre une croissance soutenable ?",expected:[["énergies","renouvelables"],["réduction","pollution"],["progrès","technique"]]}
+      {q:"Présente le processus historique de la croissance économique en six étapes.",expected:[["avant le XVIIIe siècle : pas de croissance (famines, maladies, guerres)"],["1820-1870 : décollage de la croissance (révolution industrielle)"],["1870-1913 : élargissement à plusieurs pays"],["1913-1945 : ralentissement (guerres)"],["1945-1970 : forte accélération"],["1970-2025 : stagnation (crises, chômage)"]]},
+      {q:"Comment mesure-t-on la croissance économique et comment calcule-t-on le taux de croissance ?",expected:[["La croissance est mesurée par le PIB, somme des valeurs ajoutées dans un pays"],["Le taux de croissance correspond à la variation en pourcentage du PIB entre deux dates"]]},
+      {q:"Quels sont les deux facteurs de production ?",expected:[["le facteur travail : nombre de travailleurs et heures travaillées"],["le facteur capital : machines, bâtiments, outils"]]},
+      {q:"Quelles sont les deux sources de la croissance économique ?",expected:[["l'accumulation des facteurs de production (croissance extensive : augmenter la quantité des facteurs)"],["l'accroissement de la PGF (croissance intensive : augmenter l'efficacité des facteurs)"]]},
+      {q:"Explique pourquoi la croissance extensive a des limites selon la loi de Ricardo.",expected:[["La loi des rendements décroissants de Ricardo montre que la production stagne si on augmente un seul facteur de production, ce qui empêche une croissance extensive indéfinie"]]},
+      {q:"Comment le progrès technique permet-il des gains de productivité ?",expected:[["Une invention devient une innovation quand elle est utilisée dans le processus de production"],["L'innovation transforme le processus de production et améliore la PGF, permettant de produire davantage sans augmenter les facteurs"]]},
+      {q:"Pourquoi le progrès technique est-il dit endogène ?",expected:[["Le progrès technique est lié aux investissements des agents économiques dans quatre domaines : capital physique, recherche et développement, capital humain (éducation, santé) et infrastructures publiques"]]},
+      {q:"Explique pourquoi la croissance économique est un processus auto-entretenu.",expected:[["Seuls les pays riches disposent des ressources pour investir dans les sources de croissance, ce qui leur permet de s'enrichir encore davantage grâce aux rendements croissants de l'innovation"]]},
+      {q:"Quel est le rôle des institutions dans la croissance économique ?",expected:[["Les institutions représentent les règles formelles et informelles qui encadrent les échanges, elles apportent de la confiance et favorisent les échanges"],["Plus les institutions sont de qualité, plus la richesse est importante"]]},
+      {q:"Explique les deux incitations créées par les droits de propriété.",expected:[["Incitation à innover : les agents n'ont plus peur de se faire voler grâce aux droits de propriété et aux brevets"],["Incitation à investir : la sécurité accordée par les institutions favorise les investissements"]]},
+      {q:"Présente le processus de destruction créatrice.",expected:[["L'innovation crée de nouveaux produits, emplois et entreprises"],["Elle détruit simultanément les anciens produits, entreprises et emplois devenus obsolètes (exemple : streaming vs cinéma et DVD)"]]},
+      {q:"Présente les deux effets du progrès technique sur les inégalités de revenus.",expected:[["Les entreprises innovantes versent des salaires plus élevés aux salariés qualifiés, créant des inégalités de revenus"],["Le progrès technique a un effet biaisé : il profite surtout aux qualifiés, crée des emplois qualifiés et détruit des emplois routiniers, provoquant une polarisation de l'emploi"]]},
+      {q:"Présente les trois limites écologiques à la croissance soutenable.",expected:[["l'épuisement des ressources naturelles (empreinte écologique, jour de dépassement)"],["l'accélération de la pollution (air, sol, eau)"],["l'accélération du réchauffement climatique (dérèglements, catastrophes naturelles)"]]},
+      {q:"Distingue soutenabilité faible et soutenabilité forte.",expected:[["Soutenabilité faible : on peut remplacer le capital naturel par le progrès technique, donc la croissance est soutenable"],["Soutenabilité forte : le capital naturel ne peut pas être remplacé, il faut donc le préserver"]]},
+      {q:"Comment le progrès technique peut-il permettre une croissance soutenable ?",expected:[["L'innovation peut solutionner l'épuisement des ressources par les énergies renouvelables, réduire la pollution par des transports moins polluants et contenir le réchauffement climatique par des innovations de captage du CO2"]]},
     ],
     defs:{
-      "Croissance économique":"Augmentation durable de la production de biens et de services.",
-      "PIB":"Somme des valeurs ajoutées produites dans un pays.",
-      "Taux de croissance économique":"Variation en pourcentage du PIB.",
-      "Facteurs de production":"Travail et capital utilisés pour produire.",
-      "Croissance extensive":"Croissance par augmentation de la quantité de facteurs.",
-      "Croissance intensive":"Croissance par amélioration de l'efficacité des facteurs.",
-      "Productivité globale des facteurs":"Efficacité combinée du travail et du capital.",
-      "Progrès technique":"Amélioration des techniques de production.",
-      "Gains de productivité":"Production supplémentaire sans augmenter les facteurs.",
-      "Innovation":"Application d'une invention à la production.",
-      "Endogène":"Lié au fonctionnement interne de l'économie.",
-      "Institution":"Règles formelles et informelles encadrant les échanges.",
-      "Droits de propriété":"Droits d'utiliser, modifier, vendre un bien.",
-      "Croissance soutenable":"Croissance respectant les générations futures.",
-      "Limites écologiques":"Contraintes environnementales à la croissance."
+      "Croissance économique":"Augmentation durable de la production de biens et de services dans un pays.",
+      "PIB":"Somme des valeurs ajoutées produites dans un pays, indicateur de la croissance économique.",
+      "Taux de croissance économique":"Variation en pourcentage du PIB entre deux dates.",
+      "Facteurs de production":"Éléments nécessaires à la production : le travail (travailleurs, heures) et le capital (machines, bâtiments).",
+      "Croissance extensive":"Croissance obtenue par l'augmentation de la quantité des facteurs de production.",
+      "Croissance intensive":"Croissance obtenue par l'amélioration de l'efficacité des facteurs de production grâce au progrès technique.",
+      "Productivité globale des facteurs (PGF)":"Efficacité combinée du travail et du capital dans le processus de production.",
+      "Gains de productivité":"Capacité à produire davantage sans augmenter la quantité des facteurs, grâce au progrès technique.",
+      "Invention":"Idée ou découverte scientifique (ex : un algorithme).",
+      "Innovation":"Utilisation d'une invention dans le processus de production (de produit ou de procédé).",
+      "Progrès technique":"Amélioration des technologies et des conditions de production résultant de l'innovation.",
+      "Progrès technique endogène":"Progrès technique issu des investissements des agents économiques en capital physique, R&D, capital humain et infrastructures.",
+      "Rendements croissants":"Situation où l'innovation génère des bénéfices qui permettent d'innover encore davantage, auto-entretenant la croissance.",
+      "Institution":"Ensemble des règles formelles et informelles qui encadrent les interactions entre individus et les échanges sur un marché.",
+      "Droits de propriété":"Reconnaissance accordée à un individu qui possède un bien : droit de l'utiliser, le modifier, le vendre ou le louer.",
+      "Destruction créatrice":"Processus par lequel l'innovation crée de nouveaux produits et emplois tout en détruisant les anciens devenus obsolètes.",
+      "Croissance soutenable":"Croissance qui permet de satisfaire les besoins du présent sans compromettre la capacité des générations futures à satisfaire les leurs.",
+      "Soutenabilité faible":"Conception selon laquelle le capital naturel peut être remplacé par le progrès technique.",
+      "Soutenabilité forte":"Conception selon laquelle le capital naturel ne peut pas être remplacé et doit être préservé.",
+      "Empreinte écologique":"Ressources naturelles nécessaires pour satisfaire les besoins de l'homme."
     }
   },
   structure:{
     number:"Chapitre 3",type:"socio",
     title:"Comment est structurée la société française actuelle ?",
-    details:"Analyser la structuration et la hiérarchisation de l'espace social.",
+    details:"Analyser la structuration de l'espace social, les évolutions socioprofessionnelles et le débat sur les classes sociales.",
     questions:[
-      {q:"Distingue la structuration et la hiérarchisation de l'espace social.",expected:[["structuration"],["hiérarchisation"],["classement"],["inégalités"]]},
-      {q:"Présente les sept facteurs qui permettent d'analyser l'espace social.",expected:[["revenu"],["diplôme"],["profession"],["âge"],["sexe"],["ménage"],["lieu","résidence"]]},
-      {q:"Explique les quatre évolutions de la structure socioprofessionnelle française.",expected:[["salarisation"],["tertiairisation"],["qualification"],["féminisation"]]},
-      {q:"Présente la théorie des classes sociales selon Karl Marx.",expected:[["classe","en","soi"],["classe","pour","soi"],["lutte","classes"]]},
-      {q:"Présente la théorie de la stratification sociale de Max Weber.",expected:[["économique"],["social"],["politique"]]},
-      {q:"Explique les différences entre les visions de Marx et Weber.",expected:[["monodimensionnelle"],["multidimensionnelle"]]},
-      {q:"Quels arguments remettent en cause la pertinence des classes sociales ?",expected:[["moyennisation"],["individualisation"],["intra-classes"]]},
-      {q:"Explique en quoi les classes sociales n'ont pas totalement disparu.",expected:[["inter-classes"],["élites"],["classes","populaires"]]},
-      {q:"Explique la différence entre distance inter-classes et intra-classes.",expected:[["entre"],["au","sein"]]}
+      {q:"Distingue la structuration et la hiérarchisation de l'espace social.",expected:[["La structuration consiste à regrouper des individus qui ont des ressemblances selon un critère commun"],["La hiérarchisation consiste à classer ces groupes selon une position supérieure ou inférieure"]]},
+      {q:"Présente les trois facteurs socio-économiques de l'espace social.",expected:[["la catégorie socioprofessionnelle : regroupe selon le métier, la qualification, le statut"],["le revenu : rémunération du travail et du capital qui influence le niveau de vie"],["le diplôme : reconnaissance de la qualification qui influence le chômage et les conditions d'emploi"]]},
+      {q:"Présente les quatre facteurs socio-démographiques de l'espace social.",expected:[["la composition du ménage (type de couple, présence d'enfants)"],["la position dans le cycle de vie (enfance, jeunesse, vie adulte, retraite)"],["le sexe (rôles masculins et féminins, plafond de verre)"],["le lieu de résidence (campagne vs zones urbaines, accès aux services)"]]},
+      {q:"Présente les quatre évolutions de la structure socioprofessionnelle française.",expected:[["la salarisation : augmentation de la part des salariés et diminution des indépendants"],["la tertiarisation : augmentation du secteur des services au détriment des secteurs primaire et secondaire"],["la qualification : hausse du niveau de diplôme et des compétences requises"],["la féminisation : augmentation de la part des femmes dans l'emploi"]]},
+      {q:"Explique les raisons de la salarisation.",expected:[["La sécurité du statut de salarié (santé, salaire garanti, retraite) et le développement de la grande distribution qui a détruit les petits commerces"]]},
+      {q:"Explique les raisons de la tertiarisation.",expected:[["Le développement économique a augmenté le pouvoir d'achat et la consommation de loisirs, le vieillissement de la population a accru les besoins de santé, et le progrès technique a détruit des emplois ouvriers et agricoles"]]},
+      {q:"Présente les deux raisons de la féminisation de l'emploi.",expected:[["L'émancipation des femmes par rapport à leur rôle traditionnel de mère grâce à la contraception"],["La tertiarisation de la société qui a ouvert aux femmes des emplois dans le secteur social et des services"]]},
+      {q:"Présente la théorie des classes sociales selon Marx.",expected:[["La classe en soi : caractéristiques économiques communes (possession des facteurs de production)"],["La classe pour soi : conscience d'appartenir à cette classe et d'être exploité"],["La lutte des classes : mobilisation pour défendre les intérêts communs, devant mener au communisme"]]},
+      {q:"Présente la théorie de la stratification sociale de Max Weber.",expected:[["Weber prend en compte trois dimensions : économique (richesse → classe sociale), politique (pouvoir → parti), sociale (prestige → groupe de statut)"]]},
+      {q:"Explique la principale différence entre Marx et Weber.",expected:[["Marx analyse la société selon une seule dimension économique, Weber adopte une vision multidimensionnelle avec trois critères : économique, politique et social"]]},
+      {q:"Présente les trois capitaux selon Bourdieu et les trois classes sociales qui en découlent.",expected:[["Les trois capitaux : culturel (diplômes, connaissances), économique (richesse) et social (réseau)"],["Les trois classes : dominante (aisée), moyenne et dominée (populaire)"]]},
+      {q:"Présente les trois arguments qui remettent en cause la pertinence des classes sociales.",expected:[["La moyennisation : de plus en plus d'individus appartiennent à la classe moyenne depuis les années 60-70"],["La hausse des distances intra-classes : les écarts au sein d'un même groupe augmentent"],["L'affaiblissement de l'identification subjective : les individus s'identifient moins à leur profession en raison de l'individualisation"]]},
+      {q:"Explique pourquoi les classes sociales n'ont pas totalement disparu.",expected:[["La hausse des distances inter-classes : les inégalités économiques augmentent depuis 40 ans au profit des très hauts revenus"],["Le renforcement des élites (top 0,01%, très haute bourgeoisie avec entre-soi fort)"],["L'émergence d'une nouvelle classe populaire précaire (ouvriers et employés en CDD, chômage, faibles diplômes)"]]},
+      {q:"Explique l'individualisation et son effet sur les classes sociales.",expected:[["L'individualisation est un processus où l'individu devient plus autonome et indépendant des groupes auxquels il appartient, ce qui affaiblit l'identité collective et l'appartenance à une classe sociale"]]},
     ],
     defs:{
-      "Espace social":"Représentation de la société à partir des positions sociales.",
-      "Structuration":"Regroupement des individus selon des critères communs.",
-      "Hiérarchisation":"Classement des groupes sociaux selon des inégalités.",
-      "Catégorie socioprofessionnelle":"Classement statistique des professions.",
-      "Structure socioprofessionnelle":"Répartition des actifs selon les CSP.",
-      "Salarisation":"Hausse de la part des salariés.",
-      "Tertiarisation":"Hausse du secteur des services.",
-      "Qualification":"Niveau de compétences ou de diplôme.",
+      "Espace social":"Description de la société basée sur les points communs et les différences entre les individus et les groupes.",
+      "Structuration":"Regroupement d'individus dans l'espace social qui ont des ressemblances selon un critère commun.",
+      "Hiérarchisation":"Classement des groupes dans l'espace social selon une position supérieure ou inférieure.",
+      "Catégorie socioprofessionnelle (CSP)":"Classement des individus selon leur métier, qualification, position hiérarchique et statut (6 CSP : ouvriers, employés, CPIS, PI, ACCE, agriculteurs).",
+      "Structure socioprofessionnelle":"Répartition des actifs dans les différentes CSP.",
+      "Salarisation":"Augmentation de la part des salariés et diminution des indépendants.",
+      "Tertiarisation":"Augmentation de la part du secteur tertiaire (services) et baisse des secteurs primaire et secondaire.",
+      "Qualification":"Hausse du niveau de diplôme des individus et des compétences nécessaires pour occuper un emploi.",
       "Féminisation":"Augmentation de la part des femmes dans l'emploi.",
-      "Classes sociales":"Groupes hiérarchisés partageant des caractéristiques communes.",
-      "Stratification sociale":"Hiérarchie sociale multidimensionnelle.",
-      "Distance inter-classes":"Écarts entre groupes sociaux.",
-      "Distance intra-classes":"Écarts au sein d'un même groupe.",
-      "Individualisation":"Affaiblissement des appartenances collectives.",
-      "Identification subjective":"Sentiment d'appartenance à un groupe.",
-      "Rapports sociaux de genre":"Inégalités construites entre hommes et femmes."
+      "Classes sociales":"Groupes hiérarchisés partageant des caractéristiques communes, définis selon des critères économiques, sociaux et culturels.",
+      "Classe en soi":"Groupe d'individus partageant des caractéristiques économiques communes (Marx).",
+      "Classe pour soi":"Groupe d'individus conscients d'appartenir à une même classe et de partager des intérêts communs (Marx).",
+      "Lutte des classes":"Mobilisation des classes sociales pour défendre leurs intérêts communs contre les autres classes (Marx).",
+      "Stratification sociale":"Hiérarchie de la société fondée sur plusieurs critères : économique, politique et social (Weber).",
+      "Capital culturel":"Ressources culturelles d'un individu : connaissances, diplômes, langage (Bourdieu).",
+      "Capital économique":"Richesse et patrimoine d'un individu (Bourdieu).",
+      "Capital social":"Réseau de relations d'un individu (Bourdieu).",
+      "Moyennisation":"Processus par lequel une part croissante de la population rejoint la classe moyenne, réduisant les extrêmes (Henri Mendras).",
+      "Individualisation":"Processus par lequel l'individu devient plus autonome et indépendant des groupes auxquels il appartient.",
+      "Distance intra-classes":"Écarts entre individus appartenant au même groupe social.",
+      "Distance inter-classes":"Écarts entre individus appartenant à des groupes sociaux différents.",
+      "Identification subjective":"Sentiment d'appartenance à un groupe social lié à un métier ou une position.",
+      "Rapports sociaux de genre":"Façon dont la société crée et reproduit les rôles masculins et féminins, source d'inégalités.",
+      "Plafond de verre":"Barrière invisible qui empêche les femmes d'accéder aux postes à très haute responsabilité."
     }
   },
   commerce:{
     number:"Chapitre 4",type:"eco",
     title:"Quels sont les fondements du commerce international et de l'internationalisation de la production ?",
-    details:"À compléter.",
+    details:"Comprendre les mécanismes des échanges internationaux, la compétitivité et les débats libre-échange/protectionnisme.",
     questions:[
-      {q:"Quels sont les deux grands types d'échanges internationaux ?",expected:[["pays","différents"],["pays","comparables"]]},
-      {q:"Sur quel élément le commerce international repose t-il en partie ?",expected:[["spécialisation","internationale"]]},
-      {q:"Selon Ricardo, dans quoi un pays doit-il se spécialiser ?",expected:[["avantage","comparatif"]]},
-      {q:"Par quoi les avantages comparatifs s'expliquent-ils ?",expected:[["dotations","factorielles"],["dotations","technologiques"]]},
-      {q:"Comment expliquer les échanges entre pays comparables ?",expected:[["différenciation","produits"],["différenciation","qualité","verticale"],["différenciation","caractéristiques","horizontale"],["fragmentation","chaine","valeur"]]},
-      {q:"Explique pourquoi la compétitivité d'un pays dépend de celle de ses entreprises.",expected:[["productivité"],["entreprises"],["compétitivité"]]},
-      {q:"Pourquoi seules certaines entreprises peuvent-elles exporter ?",expected:[["coûts"],["productives"],["grandes","entreprises"]]},
-      {q:"Énumère les deux stratégies utilisées par les entreprises pour internationaliser la chaîne de valeur.",expected:[["sous-traitance"],["investissements","directs","étranger"]]},
-      {q:"Énumère les trois effets du commerce international.",expected:[["gains","consommateurs"],["baisse","inégalités","entre","pays"],["hausse","inégalités","revenus","sein","pays"]]},
-      {q:"Quels sont les stratégies qui peuvent influer sur les barrières commerciales",expected:[["libre-échange"],["protectionnisme"]]},
-      {q:"Présente deux avantages et une limite du libre-échange.",expected:[["prix","faibles"],["diversité"],["inégalités"]]},
-      {q:"Présente un aspect positif et une limite du protectionnisme.",expected:[["protéger","emplois"],["hausse","prix"]]}
+      {q:"Présente les deux types d'échanges commerciaux au XXIe siècle.",expected:[["Le commerce interbranche entre pays différents : exploitation des avantages comparatifs de chaque pays"],["Le commerce intrabranche entre pays comparables : échange de produits du même secteur (représente 50% du commerce international)"]]},
+      {q:"Explique la théorie de l'avantage comparatif de Ricardo.",expected:[["Selon Ricardo, un pays doit se spécialiser dans le domaine où sa supériorité est la plus grande, ou si aucune supériorité, dans le domaine où son infériorité est la moins importante (là où il est le moins mauvais)"]]},
+      {q:"Compare la théorie de l'avantage absolu (Adam Smith) et l'avantage comparatif (Ricardo).",expected:[["Adam Smith : un pays se spécialise dans les productions où il est le plus efficace, mais cette théorie est incomplète car certains pays n'auraient aucun avantage absolu"],["Ricardo : tout pays doit se spécialiser dans son avantage comparatif, même sans supériorité absolue, ce qui augmente la production mondiale"]]},
+      {q:"Qu'est-ce qu'une dotation factorielle et comment explique-t-elle les avantages comparatifs ?",expected:[["La dotation factorielle correspond à la quantité de facteurs de production disponibles dans un pays (travailleurs qualifiés ou peu qualifiés, capital)"],["Un pays se spécialise dans les produits qui nécessitent les facteurs qu'il possède en grande quantité"]]},
+      {q:"Comment expliquer les échanges entre pays comparables par la différenciation des produits ?",expected:[["La différenciation par la qualité (verticale) permet de distinguer un produit haut de gamme d'un autre"],["La différenciation par les caractéristiques (horizontale) répond au goût pour la diversité des consommateurs"]]},
+      {q:"Explique le rôle de la fragmentation de la chaîne de valeur dans le commerce international.",expected:[["La chaîne de valeur regroupe toutes les étapes de fabrication d'un bien (conception, assemblage, livraison)"],["Sa fragmentation signifie que ces étapes sont réparties dans différents pays selon leurs avantages comparatifs, générant du commerce de biens intermédiaires"]]},
+      {q:"Explique pourquoi la compétitivité d'un pays dépend de la productivité de ses entreprises.",expected:[["La compétitivité des pays dépend des entreprises qui provient de leur productivité"],["Seules les grandes entreprises, les plus productives, sont capables de supporter les coûts spécifiques du commerce international et d'exporter"]]},
+      {q:"Présente les deux types de compétitivité.",expected:[["La compétitivité prix : proposer un prix faible et attractif"],["La compétitivité hors-prix : proposer un produit de qualité différent des concurrents (délai, notoriété, qualité)"]]},
+      {q:"Présente les deux stratégies des firmes pour internationaliser leur chaîne de valeur.",expected:[["La sous-traitance : confier une étape de production à une entreprise étrangère"],["L'investissement direct à l'étranger (IDE) : acheter une entreprise étrangère ou en construire une nouvelle"]]},
+      {q:"Présente les trois effets du commerce international.",expected:[["Des gains pour les consommateurs : prix plus faibles et plus de diversité et de qualité"],["Une baisse des inégalités entre les pays : le commerce crée des emplois dans les pays pauvres qui peuvent monter en gamme"],["Une hausse des inégalités de revenus au sein de chaque pays : polarisation emplois entre gagnants et perdants de la mondialisation"]]},
+      {q:"Présente les avantages et les limites du libre-échange.",expected:[["Avantages : gains pour les consommateurs (prix, diversité) et baisse des inégalités entre les pays"],["Limites : hausse des inégalités internes, impact environnemental, concurrence déloyale, dépendance pour des produits stratégiques"]]},
+      {q:"Présente les quatre arguments qui justifient le protectionnisme.",expected:[["Protéger les emplois en concurrence avec les importations"],["Développer la sécurité nationale en protégeant les secteurs stratégiques"],["Assurer la sécurité alimentaire"],["Se protéger du dumping (concurrence déloyale)"]]},
+      {q:"Explique le risque de guerre commerciale.",expected:[["Une guerre commerciale survient quand des pays répliquent aux barrières douanières de leurs partenaires en imposant leurs propres taxes, ce qui augmente les prix pour les consommateurs et nuit aux exportateurs des deux côtés"]]},
     ],
     defs:{
-      "Commerce international":"Échanges de marchandises entre pays.",
-      "Spécialisation internationale":"Concentration de la production d'un pays dans certains domaines destinés à l'exportation.",
-      "Avantage comparatif":"Domaine dans lequel un pays est relativement le plus efficace ou le moins inefficace.",
-      "Dotation factorielle":"Quantité et qualité des facteurs de production disponibles dans un pays.",
-      "Dotation technologique":"Niveau de technologies, de capital humain et d'innovation d'un pays.",
-      "Différenciation des produits":"Stratégie visant à distinguer un produit par la qualité ou les caractéristiques.",
-      "Chaîne de valeur":"Ensemble des étapes nécessaires à la production d'un bien ou service.",
-      "Fragmentation de la chaîne de valeur":"Répartition des étapes de production dans plusieurs pays.",
-      "Productivité":"Efficacité avec laquelle les facteurs de production sont utilisés.",
-      "Compétitivité":"Capacité à faire mieux que les concurrents sur les marchés internationaux.",
-      "Firmes":"Très grandes entreprises présentes dans plusieurs pays.",
-      "Internationalisation de la chaîne de valeur":"Dispersion mondiale des étapes de production.",
-      "Libre-échange":"Politique favorisant la suppression des barrières commerciales.",
-      "Protectionnisme":"Politique visant à limiter les importations pour protéger l'économie nationale."
+      "Mondialisation":"Processus d'intégration des économies mondiales à travers les échanges commerciaux, la production internationale et la finance.",
+      "Commerce interbranche":"Échanges entre pays de niveaux de développement différents portant sur des produits de valeur différente.",
+      "Commerce intrabranche":"Échanges entre pays comparables portant sur des produits du même secteur.",
+      "Spécialisation internationale":"Concentration des capacités de production d'un pays dans des domaines destinés à l'exportation.",
+      "Avantage absolu":"Domaine dans lequel un pays est le plus efficace en termes de coûts de production (Adam Smith).",
+      "Avantage comparatif":"Domaine dans lequel la supériorité d'un pays est la plus grande ou son infériorité la moins importante (Ricardo).",
+      "Dotation factorielle":"Quantité et qualité des facteurs de production disponibles dans un pays (travailleurs qualifiés, capital).",
+      "Différenciation verticale":"Stratégie de différenciation d'un produit par sa qualité (haut de gamme vs bas de gamme).",
+      "Différenciation horizontale":"Stratégie de différenciation d'un produit par ses caractéristiques pour répondre aux goûts variés des consommateurs.",
+      "Chaîne de valeur":"Ensemble des étapes nécessaires à la fabrication d'un bien : conception, assemblage, livraison, SAV.",
+      "Fragmentation de la chaîne de valeur":"Répartition des étapes de production dans différents pays selon leurs avantages comparatifs.",
+      "Compétitivité":"Capacité d'un pays à faire mieux que les autres, donc à exporter davantage.",
+      "Compétitivité prix":"Capacité à proposer un prix faible et attractif.",
+      "Compétitivité hors-prix":"Capacité à proposer un produit de qualité différent des concurrents.",
+      "Firmes multinationales":"Très grandes entreprises localisées dans plusieurs pays, moteurs de l'internationalisation de la production.",
+      "Investissement direct à l'étranger (IDE)":"Investissement d'une firme à l'étranger par rachat ou création d'une entreprise.",
+      "Libre-échange":"Politique commerciale favorisant le commerce international et l'internationalisation de la production en supprimant les barrières.",
+      "Protectionnisme":"Politique de mise en place de barrières pour limiter les importations et protéger les entreprises nationales.",
+      "Protectionnisme tarifaire":"Augmentation du prix des biens importés ou diminution du prix des exportations via des taxes douanières.",
+      "Protectionnisme non tarifaire":"Limitation de la quantité des importations par des quotas ou normes.",
+      "Dumping":"Pratique consistant à vendre des produits à un prix inférieur au prix de revient pour conquérir des marchés."
     }
   },
   mobilite:{
     number:"Chapitre 5",type:"socio",
-    title:"Quels sont les facteurs de la mobilité sociale ?",
-    details:"Analyser et comprendre les déterminants de la mobilité sociale.",
+    title:"Quels sont les caractéristiques contemporaines et les facteurs de mobilité sociale ?",
+    details:"Définir, mesurer et comprendre les déterminants de la mobilité sociale.",
     questions:[
-      {q:"Quelles sont les différentes formes de mobilités ?",expected:[["géographique","lieu"],["professionnelle","métier"],["sociale","position","sociale"]]},
-      {q:"Comment mesure-t-on la mobilité sociale ?",expected:[["tables","destinée"],["insee"],["tables","origine","recrutement"]]},
-      {q:"Distingue la table des destinées de la table de recrutement.",expected:[["destinée","enfants","deviennent"],["recrutement","origine","parents"]]},
-      {q:"Quel est l'intérêt principal des tables de mobilité ?",expected:[["mesurer","mobilité","observée"],["ensemble","pays"]]},
-      {q:"Quels sont les limites des tables de mobilité ?",expected:[["population","partielle"],["csp","france"],["revenus","non","pris","en","compte"]]},
-      {q:"Distingue mobilité ascendante, descendante et déclassement.",expected:[["ascendante","position","supérieure"],["descendante","inférieure"],["déclassement","diplôme","supérieur","emploi","inférieur"]]},
-      {q:"Distingue mobilité verticale, horizontale et immobilité.",expected:[["verticale","hiérarchie"],["horizontale","csp","équivalente"],["immobilité","même","csp"]]},
-      {q:"Caractérise les mobilités masculine et féminine.",choices:["femmes","mobilité","ascendante","plafond","verre"],correct:[0,2]},
-      {q:"Distingue mobilité sociale et fluidité sociale.",expected:[["mobilité","changement","csp"],["fluidité","égalité","chances"]]},
-      {q:"Pourquoi la mobilité sociale observée dépend-elle de la mobilité structurelle ?",expected:[["évolution","structure","socioprofessionnelle"],["création","disparition","emplois"]]},
-      {q:"Explique l'impact de l'évolution des structures socioprofessionnelles sur la mobilité sociale.",expected:[["tertiairisation"],["féminisation"],["qualification"]]},
-      {q:"Explique le rôle des niveaux de formation sur la mobilité sociale.",expected:[["diplôme"],["mobilité","ascendante"],["déclassement"]]},
-      {q:"Explique le rôle de la famille sur la mobilité sociale.",expected:[["ressources","familiales"],["configurations","familiales"]]},
-      {q:"Quels sont les trois capitaux possédés par la famille ?",expected:[["économique"],["social"],["culturel"]]}
+      {q:"Présente les trois formes de mobilité.",expected:[["la mobilité géographique : changement de lieu"],["la mobilité professionnelle : changement de profession au cours de sa vie"],["la mobilité sociale intergénérationnelle : position sociale différente de celle de ses parents"]]},
+      {q:"Distingue mobilité verticale et mobilité horizontale.",expected:[["La mobilité verticale (ascendante ou descendante) correspond à une position sociale supérieure ou inférieure à son origine sociale"],["La mobilité horizontale correspond à un changement de CSP sans modification de la hiérarchie sociale"]]},
+      {q:"Comment les tables de mobilité sont-elles construites par l'INSEE ?",expected:[["L'INSEE interroge des personnes actives de 35 à 59 ans et recueille leur CSP et celle de leur père"],["Les individus hors de la diagonale (ayant changé de CSP) représentent la mobilité observée, soit deux tiers de la population"]]},
+      {q:"Distingue la table de destinée et la table de recrutement.",expected:[["La table de destinée indique ce que deviennent les enfants originaires d'une CSP donnée"],["La table de recrutement indique l'origine sociale des individus appartenant à une CSP donnée"]]},
+      {q:"Présente les trois principales limites des tables de mobilité.",expected:[["Elles ne prennent pas en compte tous les individus : les chômeurs, retraités, moins de 35 ans et plus de 59 ans sont exclus"],["Les CSP n'existent qu'en France, ce qui empêche les comparaisons internationales"],["Elles ne prennent pas en compte des éléments importants comme le revenu, le type de contrat, ni l'avis des personnes"]]},
+      {q:"Présente les quatre caractéristiques de la mobilité sociale en France.",expected:[["La mobilité sociale a augmenté depuis 1850 mais stagne depuis les années 2000"],["La mobilité ascendante est plus importante que la descendante, mais l'écart se réduit"],["La mobilité horizontale disparaît"],["La reproduction sociale est très élevée aux extrémités de la société"]]},
+      {q:"Présente les spécificités de la mobilité féminine.",expected:[["La mobilité ascendante est beaucoup plus importante chez les femmes que chez les hommes, reflétant les progrès réalisés dans l'éducation et le marché du travail"],["Comparées à leur père, les femmes connaissent plus de mobilité descendante en raison du plafond de verre"]]},
+      {q:"Distingue mobilité observée et fluidité sociale.",expected:[["La mobilité observée mesure le changement de CSP dans les tables de mobilité et dépend des évolutions de la structure socioprofessionnelle"],["La fluidité sociale mesure l'égalité des chances indépendamment de ces évolutions : elle s'est améliorée de 1970 à 2000 mais recule depuis"]]},
+      {q:"Explique pourquoi une société mobile n'est pas forcément plus fluide.",expected:[["La mobilité observée dépend des évolutions de la structure socioprofessionnelle (création de postes de cadres pendant les Trente Glorieuses), alors que la fluidité sociale mesure si chacun a les mêmes chances quelle que soit son origine"]]},
+      {q:"Explique comment la mobilité structurelle influence la mobilité sociale.",expected:[["La mobilité structurelle est la mobilité liée aux évolutions de la société entre générations (tertiarisation, féminisation, qualification, salarisation)"],["Elle a été très importante des années 50 aux années 80 en créant des postes de cadres, mais stagne depuis les années 1980"]]},
+      {q:"Explique le rôle du diplôme dans la mobilité sociale et le paradoxe d'Anderson.",expected:[["Les diplômes du supérieur favorisent la mobilité ascendante car ils mènent vers des CSP de cadres ou professions intermédiaires"],["Mais le paradoxe d'Anderson montre qu'un diplôme supérieur à celui de ses parents ne garantit pas une position plus élevée, voire entraîne du déclassement en raison de la dévalorisation des diplômes"]]},
+      {q:"Explique comment les ressources familiales influencent la mobilité sociale.",expected:[["Les familles aisées et moyennes disposent de davantage de capital économique (cours particuliers, écoles privées), social (réseau, stages) et culturel (langage, loisirs)"],["Cela facilite la réussite scolaire de leurs enfants et entraîne de la reproduction sociale"]]},
+      {q:"Explique comment les configurations familiales influencent la mobilité sociale.",expected:[["Les familles monoparentales et recomposées connaissent plus d'échecs scolaires en raison d'un capital économique plus faible et de tensions familiales"],["La taille de la fratrie réduit les ressources par enfant, créant moins de mobilité ascendante dans les familles nombreuses"]]},
     ],
     defs:{
-      "Mobilité sociale / intergénérationnelle":"Mobilité entre la position sociale des parents et celle des enfants.",
-      "Mobilité professionelle / intragénérationnelle":"Changement de profession au cours de la vie d'un individu.",
-      "Mobilité géographique":"Déplacement d'un lieu à un autre.",
-      "Tables de mobilité":"Tableaux statistiques mesurant les changements de CSP entre générations.",
-      "Table de destinée":"Table indiquant ce que deviennent les enfants d'une CSP.",
-      "Table de recrutement":"Table indiquant l'origine sociale des individus d'une CSP.",
-      "Mobilité observée":"Part des individus ayant changé de CSP par rapport à leurs parents.",
-      "Mobilité ascendante":"Position sociale plus élevée par rapport à celle de ses parents.",
-      "Mobilité descendante / Déclassement":"Position sociale inférieure par rapport à celle de ses parents.",
-      "Mobilité horizontale":"Changement de CSP sans modification de la hiérarchie sociale.",
-      "Mobilité verticale":"Changement de position dans la hiérarchie sociale.",
-      "Reproduction sociale":"Maintien de la même position sociale que les parents.",
-      "Mobilité structurelle":"Mobilité liée aux transformations de la structure socioprofessionnelle.",
-      "Configuration familiale":"Structure de la famille (taille, type, organisation).",
-      "Ressources familiales":"Possesions des capitaux économiques, culturels et sociaux d'une famille.",
-      "Niveaux de formation":"Diplômes et qualifications obtenus par un individu."
+      "Mobilité sociale intergénérationnelle":"Situation où un individu a une position sociale différente de celle de ses parents.",
+      "Mobilité professionnelle (intragénérationnelle)":"Changement de profession au cours de la vie d'un individu.",
+      "Mobilité géographique":"Changement de lieu de résidence.",
+      "Mobilité verticale ascendante":"Position sociale supérieure à celle de ses parents.",
+      "Mobilité verticale descendante":"Position sociale inférieure à celle de ses parents.",
+      "Mobilité horizontale":"Changement de CSP sans modification de la position dans la hiérarchie sociale.",
+      "Reproduction sociale":"Maintien de la même position sociale que ses parents.",
+      "Tables de mobilité":"Tableaux statistiques construits par l'INSEE mesurant les changements de CSP entre générations.",
+      "Table de destinée":"Table indiquant ce que deviennent les enfants originaires d'une CSP donnée.",
+      "Table de recrutement":"Table indiquant l'origine sociale des individus appartenant à une CSP donnée.",
+      "Mobilité observée":"Part des individus qui ont changé de CSP par rapport à leurs parents, mesurée par les tables de mobilité.",
+      "Fluidité sociale":"Indicateur mesurant l'égalité des chances, c'est-à-dire le lien entre la CSP d'un individu et celle de ses parents, indépendamment des évolutions de la structure socioprofessionnelle.",
+      "Mobilité structurelle":"Mobilité liée aux évolutions de la structure socioprofessionnelle entre la génération des parents et celle des enfants.",
+      "Déclassement":"Situation où un individu occupe un emploi de niveau inférieur à son diplôme ou à la CSP de ses parents.",
+      "Paradoxe d'Anderson":"Observation selon laquelle avoir un diplôme supérieur à ses parents ne garantit pas l'accès à une position sociale plus élevée.",
+      "Ressources familiales":"Possession des capitaux économique, social et culturel par une famille, influençant la réussite scolaire et la mobilité des enfants.",
+      "Configuration familiale":"Caractéristiques de la famille : type de couple, nombre d'enfants, organisation familiale.",
+      "Capital économique (Bourdieu)":"Patrimoine et revenu d'une famille, permettant l'accès aux écoles privées, cours particuliers et loisirs.",
+      "Capital social (Bourdieu)":"Réseau de relations d'une famille, favorisant l'orientation, la motivation et les stages.",
+      "Capital culturel (Bourdieu)":"Ressources culturelles d'une famille (langage, diplômes, loisirs), extrêmement valorisées à l'école selon Bourdieu.",
+      "Plafond de verre":"Barrière invisible empêchant les femmes d'accéder aux postes à très haute responsabilité."
     }
   },
-  chomage:{number:"Chapitre 6",type:"eco",title:"Comment lutter contre le chômage ?",questions:[],defs:{},details:"À compléter."},
-  travail:{number:"Chapitre 7",type:"socio",title:"Quelles mutations du travail et de l'emploi ?",questions:[],defs:{},details:"À compléter."},
-  europe:{number:"Chapitre 8",type:"eco",title:"Quelles politiques économiques dans le cadre européen ?",questions:[],defs:{},details:"À compléter."},
-  environnement:{number:"Chapitre 9",type:"cross",title:"Quelle action publique pour l'environnement ?",questions:[],defs:{},details:"À compléter."}
+  chomage:{
+    number:"Chapitre 6",type:"eco",
+    title:"Comment lutter contre le chômage ?",
+    details:"Analyser le marché du travail, les formes de chômage et les politiques pour y remédier.",
+    questions:[
+      {q:"Présente les trois catégories de la population selon le marché du travail.",expected:[["La population active occupée possède un emploi"],["La population active inoccupée est chômeuse : elle ne possède pas d'emploi mais en recherche un"],["La population inactive ne possède pas d'emploi et n'en recherche pas"]]},
+      {q:"Distingue le taux de chômage et le taux d'emploi.",expected:[["Le taux de chômage mesure la part des personnes qui cherchent un emploi parmi la population active"],["Le taux d'emploi mesure la part des personnes qui possèdent un emploi parmi la population en âge de travailler (15-64 ans)"]]},
+      {q:"Quels sont les trois critères du BIT pour être considéré comme chômeur ?",expected:[["sans emploi"],["disponible pour travailler sous 15 jours"],["en recherche active d'un emploi"]]},
+      {q:"Quelle est la limite du taux de chômage comme indicateur ?",expected:[["Un pays peut avoir un taux de chômage faible mais une situation économique compliquée car des personnes inactives en âge de travailler ne font pas d'efforts pour trouver un emploi"]]},
+      {q:"Présente les deux nouvelles catégories apparues avec la complexification du marché du travail.",expected:[["le sous-emploi"],["le halo du chômage"]]},
+      {q:"Qu'est-ce que le chômage conjoncturel et quelle en est la cause principale ?",expected:[["Le chômage conjoncturel est un chômage de court terme lié aux fluctuations de l'activité économique"],["Il est causé par un manque de demande globale dans l'économie"]]},
+      {q:"Présente les quatre composantes de la demande globale.",expected:[["la demande des consommateurs"],["la demande des entreprises"],["les demandes extérieures (exportations)"],["la demande de l'État"]]},
+      {q:"Quelles politiques macroéconomiques permettent de lutter contre le chômage conjoncturel ?",expected:[["les politiques budgétaires de relance"],["les politiques monétaires de relance"],["dont l'objectif est de soutenir la demande globale"]]},
+      {q:"Comment une politique budgétaire de relance fonctionne-t-elle ?",expected:[["L'État augmente ses dépenses ou diminue ses recettes en investissant dans l'économie et en augmentant les aides sociales"]]},
+      {q:"Comment une politique monétaire de relance fonctionne-t-elle ?",expected:[["La banque centrale baisse le taux directeur pour réduire le coût des crédits et stimuler la consommation et l'investissement"]]},
+      {q:"Présente les trois limites des politiques macroéconomiques de relance.",expected:[["L'État est davantage endetté"],["risque d'inflation"],["les individus peuvent épargner ou acheter des produits étrangers plutôt que de consommer"]]},
+      {q:"Présente les trois problèmes d'appariement sur le marché du travail.",expected:[["les inégalités spatiales"],["les inadéquations de qualifications"],["les frictions liées à la recherche d'emploi"]]},
+      {q:"Distingue la sélection adverse et l'aléa moral.",expected:[["La sélection adverse est liée au manque d'informations avant l'échange : l'employeur ne peut pas vérifier les caractéristiques du salarié avant l'embauche"],["L'aléa moral est lié au manque d'informations après la signature du contrat : l'employeur ne peut pas connaître la motivation réelle du salarié une fois embauché"]]},
+      {q:"Présente les deux institutions qui influencent le chômage structurel.",expected:[["le salaire minimum (SMIC)"],["les règles de protection de l'emploi"]]},
+      {q:"Présente les effets positifs et négatifs du salaire minimum.",expected:[["Effets positifs : hausse de la productivité, réduction des discriminations, hausse de la consommation, incitation à la formation"],["Effets négatifs : coût élevé pour les entreprises entraînant la non-embauche des peu qualifiés et l'investissement dans des robots"]]},
+      {q:"Présente les effets positifs et négatifs des règles de protection de l'emploi.",expected:[["Effets positifs : investissement dans la formation, stabilité et sécurité de l'emploi, incitation à investir"],["Effets négatifs : moins d'incitation à embaucher, multiplication des CDD et des emplois précaires"]]},
+      {q:"Présente les trois politiques pour lutter contre le chômage structurel.",expected:[["les politiques d'allégement du coût du travail"],["les politiques de flexibilisation du marché du travail"],["les politiques de formation"]]},
+      {q:"Comment fonctionne une politique d'allégement du coût du travail ?",expected:[["L'État diminue les cotisations sociales des entreprises (exonérations) pour les inciter à embaucher des salariés peu qualifiés"]]},
+      {q:"Présente les trois formes de flexibilité du marché du travail.",expected:[["la flexibilité quantitative : ajustement du volume de travail (effectifs, contrats, temps de travail)"],["la flexibilité fonctionnelle : ajustement grâce à la polyvalence des salariés"],["la flexibilité salariale : ajustement grâce au salaire"]]},
+      {q:"Présente les deux types de politiques de formation.",expected:[["La formation initiale correspond à la scolarité et vise à développer le capital humain d'un pays"],["La formation continue vise à augmenter la productivité des salariés et à former les chômeurs aux compétences recherchées"]]},
+    ],
+    defs:{
+      "Population active occupée":"Personnes qui possèdent un emploi.",
+      "Population active inoccupée":"Personnes qui ne possèdent pas d'emploi mais en recherchent un (chômeurs).",
+      "Population inactive":"Personnes qui ne possèdent pas d'emploi et n'en recherchent pas.",
+      "Taux de chômage":"Part des personnes qui cherchent un emploi parmi la population active.",
+      "Taux d'emploi":"Part des personnes qui possèdent un emploi parmi la population en âge de travailler (15-64 ans).",
+      "Sous-emploi":"Personnes à temps partiel souhaitant davantage travailler — le critère BIT « sans emploi » n'est pas respecté.",
+      "Halo du chômage":"Personnes souhaitant travailler mais qui ne recherchent pas activement un emploi ou qui ne sont pas immédiatement disponibles.",
+      "Chômage conjoncturel":"Chômage de court terme lié aux fluctuations de l'activité économique, causé par un manque de demande globale.",
+      "Chômage structurel":"Chômage de long terme qui s'explique par un mauvais fonctionnement du marché du travail entre salariés et entreprises.",
+      "Demande globale":"Ensemble des demandes émanant des consommateurs, des entreprises, de l'État et de l'étranger.",
+      "Politique macroéconomique":"Intervention de l'État pour agir sur l'activité économique (politique budgétaire ou monétaire).",
+      "Politique budgétaire de relance":"Politique où l'État augmente ses dépenses ou réduit les impôts pour soutenir l'activité.",
+      "Politique monétaire de relance":"Politique où la banque centrale baisse le taux directeur pour réduire le coût des crédits.",
+      "Taux directeur":"Taux payé par les banques commerciales pour se refinancer auprès de la banque centrale.",
+      "Problèmes d'appariement":"Difficultés de mise en relation entre les chômeurs et les emplois vacants, alors même que des entreprises souhaitent embaucher.",
+      "Inégalités spatiales":"Inadéquation entre le lieu d'habitation des individus au chômage et la localisation des emplois proposés, liée à un manque de mobilité géographique.",
+      "Inadéquation de qualifications":"Décalage entre la qualification des chômeurs et celle requise pour occuper un poste.",
+      "Asymétrie d'information":"Situation dans laquelle l'une des deux parties à l'échange ne dispose pas des mêmes informations que l'autre.",
+      "Sélection adverse":"Risque lié à un manque d'information avant l'embauche : l'employeur ne peut pas vérifier les caractéristiques du salarié.",
+      "Aléa moral":"Difficulté pour l'employeur de connaître la motivation réelle du salarié une fois embauché.",
+      "Salaire d'efficience":"Salaire supérieur au salaire du marché, versé pour motiver les salariés, attirer les meilleurs et réduire le turnover.",
+      "Institutions du marché du travail":"Règles formelles ou informelles qui encadrent le fonctionnement du marché du travail.",
+      "SMIC":"Salaire minimum interprofessionnel de croissance, rémunération minimale à payer à chaque salarié.",
+      "Règles de protection de l'emploi":"Règles encadrant les licenciements, les embauches et les droits du travail.",
+      "Coût du travail":"Coût total pour embaucher un travailleur, comprenant le salaire net et les cotisations sociales.",
+      "Flexibilité quantitative":"Ajustement du volume de travail via les effectifs, les contrats et le temps de travail.",
+      "Flexibilité fonctionnelle":"Ajustement grâce à la polyvalence des salariés.",
+      "Formation initiale":"Scolarité visant à développer le capital humain par l'augmentation du niveau de qualification.",
+      "Formation continue":"Formation visant à augmenter la productivité des salariés et à former les chômeurs aux compétences recherchées."
+    }
+  },
+  travail:{
+    number:"Chapitre 7",type:"socio",
+    title:"Quelles mutations du travail et de l'emploi ?",
+    details:"Analyser les définitions, l'organisation du travail, les effets du numérique et l'intégration sociale par le travail.",
+    questions:[
+      {q:"Distingue le travail au sens économique et au sens social.",expected:[["Le travail au sens économique est une occupation humaine qui permet de produire"],["Le travail au sens social crée des biens et services, constitue une valeur permettant aux individus de se réaliser et donne un statut dans la société en créant des liens sociaux"]]},
+      {q:"Présente les trois dimensions sociales du travail.",expected:[["la création de biens et de services"],["une valeur qui permet aux individus de réaliser des choses dans leur vie"],["un statut dans la société avec la création de liens sociaux"]]},
+      {q:"Distingue emploi, travail et activité.",expected:[["Le travail n'a pas forcément de rémunération, contrairement à l'emploi"],["L'emploi est la partie rémunérée du travail et concerne les actifs occupés"],["L'activité désigne la population active, comprenant les actifs occupés et les chômeurs"]]},
+      {q:"Distingue salarié et non salarié.",expected:[["Le salarié est lié par un contrat de travail qui fixe ses droits et obligations"],["Le non salarié n'a pas de contrat de travail et est indépendant (il perçoit un revenu)"]]},
+      {q:"Distingue les contrats typiques et les contrats atypiques.",expected:[["Les contrats typiques sont les CDI à plein temps, la forme la plus fréquente"],["Les contrats atypiques sont en augmentation depuis les années 1970"]]},
+      {q:"Comment les formes atypiques brouillent-elles les frontières emploi/chômage/inactivité ?",expected:[["Les CDD et intérims créent une situation d'emploi pendant la durée du contrat mais de chômage à la fin"],["Le temps partiel subi crée une situation d'emploi mais une période d'inactivité pendant la semaine ou la journée"],["Ces contrats créent le halo du chômage"]]},
+      {q:"Présente les six descripteurs de la qualité d'un emploi.",expected:[["les conditions de travail"],["le niveau de salaire"],["la sécurité économique"],["l'horizon de carrière"],["le potentiel des formations"],["la variété des tâches"]]},
+      {q:"Quels sont les trois points d'amélioration de la qualité de l'emploi en France ?",expected:[["le niveau de salaire (de plus en plus de personnes payées au SMIC)"],["les conditions de travail (pénibilité)"],["les horaires de travail"]]},
+      {q:"Présente les trois caractéristiques du modèle taylorien.",expected:[["La division verticale du travail : les ingénieurs décident de la façon de produire et les ouvriers appliquent"],["La division horizontale du travail : la production d'un bien est divisée en plusieurs étapes et chaque ouvrier est responsable d'une seule"],["Une hiérarchie très stricte pour vérifier que les ouvriers appliquent la bonne méthode"]]},
+      {q:"Quelles sont les trois améliorations apportées par le fordisme ?",expected:[["la chaîne de montage"],["la hausse des salaires"],["la standardisation des produits"]]},
+      {q:"Présente les trois caractéristiques du modèle post-taylorien.",expected:[["Le management participatif : les salariés peuvent proposer des améliorations sur l'organisation de la production"],["La recomposition des tâches : les salariés réalisent plusieurs missions"],["La flexibilité des salariés (polyvalence) et de l'entreprise (adaptation aux consommateurs)"]]},
+      {q:"Compare les risques sur la santé dans le modèle taylorien et post-taylorien.",expected:[["Dans le modèle taylorien : risques physiques liés aux cadences répétitives et aux blessures au travail"],["Dans le modèle post-taylorien : risques mentaux et psychosociaux liés à la charge de travail élevée, aux responsabilités et au stress (burn-out)"]]},
+      {q:"Comment le numérique brouille-t-il les frontières du travail ?",expected:[["Le numérique (télétravail, téléphone, mails) fait disparaître les frontières entre le temps de travail et les loisirs, et entre le lieu de travail et le lieu d'habitation"],["L'État a donc créé un droit à la déconnexion pour assurer le respect du temps de repos"]]},
+      {q:"Présente le risque de polarisation des emplois lié au numérique.",expected:[["Les emplois intermédiaires (tâches répétitives à qualifications intermédiaires) sont menacés par le numérique"],["Les emplois non répétitifs et cognitifs ne sont pas menacés"]]},
+      {q:"Présente le bilan des effets du numérique sur l'emploi en trois points.",expected:[["Il brouille les frontières du travail (travail versus hors travail)"],["Il transforme les relations d'emploi en augmentant le nombre d'indépendants (ubérisation)"],["Il accroît les risques de polarisation des emplois en détruisant les emplois intermédiaires"]]},
+      {q:"Comment le travail contribue-t-il à l'intégration sociale ?",expected:[["Le revenu permet d'accéder à la société de consommation, d'avoir des loisirs et d'éviter la pauvreté"],["Le travail est aussi un lieu de sociabilité qui permet de créer un statut social et d'assurer des droits sociaux"]]},
+      {q:"Présente les quatre types de liens sociaux et l'impact du chômage sur chacun.",expected:[["Les liens de filiation (famille) : hausse des tensions dans le couple, difficultés financières entre parents et enfants"],["Les liens électifs (amis) : la baisse des revenus réduit les activités et les loisirs"],["Les liens de participation organique (collègues) : absence ou réduction des liens du travail"],["Les liens de citoyenneté (sécurité sociale) : baisse des aides sociales"]]},
+      {q:"Présente les trois évolutions de l'emploi qui affaiblissent l'intégration sociale.",expected:[["Le taux de chômage persistant et élevé (chômage de masse et de longue durée)"],["La précarisation de l'emploi (CDD, intérim, temps partiel, indépendants à situations instables)"],["La polarisation de la qualité des emplois (hausse de l'écart entre emplois de qualité et emplois alimentaires)"]]},
+      {q:"Distingue les trois zones d'intégration selon le type de contrat.",expected:[["Le CDI constitue une zone d'intégration assurée avec des liens sociaux stables"],["Les contrats précaires constituent une zone d'intégration incertaine avec des liens sociaux intermittents (isolement)"],["Le chômage constitue une zone de désaffiliation avec une dépendance aux aides sociales et très peu de liens sociaux (exclusion)"]]},
+    ],
+    defs:{
+      "Travail (sens économique)":"Occupation humaine qui permet de produire.",
+      "Emploi":"Partie rémunérée du travail (actifs occupés).",
+      "Activité":"Population active, comprenant les personnes en emploi et au chômage.",
+      "Salarié":"Travailleur lié par un contrat de travail qui fixe ses droits et obligations.",
+      "Non salarié":"Travailleur indépendant sans contrat de travail.",
+      "Formes d'emploi":"Contrats de travail qui déterminent l'autonomie du salarié (CDI, CDD, intérim, temps partiel).",
+      "Contrat typique":"CDI à plein temps, forme d'emploi la plus fréquente.",
+      "Contrat atypique":"Forme d'emploi en augmentation depuis les années 1970 (CDD, intérim, temps partiel).",
+      "Emploi de qualité":"Emploi qui contribue au bien-être des salariés selon six descripteurs.",
+      "Sous-emploi":"Personnes à temps partiel souhaitant davantage travailler — le critère BIT « sans emploi » n'est pas respecté.",
+      "Organisation du travail":"Façon dont les postes de travail et les relations entre salariés sont déterminés dans une entreprise.",
+      "Taylorisme":"Organisation scientifique du travail fondée sur la division verticale, horizontale et une hiérarchie stricte pour augmenter la productivité.",
+      "Fordisme":"Amélioration du taylorisme associant la chaîne de montage, la hausse des salaires et la standardisation des produits.",
+      "Modèle post-taylorien":"Organisation du travail fondée sur le management participatif, la recomposition des tâches et la flexibilité des salariés.",
+      "Numérique":"Toutes les technologies liées à l'information et à la communication : informatique, internet, robotique, intelligence artificielle, réseaux sociaux, géolocalisation.",
+      "Droit à la déconnexion":"Droit des salariés à ne pas être contactés en dehors du temps de travail, créé par l'État pour assurer le respect du temps de repos.",
+      "Ubérisation":"Développement de travailleurs indépendants proposant leurs services via une plateforme numérique, avec plus de libertés mais moins de protections.",
+      "Polarisation des emplois":"Destruction des emplois intermédiaires (tâches répétitives) sous l'effet du numérique, au profit des emplois très qualifiés et peu qualifiés.",
+      "Intégration sociale":"Processus permettant aux individus d'appartenir à la société en développant des liens sociaux.",
+      "Chômage de masse":"Taux de chômage persistant et élevé concernant plusieurs millions de personnes sur le long terme.",
+      "Précarisation de l'emploi":"Développement des emplois précaires (CDD, intérim, temps partiel, indépendants) entraînant une instabilité professionnelle.",
+      "Zone de désaffiliation":"Situation de chômage entraînant une dépendance aux aides sociales et très peu de liens sociaux (exclusion)."
+    }
+  },
+  europe:{
+    number:"Chapitre 8",type:"eco",
+    title:"Quelles politiques économiques dans le cadre européen ?",
+    details:"Comprendre l'intégration européenne, la politique de la concurrence et les politiques conjoncturelles.",
+    questions:[
+      {q:"Présente les trois types d'institutions européennes.",expected:[["les institutions judiciaires (la Cour de justice de l'UE)"],["les institutions économiques (la BCE)"],["les institutions politiques (le triangle institutionnel)"]]},
+      {q:"Présente les quatre institutions du triangle institutionnel européen.",expected:[["Le Conseil européen (27 chefs d'États) définit les priorités de l'UE"],["Le Conseil de l'UE (27 ministres) vote les lois"],["Le Parlement européen (750 députés élus) vote les lois et contrôle les autres institutions"],["La Commission européenne propose de nouvelles lois et défend les intérêts de l'UE"]]},
+      {q:"Présente les cinq étapes d'intégration économique selon Balassa.",expected:[["la zone de libre-échange (suppression des taxes douanières)"],["l'union douanière"],["le marché unique"],["l'union économique"],["l'union économique et monétaire"]]},
+      {q:"À quel niveau d'intégration se situe l'UE et sur quels deux éléments repose-t-elle ?",expected:[["L'UE est au cinquième niveau d'intégration"],["Elle repose sur le marché unique depuis 1993 (libre circulation des biens, services, travailleurs et capitaux)"],["et sur la zone euro (monnaie commune depuis 2002)"]]},
+      {q:"Sur quelles quatre libertés repose le marché unique ?",expected:[["la libre circulation des biens"],["la libre circulation des services"],["la libre circulation des travailleurs"],["la libre circulation des capitaux"]]},
+      {q:"Comment le marché unique favorise-t-il la croissance ? Présente les trois mécanismes.",expected:[["La hausse de la concurrence entre les entreprises entraîne une baisse des prix et une diversité des produits"],["La baisse des taxes douanières favorise la spécialisation des pays"],["L'augmentation de la taille du marché permet des économies d'échelle"]]},
+      {q:"Distingue une politique économique de long terme et de court terme.",expected:[["Sur le long terme : politique de la concurrence, industrielle, de l'éducation"],["Sur le court terme : politique monétaire et budgétaire"]]},
+      {q:"Présente les trois objectifs de la politique de la concurrence européenne.",expected:[["Limiter le pouvoir de marché des entreprises pour que la meilleure soit la plus performante et non la plus puissante"],["Augmenter la concurrence pour stimuler l'innovation et la qualité"],["Accroître la croissance économique en favorisant les échanges et les emplois"]]},
+      {q:"Présente les quatre modalités de la politique de la concurrence.",expected:[["L'interdiction des ententes (accords secrets et illégaux entre entreprises, cartels)"],["L'interdiction des abus de position dominante"],["Le contrôle des concentrations (fusions et rachats d'entreprises)"],["Le contrôle des aides publiques accordées par l'État aux entreprises"]]},
+      {q:"Présente les deux limites de la politique de la concurrence.",expected:[["Elle freine la création de champions européens car elle contrôle les concentrations et les aides publiques nécessaires pour concurrencer les firmes américaines et chinoises"],["Dans le numérique, la concurrence n'est pas toujours souhaitable en raison des effets de réseau, et les grandes firmes américaines rachètent les start-up innovantes"]]},
+      {q:"Comment fonctionne la politique monétaire ?",expected:[["Elle est gérée par la banque centrale qui contrôle la quantité de monnaie dans l'économie grâce au taux directeur, permettant de maintenir l'inflation autour de 2 à 3%"]]},
+      {q:"Comment fonctionne la politique budgétaire ?",expected:[["Elle est gérée par l'État en utilisant son budget (dépenses, recettes, impôts et taxes). Elle crée un déficit si les dépenses sont supérieures aux recettes, et un excédent dans le cas contraire"]]},
+      {q:"Présente les limites des politiques conjoncturelles.",expected:[["Les individus peuvent épargner plutôt que consommer"],["Ils peuvent acheter des produits étrangers"],["Ces politiques créent des risques d'inflation et de hausse du déficit"]]},
+      {q:"Présente les deux règles budgétaires européennes issues des traités.",expected:[["Le Traité de Maastricht (1992) fixe les règles pour intégrer la zone euro"],["Le Pacte de stabilité et de croissance (1997) impose un déficit inférieur à 3% du PIB et une dette inférieure à 60% du PIB"]]},
+      {q:"Explique le défaut de coordination entre politiques monétaire et budgétaire en zone euro.",expected:[["Il existe 19 politiques budgétaires différentes réalisées par des États souverains aux besoins et visions différents"],["La politique monétaire de la BCE est unique et indépendante : elle applique le même taux directeur à tous les pays"],["Leurs objectifs peuvent s'opposer : la BCE vise une inflation à 2% alors que les États visent la croissance et la baisse du chômage"]]},
+      {q:"Qu'est-ce qu'un choc asymétrique et pourquoi l'UE peine-t-elle à le gérer ?",expected:[["Un choc asymétrique est un événement qui touche certains pays de la zone euro de manière plus intense que d'autres (exemple : la Covid)"],["La BCE ne peut pas adapter son taux directeur à un seul pays car il est unique pour toute la zone euro"],["Les règles budgétaires limitent les politiques de relance des pays touchés"]]},
+    ],
+    defs:{
+      "Intégration économique":"Processus d'unification économique entre des pays pour former un espace commun.",
+      "Zone de libre-échange":"Suppression des taxes douanières entre les pays membres.",
+      "Union douanière":"Zone de libre-échange avec un tarif douanier commun envers les pays tiers.",
+      "Marché unique":"Espace économique sans frontières basé sur la libre circulation des biens, services, travailleurs et capitaux.",
+      "Zone euro":"Ensemble des pays membres de l'UE ayant adopté l'euro comme monnaie commune.",
+      "Politique économique":"Décisions prises par les pouvoirs publics pour influencer l'économie.",
+      "Politique de la concurrence":"Règles qui permettent d'assurer une concurrence saine et loyale entre les entreprises.",
+      "Entente (cartel)":"Accord secret et illégal entre entreprises visant à fixer les prix ou se répartir les marchés.",
+      "Abus de position dominante":"Comportement d'une entreprise en position de numéro 1 visant à empêcher la concurrence de se développer.",
+      "Champions européens":"Grandes entreprises européennes capables de concurrencer les firmes chinoises et américaines.",
+      "Conjoncture":"Indicateurs économiques à court terme comme l'inflation, le PIB, le chômage et les exportations.",
+      "Conjoncture":"Ensemble des indicateurs économiques à court terme : l'inflation, le PIB, la croissance économique, le chômage et les exportations.",
+      "Politique monétaire":"Gestion par la banque centrale de la quantité de monnaie dans l'économie grâce au taux directeur.",
+      "Politique budgétaire":"Gestion par l'État de son budget (dépenses, recettes, impôts et taxes).",
+      "Taux directeur":"Taux payé par les banques commerciales pour se refinancer auprès de la banque centrale.",
+      "Déficit public":"Situation où les dépenses de l'État sont supérieures à ses recettes sur une année.",
+      "Excédent public":"Situation où les dépenses de l'État sont inférieures à ses recettes.",
+      "Traité de Maastricht":"Traité de 1992 fixant les règles pour intégrer la zone euro.",
+      "Pacte de stabilité et de croissance":"Règles de 1997 imposant un déficit inférieur à 3% du PIB et une dette inférieure à 60% du PIB.",
+      "Choc asymétrique":"Événement économique qui touche certains pays de la zone euro de manière plus intense que d'autres.",
+      "BCE":"Banque Centrale Européenne, institution indépendante gérant la politique monétaire unique de la zone euro avec pour objectif prioritaire une inflation proche de 2%."
+    }
+  },
+  environnement:{
+    number:"Chapitre 9",type:"cross",
+    title:"Quelle action publique pour l'environnement ?",
+    details:"Analyser les instruments et enjeux de la politique environnementale.",
+    questions:[
+      {q:"Qu'est-ce qu'une externalité négative ?",expected:[["coût","tiers"],["non","compensé"],["pollution"]]},
+      {q:"Pourquoi le marché ne résout-il pas seul les problèmes environnementaux ?",expected:[["externalités"],["biens","communs"],["défaillance","marché"]]},
+      {q:"Présente les trois grands instruments de la politique environnementale.",expected:[["réglementation"],["taxes","pigouviennes"],["marchés","permis"]]},
+      {q:"Qu'est-ce que la taxe pigouvienne ?",expected:[["internaliser"],["externalités"],["pollueur","payeur"]]},
+      {q:"Comment fonctionnent les marchés de permis d'émission ?",expected:[["quota","CO2"],["échange"],["réduire","émissions"]]},
+      {q:"Qu'est-ce que le développement durable ?",expected:[["besoins","présents"],["générations","futures"],["trois","piliers"]]},
+      {q:"Présente les trois piliers du développement durable.",expected:[["économique"],["social"],["environnemental"]]},
+      {q:"Quelles sont les limites de la réglementation environnementale ?",expected:[["coût","entreprises"],["lobbying"],["concurrence","internationale"]]},
+      {q:"Explique le principe pollueur-payeur.",expected:[["responsabilité"],["coût","pollution"],["entreprise","ménage"]]},
+      {q:"Qu'est-ce qu'un bien commun ?",expected:[["rival"],["non","excluable"],["sur-exploitation"]]},
+      {q:"Comment l'État peut-il favoriser la transition énergétique ?",expected:[["subventions"],["renouvelables"],["normes"]]},
+      {q:"Présente les enjeux de la justice climatique.",expected:[["inégalités"],["pays","développés"],["populations","vulnérables"]]},
+    ],
+    defs:{
+      "Externalité":"Effet d'une activité économique sur un tiers non compensé par le marché.",
+      "Externalité négative":"Coût imposé à des tiers sans compensation, comme la pollution.",
+      "Taxe pigouvienne":"Taxe sur les activités polluantes visant à internaliser les externalités négatives.",
+      "Marché de permis d'émission":"Système permettant l'échange de droits à polluer pour réduire les émissions.",
+      "Bien commun":"Bien rival et non-excluable, sujet à la surexploitation.",
+      "Développement durable":"Développement répondant aux besoins présents sans compromettre les générations futures.",
+      "Principe pollueur-payeur":"Principe selon lequel le pollueur doit supporter le coût de la pollution.",
+      "Transition énergétique":"Passage d'un système énergétique basé sur les fossiles vers les renouvelables.",
+      "Biens publics":"Biens non-rivaux et non-excluables fournis généralement par l'État.",
+      "Internalisation des externalités":"Mécanisme visant à intégrer les coûts ou bénéfices externes dans les prix.",
+      "Capital naturel":"Ensemble des ressources naturelles et services écosystémiques disponibles."
+    }
+  }
 };
 
 Object.keys(chapters).forEach(k=>{
@@ -640,6 +886,7 @@ function showQuestion(){
   c.innerHTML='';
   if(questionIndex>=allQuestions.length){endSession();return;}
   const q=allQuestions[questionIndex];
+  // In-session: content is already a flex column, just append directly
   c.appendChild(buildProgressTracker());
   if(q.choices) renderQCM(q,c);
   else renderFlashcard(q,c);
@@ -665,7 +912,10 @@ function buildProgressTracker(){
   wrap.className='progress-tracker';
   wrap.innerHTML=`
     <div class="progress-top">
-      <span class="progress-title">${label}</span>
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="session-back-btn" onclick="back()">← Accueil</button>
+        <span class="progress-title">${label}</span>
+      </div>
       <span class="progress-count">${questionIndex+1}<span style="color:var(--muted);font-weight:400"> / ${total}</span></span>
     </div>
     <div class="seg-bar">
@@ -682,10 +932,35 @@ function buildProgressTracker(){
   return wrap;
 }
 
+/* ── Smart answer display: picks grammatically correct French connector ── */
+function joinKeywords(exp){
+  // exp = array of keyword strings e.g. ["passagers","clandestins"]
+  // We join as a natural phrase; the keywords themselves are already words
+  return exp.join(' ');
+}
+
+// Returns the display label for one expected element, adding a determiner when needed
+// e.g. ["engagement","associatif"] → "de l'engagement associatif"
+//      ["vote"] → "vote"
+//      ["csp"] → "CSP"
+function labelFor(exp){
+  // exp is an array of strings. If it's a single long string (full sentence), display as-is.
+  // If it's multiple short keywords, join them as a phrase.
+  const phrase = exp.join(' ').trim();
+  // Capitalise short acronyms (≤4 chars, no spaces, all lowercase)
+  if(phrase === phrase.toLowerCase() && phrase.length <= 4 && !phrase.includes(' ')) return phrase.toUpperCase();
+  // Capitalise first letter
+  return phrase.charAt(0).toUpperCase() + phrase.slice(1);
+}
+
+function buildAnswerItems(expected){
+  return expected.map(exp=>`<li>${labelFor(exp)}</li>`).join('');
+}
+
 /* ── Flashcard with adaptive height ── */
 function renderFlashcard(q, container){
   isFlipped=false;
-  const answers=q.expected.map(exp=>`<li>${exp.join(' / ')}</li>`).join('');
+  const answers=buildAnswerItems(q.expected);
 
   const scene=document.createElement('div');
   scene.className='flashcard-scene';
@@ -708,6 +983,7 @@ function renderFlashcard(q, container){
       <!-- Sizer: back face (includes buttons for accurate height) -->
       <div class="fc-sizer fc-sizer-back" id="sizerBack" style="display:none">
         <div class="fc-answer-label">Éléments de réponse</div>
+        <div class="fc-back-question">${q.q}</div>
         <ul class="fc-answer-list">${answers}</ul>
         <div style="display:flex;gap:12px;width:100%;margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.07)">
           <div style="flex:1;height:46px;background:rgba(245,158,11,0.12);border-radius:12px;"></div>
@@ -726,6 +1002,7 @@ function renderFlashcard(q, container){
         </div>
         <div class="flashcard-face flashcard-back">
           <div class="fc-answer-label">Éléments de réponse</div>
+          <div class="fc-back-question">${q.q}</div>
           <ul class="fc-answer-list">${answers}</ul>
           ${actionsBtns}
         </div>
@@ -733,20 +1010,21 @@ function renderFlashcard(q, container){
     </div>`;
   container.appendChild(scene);
 
-  // Set wrapper height to the taller of the two faces
+  // Set wrapper height to the taller of the two faces using sizers
   requestAnimationFrame(()=>{
     const front=document.getElementById('sizerFront');
     const wrapper=document.getElementById('fcWrapper');
     const card=document.getElementById('theCard');
     if(!front||!wrapper||!card) return;
 
+    // Measure back sizer
     const backSizer=document.getElementById('sizerBack');
     backSizer.style.display='flex';
     front.style.display='none';
-    const backH=backSizer.offsetHeight;
+    const backH=backSizer.scrollHeight;
     backSizer.style.display='none';
     front.style.display='flex';
-    const frontH=front.offsetHeight;
+    const frontH=front.scrollHeight;
 
     const h=Math.max(frontH, backH, 220);
     wrapper.style.height=h+'px';
@@ -757,9 +1035,30 @@ function renderFlashcard(q, container){
 
 function flipCard(){
   const card=document.getElementById('theCard');
+  const wrapper=document.getElementById('fcWrapper');
   if(!card||isFlipped) return;
   isFlipped=true;
   card.classList.add('flipped');
+
+  // After the flip animation, measure the actual back face and update wrapper height
+  setTimeout(()=>{
+    const backFace=card.querySelector('.flashcard-back');
+    if(!backFace||!wrapper) return;
+
+    // Temporarily make back face flow-positioned to measure its natural height
+    backFace.style.position='relative';
+    backFace.style.transform='none';
+    backFace.style.visibility='hidden';
+    const backH=backFace.scrollHeight;
+    backFace.style.position='';
+    backFace.style.transform='';
+    backFace.style.visibility='';
+
+    const h=Math.max(backH+2, 220);
+    wrapper.style.height=h+'px';
+    card.style.height=h+'px';
+    card.querySelectorAll('.flashcard-face').forEach(f=>f.style.height=h+'px');
+  }, 560); // after animation completes (550ms)
 }
 
 function markStatus(status){
@@ -857,9 +1156,20 @@ function showDef(){
   const total=defQuestions.length;
   const pct=Math.round((defIndex/total)*100);
 
+  // Back button + progress bar as one tracker card
   const bar=document.createElement('div');
-  bar.style.cssText='max-width:680px;margin:0 auto 20px;background:rgba(255,255,255,0.06);border-radius:999px;height:6px;';
-  bar.innerHTML=`<div style="width:${pct}%;height:6px;border-radius:999px;background:var(--accent);transition:width .4s ease;"></div>`;
+  bar.style.cssText='max-width:680px;margin:0 auto 10px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px 20px;';
+  bar.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="session-back-btn" onclick="back()">← Accueil</button>
+        <span class="progress-title">Définitions</span>
+      </div>
+      <span class="progress-count" style="font-family:'DM Mono',monospace;font-size:0.88rem;color:var(--accent)">${defIndex+1}<span style="color:var(--muted);font-weight:400"> / ${total}</span></span>
+    </div>
+    <div style="height:6px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden">
+      <div style="width:${pct}%;height:6px;background:var(--accent);transition:width .4s ease;"></div>
+    </div>`;
   c.appendChild(bar);
 
   // Fixed sorted term list — same position every time
@@ -923,7 +1233,7 @@ function endSession(){
     div.style.animationDelay=`${idx*0.04}s`;
     let html=`<div class="recap-q">${a.correct?'✓':'✗'} ${a.question}</div>`;
     if(!a.correct&&a.expected){
-      html+=`<div class="recap-correction"><strong>Correction :</strong> ${a.expected.map(e=>Array.isArray(e)?e.join(' / '):e).join(' ; ')}</div>`;
+      html+=`<div class="recap-correction"><strong>Correction :</strong> ${a.expected.map(e=>Array.isArray(e)?labelFor(e):e).join(' ; ')}</div>`;
     }
     div.innerHTML=html;
     c.appendChild(div);
