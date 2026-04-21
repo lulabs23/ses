@@ -786,11 +786,19 @@ const chapters={
   }
 };
 
-Object.keys(chapters).forEach(k=>{
-  if(!records[k]) records[k]={best:0};
-  if(!statusStore[k]) statusStore[k]={q:[],d:[]};
-});
-saveAll();
+function ensureChapterDefaults(){
+  Object.keys(chapters).forEach(k=>{
+    if(!records[k]) records[k]={best:0};
+    if(typeof records[k].best!=='number') records[k].best=0;
+    if(!statusStore[k]) statusStore[k]={q:[],d:[]};
+    if(!Array.isArray(statusStore[k].q)) statusStore[k].q=[];
+    if(!Array.isArray(statusStore[k].d)) statusStore[k].d=[];
+  });
+}
+ensureChapterDefaults();
+// Don't trigger cloud sync on initial load — only persist locally
+localStorage.setItem('records', JSON.stringify(records));
+localStorage.setItem('statusStore', JSON.stringify(statusStore));
 
 function saveAll(){
   localStorage.setItem('records', JSON.stringify(records));
@@ -890,6 +898,7 @@ async function pullCloudSync(){
     if(parsed.statusStore){
       Object.keys(parsed.statusStore).forEach(k=>{ statusStore[k]=parsed.statusStore[k]; });
     }
+    ensureChapterDefaults();
     localStorage.setItem('records', JSON.stringify(records));
     localStorage.setItem('statusStore', JSON.stringify(statusStore));
     setSyncStatus('✓ Chargé','ok');
@@ -984,11 +993,12 @@ function getLearningCount(id, type){
 }
 
 function renderChapters(){
+  ensureChapterDefaults();
   chaptersDiv.innerHTML='';
   Object.keys(chapters).forEach(id=>{
     const c=chapters[id];
     const total=c.questions.length+Object.keys(c.defs).length;
-    const best=records[id].best;
+    const best=(records[id] && records[id].best) || 0;
     const percent=total?Math.round((best/total)*100):0;
     const isEmpty=total===0;
     const typeColor=c.type==='socio'?'#2563eb':c.type==='eco'?'#dc2626':'#7c3aed';
