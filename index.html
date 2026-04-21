@@ -169,6 +169,54 @@ body.in-session #chapters {
 .prog-legend-item { display:flex; align-items:center; gap:6px; font-size:0.74rem; color:var(--muted); }
 .prog-legend-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
+/* ── SYNC BUTTON & MODAL ── */
+.sync-btn {
+  position: fixed; top: 14px; right: 14px; z-index: 50;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease;
+}
+.sync-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); background: var(--surface2); }
+#syncStatus {
+  position: fixed; top: 18px; right: 60px; z-index: 50;
+  font-size: 0.74rem; color: var(--muted); font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.02em; transition: opacity 0.3s ease;
+  background: var(--surface); padding: 5px 12px; border-radius: 999px;
+  border: 1px solid var(--border);
+}
+#syncStatus:empty { display: none; }
+#syncStatus[data-state="ok"] { color: var(--known); }
+#syncStatus[data-state="err"] { color: #f87171; }
+#syncStatus[data-state="pending"] { color: var(--accent); }
+
+#syncModal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.sync-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); }
+.sync-panel {
+  position: relative; z-index: 1;
+  max-width: 460px; width: 100%;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px;
+  animation: fadeUp 0.2s ease both;
+}
+.sync-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 6px; }
+.sync-hint { color: var(--muted); font-size: 0.82rem; margin-bottom: 20px; line-height: 1.5; }
+.sync-panel label {
+  display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted); margin: 12px 0 6px;
+}
+.sync-sublabel { text-transform: none; letter-spacing: normal; font-weight: 400; opacity: 0.7; }
+.sync-panel input {
+  width: 100%; padding: 11px 14px; border-radius: 10px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.82rem;
+  box-sizing: border-box;
+}
+.sync-panel input:focus { outline: none; border-color: var(--accent); }
+.sync-actions { display: flex; gap: 10px; margin-top: 18px; }
+.sync-actions .btn { flex: 1; font-size: 0.82rem; padding: 10px 14px; }
+
 /* ── FLASHCARD ── */
 .fc-actions-inner {
   display: flex; gap: 12px; width: 100%; margin-top: 20px;
@@ -323,6 +371,8 @@ body.in-session #chapters {
 </style>
 </head>
 <body>
+<button class="sync-btn" onclick="openSyncSettings()" title="Synchronisation">⚙</button>
+<div id="syncStatus"></div>
 <div id="app">
   <div class="hero">
     <div class="hero-eyebrow">Terminale SES</div>
@@ -745,6 +795,165 @@ saveAll();
 function saveAll(){
   localStorage.setItem('records', JSON.stringify(records));
   localStorage.setItem('statusStore', JSON.stringify(statusStore));
+  scheduleCloudSync();
+}
+
+/* ═══════════════════════════════════════
+   CLOUD SYNC (GitHub Gist)
+═══════════════════════════════════════ */
+let syncTimer=null;
+let syncInFlight=false;
+
+function getSyncConfig(){
+  return {
+    token: localStorage.getItem('gistToken')||'',
+    gistId: localStorage.getItem('gistId')||''
+  };
+}
+
+function setSyncConfig(token, gistId){
+  localStorage.setItem('gistToken', token);
+  localStorage.setItem('gistId', gistId);
+}
+
+function setSyncStatus(text, state){
+  const el=document.getElementById('syncStatus');
+  if(!el) return;
+  el.textContent=text;
+  el.dataset.state=state||'';
+}
+
+/* Debounced push: waits 2s after last change before pushing */
+function scheduleCloudSync(){
+  const cfg=getSyncConfig();
+  if(!cfg.token||!cfg.gistId) return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(pushCloudSync, 2000);
+}
+
+async function pushCloudSync(){
+  const cfg=getSyncConfig();
+  if(!cfg.token||!cfg.gistId||syncInFlight) return;
+  syncInFlight=true;
+  setSyncStatus('Synchronisation…','pending');
+  try{
+    const body={
+      files:{
+        'ses-progress.json':{
+          content: JSON.stringify({records, statusStore, updatedAt: Date.now()}, null, 2)
+        }
+      }
+    };
+    const res=await fetch(`https://api.github.com/gists/${cfg.gistId}`,{
+      method:'PATCH',
+      headers:{
+        'Authorization':`token ${cfg.token}`,
+        'Accept':'application/vnd.github+json',
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    setSyncStatus('✓ Synchronisé','ok');
+    setTimeout(()=>setSyncStatus('',''), 2500);
+  }catch(err){
+    setSyncStatus('⚠ Erreur de sync','err');
+    console.error('Sync push failed:', err);
+  }finally{
+    syncInFlight=false;
+  }
+}
+
+async function pullCloudSync(){
+  const cfg=getSyncConfig();
+  if(!cfg.token||!cfg.gistId) return false;
+  setSyncStatus('Chargement…','pending');
+  try{
+    const res=await fetch(`https://api.github.com/gists/${cfg.gistId}`,{
+      headers:{
+        'Authorization':`token ${cfg.token}`,
+        'Accept':'application/vnd.github+json'
+      }
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const file=data.files && data.files['ses-progress.json'];
+    if(!file||!file.content||file.content.trim()==='{}'||file.content.trim()===''){
+      setSyncStatus('✓ Prêt','ok');
+      setTimeout(()=>setSyncStatus('',''), 2000);
+      return false;
+    }
+    const parsed=JSON.parse(file.content);
+    if(parsed.records){
+      Object.keys(parsed.records).forEach(k=>{ records[k]=parsed.records[k]; });
+    }
+    if(parsed.statusStore){
+      Object.keys(parsed.statusStore).forEach(k=>{ statusStore[k]=parsed.statusStore[k]; });
+    }
+    localStorage.setItem('records', JSON.stringify(records));
+    localStorage.setItem('statusStore', JSON.stringify(statusStore));
+    setSyncStatus('✓ Chargé','ok');
+    setTimeout(()=>setSyncStatus('',''), 2000);
+    return true;
+  }catch(err){
+    setSyncStatus('⚠ Erreur','err');
+    console.error('Sync pull failed:', err);
+    return false;
+  }
+}
+
+function openSyncSettings(){
+  const cfg=getSyncConfig();
+  const modal=document.createElement('div');
+  modal.id='syncModal';
+  modal.innerHTML=`
+    <div class="sync-overlay" onclick="closeSyncSettings()"></div>
+    <div class="sync-panel">
+      <h3>Synchronisation</h3>
+      <p class="sync-hint">Synchronise ta progression entre tes appareils via un Gist GitHub privé.</p>
+      <label>Token GitHub <span class="sync-sublabel">(scope : gist)</span></label>
+      <input type="password" id="syncTokenInput" value="${cfg.token}" placeholder="ghp_..." autocomplete="off" />
+      <label>Gist ID <span class="sync-sublabel">(dans l'URL de ton Gist)</span></label>
+      <input type="text" id="syncGistIdInput" value="${cfg.gistId}" placeholder="a1b2c3d4e5f6..." autocomplete="off" />
+      <div class="sync-actions">
+        <button class="btn btn-secondary" onclick="closeSyncSettings()">Annuler</button>
+        <button class="btn btn-defs" onclick="saveSyncSettings(true)">Enregistrer et charger</button>
+      </div>
+      <div class="sync-actions" style="margin-top:8px">
+        <button class="btn btn-review" onclick="forceSyncPush()">↑ Envoyer maintenant</button>
+        <button class="btn btn-secondary" onclick="clearSyncSettings()">Déconnecter</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+function closeSyncSettings(){
+  const m=document.getElementById('syncModal');
+  if(m) m.remove();
+}
+
+async function saveSyncSettings(thenPull){
+  const token=document.getElementById('syncTokenInput').value.trim();
+  const gistId=document.getElementById('syncGistIdInput').value.trim();
+  setSyncConfig(token, gistId);
+  closeSyncSettings();
+  if(thenPull && token && gistId){
+    const loaded=await pullCloudSync();
+    if(loaded) renderChapters();
+  }
+}
+
+async function forceSyncPush(){
+  closeSyncSettings();
+  await pushCloudSync();
+}
+
+function clearSyncSettings(){
+  localStorage.removeItem('gistToken');
+  localStorage.removeItem('gistId');
+  closeSyncSettings();
+  setSyncStatus('Déconnecté','');
+  setTimeout(()=>setSyncStatus('',''), 2000);
 }
 
 /* ── Fisher-Yates shuffle ── */
@@ -758,7 +967,14 @@ function shuffle(arr){
    ACCUEIL
 ═══════════════════════════════════════ */
 const chaptersDiv=document.getElementById('chapters');
-window.addEventListener('DOMContentLoaded', renderChapters);
+window.addEventListener('DOMContentLoaded', async ()=>{
+  renderChapters();
+  const cfg=getSyncConfig();
+  if(cfg.token && cfg.gistId){
+    const loaded=await pullCloudSync();
+    if(loaded) renderChapters();
+  }
+});
 
 function getLearningCount(id, type){
   const stored = statusStore[id];
