@@ -992,14 +992,22 @@ function getLearningCount(id, type){
   return arr.filter(s=>s==='learning').length;
 }
 
+function getMasteredCount(id){
+  const stored=statusStore[id];
+  if(!stored) return 0;
+  const q=(stored.q||[]).filter(s=>s==='known').length;
+  const d=(stored.d||[]).filter(s=>s==='known').length;
+  return q+d;
+}
+
 function renderChapters(){
   ensureChapterDefaults();
   chaptersDiv.innerHTML='';
   Object.keys(chapters).forEach(id=>{
     const c=chapters[id];
     const total=c.questions.length+Object.keys(c.defs).length;
-    const best=(records[id] && records[id].best) || 0;
-    const percent=total?Math.round((best/total)*100):0;
+    const mastered=getMasteredCount(id);
+    const percent=total?Math.round((mastered/total)*100):0;
     const isEmpty=total===0;
     const typeColor=c.type==='socio'?'#2563eb':c.type==='eco'?'#dc2626':'#7c3aed';
 
@@ -1022,7 +1030,7 @@ function renderChapters(){
             <circle class="ring-fill" cx="18" cy="18" r="15.9"
               stroke-dasharray="${percent},100" style="stroke:${typeColor}"/>
           </svg>
-          <div class="ring-text">${best}/${total}</div>
+          <div class="ring-text">${mastered}/${total}</div>
         </div>
       </div>
       ${learningBadge}
@@ -1405,7 +1413,7 @@ function validateDef(term){
   if(!statusStore[currentChapter].d) statusStore[currentChapter].d=[];
   statusStore[currentChapter].d[origIdx]=newStatus;
   saveAll();
-  answersLog.push({question:q.term,correct:ok,expected:[[q.term+' : '+q.def]]});
+  answersLog.push({question:q.term,correct:ok,expected:[[q.def]]});
   defIndex++; showDef();
 }
 
