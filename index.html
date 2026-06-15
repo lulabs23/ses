@@ -170,6 +170,17 @@ body.in-session #chapters {
 .prog-legend-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
 /* ── DISSERTATION TAB (Amorces + Sujets) ── */
+.diss-back-top {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: 7px 14px; cursor: pointer;
+  transition: all 0.15s ease; letter-spacing: 0.02em;
+  margin-bottom: 18px;
+}
+.diss-back-top:hover { color: var(--text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+
 .diss-section {
   margin-top: 28px; padding-top: 24px;
   border-top: 1px solid var(--border);
@@ -287,6 +298,42 @@ body.in-session #chapters {
 .sync-panel input:focus { outline: none; border-color: var(--accent); }
 .sync-actions { display: flex; gap: 10px; margin-top: 18px; }
 .sync-actions .btn { flex: 1; font-size: 0.82rem; padding: 10px 14px; }
+
+/* Settings blocks */
+.settings-block {
+  border-top: 1px solid var(--border);
+  padding-top: 18px; margin-top: 18px;
+}
+.settings-block:first-of-type { border-top: none; padding-top: 0; margin-top: 12px; }
+.settings-block-title {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+}
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; padding: 4px 0;
+}
+.toggle-label {
+  display: flex; flex-direction: column; gap: 3px;
+  font-size: 0.88rem; color: var(--text); flex: 1;
+}
+.toggle-sublabel {
+  font-size: 0.74rem; color: var(--muted); font-weight: 400;
+  line-height: 1.4;
+}
+.toggle-switch {
+  flex-shrink: 0; width: 44px; height: 24px; border-radius: 999px;
+  background: rgba(255,255,255,0.1); border: 1px solid var(--border);
+  cursor: pointer; padding: 0; position: relative;
+  transition: background 0.2s ease;
+}
+.toggle-switch.on { background: var(--accent); border-color: var(--accent); }
+.toggle-knob {
+  display: block; width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; position: absolute; top: 2px; left: 2px;
+  transition: transform 0.2s ease;
+}
+.toggle-switch.on .toggle-knob { transform: translateX(20px); background: #1a1825; }
 
 /* ── FLASHCARD ── */
 .fc-actions-inner {
@@ -1245,27 +1292,48 @@ async function pullCloudSync(){
 
 function openSyncSettings(){
   const cfg=getSyncConfig();
+  const dDisabled=defsDisabled();
   const modal=document.createElement('div');
   modal.id='syncModal';
   modal.innerHTML=`
     <div class="sync-overlay" onclick="closeSyncSettings()"></div>
     <div class="sync-panel">
-      <h3>Synchronisation</h3>
-      <p class="sync-hint">Synchronise ta progression entre tes appareils via un Gist GitHub privé.</p>
-      <label>Token GitHub <span class="sync-sublabel">(scope : gist)</span></label>
-      <input type="password" id="syncTokenInput" value="${cfg.token}" placeholder="ghp_..." autocomplete="off" />
-      <label>Gist ID <span class="sync-sublabel">(dans l'URL de ton Gist)</span></label>
-      <input type="text" id="syncGistIdInput" value="${cfg.gistId}" placeholder="a1b2c3d4e5f6..." autocomplete="off" />
-      <div class="sync-actions">
-        <button class="btn btn-secondary" onclick="closeSyncSettings()">Annuler</button>
-        <button class="btn btn-defs" onclick="saveSyncSettings(true)">Enregistrer et charger</button>
+      <h3>Paramètres</h3>
+
+      <div class="settings-block">
+        <div class="settings-block-title">Apprentissage</div>
+        <label class="toggle-row">
+          <span class="toggle-label">Désactiver les définitions
+            <span class="toggle-sublabel">Masque le bouton « Définitions » et exclut les définitions du score</span>
+          </span>
+          <button class="toggle-switch ${dDisabled?'on':''}" onclick="handleDefsToggle(this)"><span class="toggle-knob"></span></button>
+        </label>
       </div>
-      <div class="sync-actions" style="margin-top:8px">
-        <button class="btn btn-review" onclick="forceSyncPush()">↑ Envoyer maintenant</button>
-        <button class="btn btn-secondary" onclick="clearSyncSettings()">Déconnecter</button>
+
+      <div class="settings-block">
+        <div class="settings-block-title">Synchronisation</div>
+        <p class="sync-hint">Synchronise ta progression entre tes appareils via un Gist GitHub privé.</p>
+        <label>Token GitHub <span class="sync-sublabel">(scope : gist)</span></label>
+        <input type="password" id="syncTokenInput" value="${cfg.token}" placeholder="ghp_..." autocomplete="off" />
+        <label>Gist ID <span class="sync-sublabel">(dans l'URL de ton Gist)</span></label>
+        <input type="text" id="syncGistIdInput" value="${cfg.gistId}" placeholder="a1b2c3d4e5f6..." autocomplete="off" />
+        <div class="sync-actions">
+          <button class="btn btn-secondary" onclick="closeSyncSettings()">Fermer</button>
+          <button class="btn btn-defs" onclick="saveSyncSettings(true)">Enregistrer et charger</button>
+        </div>
+        <div class="sync-actions" style="margin-top:8px">
+          <button class="btn btn-review" onclick="forceSyncPush()">↑ Envoyer maintenant</button>
+          <button class="btn btn-secondary" onclick="clearSyncSettings()">Déconnecter</button>
+        </div>
       </div>
     </div>`;
   document.body.appendChild(modal);
+}
+
+function handleDefsToggle(btn){
+  toggleDefsDisabled();
+  btn.classList.toggle('on');
+  renderChapters();
 }
 
 function closeSyncSettings(){
@@ -1324,10 +1392,17 @@ function getLearningCount(id, type){
   return arr.filter(s=>s==='learning').length;
 }
 
+function defsDisabled(){ return localStorage.getItem('defsDisabled')==='1'; }
+function toggleDefsDisabled(){
+  const cur=defsDisabled();
+  localStorage.setItem('defsDisabled', cur?'0':'1');
+}
+
 function getMasteredCount(id){
   const stored=statusStore[id];
   if(!stored) return 0;
   const q=(stored.q||[]).filter(s=>s==='known').length;
+  if(defsDisabled()) return q;
   const d=(stored.d||[]).filter(s=>s==='known').length;
   return q+d;
 }
@@ -1335,23 +1410,26 @@ function getMasteredCount(id){
 function renderChapters(){
   ensureChapterDefaults();
   chaptersDiv.innerHTML='';
+  const hideDefs=defsDisabled();
   Object.keys(chapters).forEach(id=>{
     const c=chapters[id];
-    const total=c.questions.length+Object.keys(c.defs).length;
+    const defCount=Object.keys(c.defs).length;
+    const total=c.questions.length+(hideDefs?0:defCount);
     const mastered=getMasteredCount(id);
     const percent=total?Math.round((mastered/total)*100):0;
     const isEmpty=total===0;
     const typeColor=c.type==='socio'?'#2563eb':c.type==='eco'?'#dc2626':'#7c3aed';
 
     const qLearning=getLearningCount(id,'q');
-    const dLearning=getLearningCount(id,'d');
-    const hasLearning=(qLearning+dLearning)>0;
+    const dLearning=hideDefs?0:getLearningCount(id,'d');
+    const learningTotal=qLearning+dLearning;
+    const hasLearning=learningTotal>0;
 
     const card=document.createElement('div');
     card.className=`chapter-card ${c.type}${isEmpty?' badge-empty':''}`;
 
     let learningBadge='';
-    if(hasLearning) learningBadge=`<div class="learning-badge">⏳ ${qLearning+dLearning} en cours</div>`;
+    if(hasLearning) learningBadge=`<div class="learning-badge">⏳ ${learningTotal} en cours</div>`;
 
     card.innerHTML=`
       <div class="card-top">
@@ -1370,7 +1448,7 @@ function renderChapters(){
       <div class="card-actions">
         ${total>0 ? `
           <button class="btn btn-primary" onclick="startQuestions('${id}',false)">Questions</button>
-          <button class="btn btn-defs" onclick="startDefs('${id}',false)">Définitions</button>
+          ${hideDefs?'':`<button class="btn btn-defs" onclick="startDefs('${id}',false)">Définitions</button>`}
           ${qLearning>0 ? `<button class="btn btn-review" onclick="startQuestions('${id}',true)" title="Réviser uniquement les questions en cours d'apprentissage">⏳ Réviser</button>` : ''}
         ` : `<span style="font-size:0.78rem;color:var(--muted);font-style:italic">À compléter</span>`}
         <button class="btn btn-secondary" onclick="showDetails('${id}')">Dissertation</button>
@@ -1834,6 +1912,7 @@ function showDetails(id){
     </div>`:'';
   document.getElementById('content').innerHTML=`
     <div class="details-card">
+      <button class="diss-back-top" onclick="back()">← Retour aux chapitres</button>
       <span style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.08);color:var(--muted);display:inline-block;margin-bottom:12px">${c.number}</span>
       <h2>${c.title}</h2>
       <p style="margin-top:12px;color:var(--muted);line-height:1.65">${c.details||''}</p>
