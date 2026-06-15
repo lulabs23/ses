@@ -169,6 +169,77 @@ body.in-session #chapters {
 .prog-legend-item { display:flex; align-items:center; gap:6px; font-size:0.74rem; color:var(--muted); }
 .prog-legend-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
+/* ── DISSERTATION TAB (Amorces + Sujets) ── */
+.diss-section {
+  margin-top: 28px; padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.diss-section-title {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--text);
+  margin-bottom: 4px;
+}
+.diss-section-subtitle {
+  font-size: 0.74rem; color: var(--muted); letter-spacing: 0.02em;
+  margin-bottom: 18px;
+}
+.amorce-card {
+  position: relative;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px 18px 56px;
+  margin-bottom: 12px;
+  border-left: 3px solid var(--accent);
+}
+.amorce-card p {
+  margin: 0; color: var(--text); font-size: 0.92rem; line-height: 1.6;
+  text-align: justify;
+}
+.amorce-num {
+  position: absolute; top: 16px; left: 18px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: #1a1825;
+  font-family: 'DM Mono', monospace; font-weight: 700; font-size: 0.82rem;
+  display: flex; align-items: center; justify-content: center;
+}
+/* Sujet/plan cards */
+.sujet-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 22px;
+  margin-bottom: 16px;
+  border-left: 3px solid #7c3aed;
+}
+.sujet-titles { margin-bottom: 14px; }
+.sujet-title {
+  color: var(--text); font-size: 0.95rem; line-height: 1.5;
+  font-weight: 500; margin-bottom: 4px;
+}
+.sujet-pb {
+  font-size: 0.85rem; color: var(--text);
+  background: rgba(124,58,237,0.08);
+  border-left: 2px solid #7c3aed;
+  padding: 10px 14px; border-radius: 0 8px 8px 0;
+  margin-bottom: 16px; line-height: 1.55;
+}
+.sujet-pb-label {
+  display: inline-block; font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: #a78bfa; margin-right: 8px;
+}
+.plan-part { margin-bottom: 14px; }
+.plan-part:last-child { margin-bottom: 0; }
+.plan-part-title {
+  font-weight: 600; color: var(--text); font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+.plan-subs {
+  list-style: none; padding: 0; margin: 0;
+  border-left: 1px solid var(--border);
+  padding-left: 14px;
+}
+.plan-subs li {
+  color: var(--muted); font-size: 0.86rem;
+  line-height: 1.55; padding: 3px 0;
+}
+
 /* ── SYNC BUTTON & MODAL ── */
 .sync-btn {
   position: fixed; top: 14px; right: 14px; z-index: 50;
@@ -415,6 +486,30 @@ const chapters={
     number:"Chapitre 1",type:"socio",
     title:"Comment expliquer l'engagement politique dans les sociétés démocratiques ?",
     details:"Comprendre les formes, les raisons et les transformations de l'engagement politique.",
+    amorces:[
+      "Le 10 septembre 2025 a vu naître en France le mouvement « Bloquons tout », initiative citoyenne née hors du cadre syndical traditionnel pour s'opposer au budget d'austérité du gouvernement Bayrou, suivi des journées d'action intersyndicales du 18 septembre puis du 2 octobre qui ont rassemblé des centaines de milliers de manifestants. Ce cycle de mobilisations illustre la diversité contemporaine des formes et des acteurs de l'engagement politique, où groupements de personnes et syndicats coexistent désormais dans la contestation.",
+      "La mobilisation transnationale de la jeunesse pour le climat, incarnée par Greta Thunberg, les marches Fridays for Future ou Extinction Rebellion, a transformé les répertoires de l'action collective et fait basculer l'engagement politique d'un cadre national à un cadre mondial. Cette internationalisation des causes interroge la capacité des démocraties traditionnelles à intégrer des formes de participation qui débordent les frontières et contournent les acteurs politiques institués."
+    ],
+    sujets:[
+      {
+        titles:["Comment l'action collective s'est-elle transformée dans les sociétés démocratiques ?"],
+        problematique:"Comment les objets, les acteurs et les répertoires de l'action collective ont-ils évolué dans les sociétés démocratiques contemporaines ?",
+        plan:[
+          {title:"I. La transformation des objets de l'action collective",subs:["A. Le recul des conflits traditionnels liés au travail (grèves, syndicalisation en baisse)","B. L'émergence des luttes minoritaires (#MeToo, BLM, droits des identités)","C. L'apparition de nouveaux enjeux post-matérialistes (environnement, démocratie)"]},
+          {title:"II. La diversification des acteurs",subs:["A. L'affaiblissement des acteurs traditionnels : partis et syndicats","B. La montée en puissance des associations et ONG","C. L'émergence des groupements de personnes (Gilets jaunes, Bloquons tout)"]},
+          {title:"III. L'évolution des répertoires d'action collective",subs:["A. La persistance des formes traditionnelles : manifestations, grèves, vote","B. La diversification : actions chocs, médiatisation, non-respect de la loi","C. L'élargissement des cadres : du local au mondial (Extinction Rebellion)"]}
+        ]
+      },
+      {
+        titles:["Les variables sociodémographiques sont-elles les seules explications de l'engagement politique ?"],
+        problematique:"Dans quelle mesure les variables sociodémographiques permettent-elles d'expliquer l'engagement politique, et quels autres facteurs interviennent ?",
+        plan:[
+          {title:"I. Les variables sociodémographiques expliquent largement l'engagement",subs:["A. Le poids de la CSP et du diplôme (les trois capitaux de Bourdieu)","B. L'âge et l'effet de génération (jeunes plus protestataires, méfiance envers les institutions)","C. Le sexe et les rapports sociaux de genre (thèmes de mobilisation différenciés)"]},
+          {title:"II. Mais d'autres facteurs entrent en jeu",subs:["A. Le paradoxe de l'action collective et le calcul coût-avantage","B. Les incitations sélectives et les rétributions symboliques","C. La structure des opportunités politiques (contexte politique et juridique)"]},
+          {title:"III. Une articulation de plusieurs déterminants",subs:["A. L'engagement comme résultat d'une combinaison de facteurs individuels et contextuels","B. Le rôle des socialisations (familiale, scolaire, professionnelle)","C. La diversification des formes d'engagement et leurs publics spécifiques"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente les quatre formes de l'engagement politique.",expected:[["le vote"],["l'engagement associatif"],["le militantisme"],["la consommation engagée"]]},
       {q:"Distingue les formes conventionnelles et non conventionnelles de l'engagement politique.",expected:[["Conventionnelles : formes instituées comme le vote et les meetings politiques"],["Non-conventionnelles : actions protestataires légales ou illégales comme les grèves ou les blocages"]]},
@@ -452,6 +547,30 @@ const chapters={
     number:"Chapitre 2",type:"eco",
     title:"Quels sont les sources et les défis de la croissance économique ?",
     details:"Comprendre les sources de la croissance et ses défis écologiques et sociaux.",
+    amorces:[
+      "L'investissement massif des États-Unis dans l'intelligence artificielle a permis à l'économie américaine de croître au-dessus de sa tendance en 2025 et 2026, illustrant le rôle moteur du progrès technique dans la croissance contemporaine. Mais cet essor concentre les richesses et les emplois qualifiés autour de quelques entreprises géantes comme Nvidia, Microsoft ou Meta, accentuant la polarisation de l'emploi et les inégalités de revenus qui accompagnent le nouveau cycle d'innovation.",
+      "Le rapport de synthèse du PNUE publié à la veille de la COP30 de Belém en novembre 2025 alertait que les engagements climatiques actuels ne permettraient de réduire les émissions mondiales que d'environ 10 % d'ici 2035, rendant l'objectif de 1,5 °C de l'Accord de Paris hors d'atteinte. Cette tension entre croissance économique mondiale et préservation du capital naturel place la soutenabilité de la croissance au cœur du débat économique contemporain."
+    ],
+    sujets:[
+      {
+        titles:["L'accumulation des facteurs de production est-elle suffisante pour expliquer la croissance économique ?","L'accroissement de la productivité globale des facteurs est-il la seule source de croissance économique ?"],
+        problematique:"La croissance économique repose-t-elle uniquement sur l'accumulation des facteurs de production, ou la productivité globale des facteurs joue-t-elle un rôle décisif ?",
+        plan:[
+          {title:"I. L'accumulation des facteurs, une source historique de croissance",subs:["A. La croissance extensive : augmentation du travail et du capital","B. Les leviers : démographie, durée du travail, investissement","C. Les limites : la loi des rendements décroissants de Ricardo"]},
+          {title:"II. La productivité globale des facteurs, source décisive",subs:["A. La PGF et les gains de productivité (théorie de Solow)","B. Le rôle du progrès technique et de l'innovation","C. La croissance intensive comme moteur des économies développées"]},
+          {title:"III. Une croissance auto-entretenue par le caractère endogène du progrès technique",subs:["A. Les quatre domaines d'investissement (physique, R&D, humain, public)","B. Le rôle des institutions et des droits de propriété","C. La destruction créatrice et le rôle des « Magnificent Seven » dans l'IA"]}
+        ]
+      },
+      {
+        titles:["Les limites écologiques sont-elles le seul défi posé par la croissance économique ?"],
+        problematique:"Au-delà des contraintes écologiques, quels autres défis sociaux et économiques la croissance contemporaine pose-t-elle ?",
+        plan:[
+          {title:"I. Les limites écologiques, un défi majeur",subs:["A. L'épuisement des ressources naturelles (empreinte écologique, jour de dépassement)","B. L'accélération de la pollution","C. Le réchauffement climatique (rapport PNUE 2025, COP30)"]},
+          {title:"II. Mais la croissance pose aussi des défis sociaux",subs:["A. La hausse des inégalités de revenus (top 1 %, concentration des brevets)","B. La polarisation de l'emploi liée au progrès technique","C. Les inégalités territoriales entre métropoles et périphéries"]},
+          {title:"III. L'innovation, à la fois cause et solution",subs:["A. La soutenabilité faible : remplacer le capital naturel par le progrès technique","B. La soutenabilité forte : préserver le capital naturel","C. Le rôle de l'État dans l'accompagnement de la transition (formation, redistribution)"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente le processus historique de la croissance économique en six étapes.",expected:[["avant le XVIIIe siècle : pas de croissance (famines, maladies, guerres)"],["1820-1870 : décollage de la croissance (révolution industrielle)"],["1870-1913 : élargissement à plusieurs pays"],["1913-1945 : ralentissement (guerres)"],["1945-1970 : forte accélération"],["1970-2025 : stagnation (crises, chômage)"]]},
       {q:"Comment mesure-t-on la croissance économique et comment calcule-t-on le taux de croissance ?",expected:[["La croissance est mesurée par le PIB, somme des valeurs ajoutées dans un pays"],["Le taux de croissance correspond à la variation en pourcentage du PIB entre deux dates"]]},
@@ -491,6 +610,39 @@ const chapters={
     number:"Chapitre 3",type:"socio",
     title:"Comment est structurée la société française actuelle ?",
     details:"Analyser la structuration de l'espace social, les évolutions socioprofessionnelles et le débat sur les classes sociales.",
+    amorces:[
+      "Le rapport Oxfam publié en janvier 2026 révèle que les cinq hommes les plus riches du monde ont vu leur fortune doubler depuis 2020 tandis que cinq milliards de personnes se sont appauvries, illustrant un creusement sans précédent des distances inter-classes à l'échelle mondiale comme nationale. En France, la concentration croissante du patrimoine au sommet de la pyramide sociale interroge la pertinence de la thèse de la moyennisation popularisée par Henri Mendras dans les années 1980.",
+      "La sortie en 2025 du film « Anatomie d'une chute » de Justine Triet a relancé le débat médiatique sur les « nepo babies », ces héritiers culturels et politiques dont la trajectoire confirme au grand public ce que la sociologie démontre depuis Bourdieu : le poids des capitaux familiaux dans la reproduction des élites. Ce phénomène, visible aussi dans les grandes écoles françaises où les enfants de cadres restent largement surreprésentés, questionne l'idéal méritocratique au cœur de la promesse républicaine."
+    ],
+    sujets:[
+      {
+        titles:["Quels facteurs structurent et hiérarchisent l'espace social ?"],
+        problematique:"Quels sont les principaux facteurs qui structurent et hiérarchisent l'espace social français contemporain ?",
+        plan:[
+          {title:"I. Les facteurs socio-économiques structurent l'espace social",subs:["A. La catégorie socioprofessionnelle (métier, qualification, statut)","B. Le revenu et le patrimoine (niveau de vie, consommation)","C. Le diplôme et la qualification (reconnaissance, exposition au chômage)"]},
+          {title:"II. Les facteurs socio-démographiques jouent un rôle complémentaire",subs:["A. La composition du ménage et la position dans le cycle de vie","B. Le sexe et les rapports sociaux de genre (plafond de verre)","C. Le lieu de résidence (centre-ville vs périphéries, accès aux services)"]},
+          {title:"III. L'articulation de ces facteurs dans une société individualisée",subs:["A. Des hiérarchies multiples plutôt qu'une seule (cf. Weber)","B. L'individualisation et l'affaiblissement des identifications subjectives","C. La persistance d'inégalités fortes aux extrémités de la société"]}
+        ]
+      },
+      {
+        titles:["En quoi la structure socioprofessionnelle française a-t-elle évolué depuis la seconde moitié du XXe siècle ?"],
+        problematique:"Quelles sont les principales évolutions de la structure socioprofessionnelle française depuis 1945 et comment les expliquer ?",
+        plan:[
+          {title:"I. La salarisation et la tertiarisation",subs:["A. La salarisation : sécurité du statut salarié, recul des indépendants","B. La tertiarisation : développement des services, vieillissement de la population","C. La transformation des CSP : baisse des agriculteurs et ACCE"]},
+          {title:"II. La qualification et la féminisation",subs:["A. La hausse du niveau de diplôme et la démocratisation scolaire","B. La création d'emplois qualifiés (CPIS, professions intermédiaires)","C. La féminisation : émancipation et tertiarisation du marché du travail"]},
+          {title:"III. Mais ces évolutions connaissent des limites",subs:["A. La persistance d'inégalités salariales hommes-femmes","B. Le plafond de verre et l'accès difficile aux postes à responsabilité","C. La précarisation et la polarisation des emplois"]}
+        ]
+      },
+      {
+        titles:["L'approche en termes de classes sociales permet-elle de rendre compte de la structure actuelle de la société française ?","Les classes sociales sont-elles le seul élément de structuration de la société française ?"],
+        problematique:"Les classes sociales constituent-elles une grille pertinente pour analyser la structure de la société française contemporaine, ou d'autres facteurs sont-ils nécessaires ?",
+        plan:[
+          {title:"I. Les classes sociales ont longtemps structuré la société française",subs:["A. La théorie marxiste : bourgeoisie vs prolétariat (classe en soi, pour soi, lutte)","B. La synthèse de Bourdieu : capitaux économique, culturel et social","C. L'identification subjective des individus à une classe"]},
+          {title:"II. Mais leur pertinence est remise en question",subs:["A. La moyennisation de la société (Mendras, « la toupie »)","B. La hausse des distances intra-classes","C. L'individualisation et l'affaiblissement des appartenances collectives"]},
+          {title:"III. Les classes sociales restent pertinentes mais doivent être articulées à d'autres facteurs",subs:["A. Le renforcement du top 0,01 % et de la très haute bourgeoisie (Pinçon-Charlot)","B. L'émergence d'une nouvelle classe populaire précaire","C. L'articulation avec les rapports de genre, d'âge et de territoire"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Distingue la structuration et la hiérarchisation de l'espace social.",expected:[["La structuration consiste à regrouper des individus qui ont des ressemblances selon un critère commun"],["La hiérarchisation consiste à classer ces groupes selon une position supérieure ou inférieure"]]},
       {q:"Présente les trois facteurs socio-économiques de l'espace social.",expected:[["la catégorie socioprofessionnelle : regroupe selon le métier, la qualification, le statut"],["le revenu : rémunération du travail et du capital qui influence le niveau de vie"],["le diplôme : reconnaissance de la qualification qui influence le chômage et les conditions d'emploi"]]},
@@ -530,6 +682,48 @@ const chapters={
     number:"Chapitre 4",type:"eco",
     title:"Quels sont les fondements du commerce international et de l'internationalisation de la production ?",
     details:"Comprendre les mécanismes des échanges internationaux, la compétitivité et les débats libre-échange/protectionnisme.",
+    amorces:[
+      "Le 2 avril 2025, qualifié de « Liberation Day » par Donald Trump, a marqué le retour brutal du protectionnisme avec l'imposition de droits de douane jusqu'à 104 % sur les importations chinoises, 20 % sur celles de l'Union européenne et 24 % sur le Japon. Les ripostes immédiates de Pékin (jusqu'à 84 %) et de Bruxelles ont ouvert la voie à une guerre commerciale mondiale qui questionne les fondements mêmes du libre-échange comme moteur de la mondialisation et l'ordre commercial multilatéral hérité de l'après-guerre.",
+      "Malgré les surtaxes américaines, l'excédent commercial chinois a dépassé pour la première fois 1 000 milliards de dollars en 2025, Pékin ayant diversifié ses débouchés vers l'Europe et le Sud global tout en utilisant son quasi-monopole sur les terres rares comme levier de négociation. Cette résilience face aux pressions occidentales illustre comment l'avantage comparatif d'un pays peut se transformer en arme géopolitique majeure, redessinant l'équilibre des forces économiques mondiales."
+    ],
+    sujets:[
+      {
+        titles:["Comment peut-on expliquer le commerce international ?","Le commerce international s'explique-t-il uniquement par les échanges entre pays à spécialisations différentes ?","Dans quelle mesure les dotations factorielles et technologiques expliquent-elles les échanges commerciaux ?"],
+        problematique:"Quels sont les fondements théoriques et empiriques qui permettent d'expliquer la diversité des échanges internationaux contemporains ?",
+        plan:[
+          {title:"I. Les échanges entre pays différents : spécialisation et avantages comparatifs",subs:["A. La théorie de l'avantage comparatif de Ricardo","B. Le rôle des dotations factorielles (travail qualifié, capital)","C. Le rôle des dotations technologiques (brevets, capital humain, évolution chinoise)"]},
+          {title:"II. Les échanges entre pays comparables : différenciation et chaînes de valeur",subs:["A. Le commerce intrabranche, qui représente 50 % du commerce international","B. La différenciation des produits (verticale par la qualité, horizontale par les caractéristiques)","C. La fragmentation de la chaîne de valeur (exemple : Airbus, Apple)"]},
+          {title:"III. Le rôle de la compétitivité et des firmes",subs:["A. La productivité comme socle de la compétitivité (prix et hors-prix)","B. La domination des grandes entreprises dans les exportations","C. Le rôle moteur des firmes multinationales dans les flux d'IDE"]}
+        ]
+      },
+      {
+        titles:["Comment expliquer l'internationalisation de la chaîne de valeur ?"],
+        problematique:"Quels acteurs et quelles stratégies expliquent l'internationalisation de la chaîne de valeur depuis les années 1980 ?",
+        plan:[
+          {title:"I. Les firmes multinationales, acteurs centraux de l'internationalisation",subs:["A. La concentration géographique : Amérique du Nord, Europe, Asie","B. La stratégie de sous-traitance à des entreprises étrangères","C. La stratégie d'investissement direct à l'étranger (IDE)"]},
+          {title:"II. La répartition stratégique des étapes selon les avantages comparatifs",subs:["A. La hiérarchie des étapes selon leur valeur ajoutée","B. Les étapes à faible valeur localisées dans les pays en développement (assemblage)","C. Les étapes à forte valeur concentrées dans les pays développés (R&D, marketing)"]},
+          {title:"III. D'autres déterminants au-delà des avantages comparatifs",subs:["A. La recherche d'une fiscalité avantageuse (paradis fiscaux)","B. Les règles du travail plus souples (travail des enfants, droit du travail allégé)","C. La qualité des infrastructures et de la main-d'œuvre disponible"]}
+        ]
+      },
+      {
+        titles:["Les effets induits du commerce international sont-ils toujours positifs ?","Le libre-échange est-il toujours avantageux ?","Le commerce international ne présente-t-il que des avantages ?"],
+        problematique:"Le commerce international génère-t-il uniquement des effets positifs, ou crée-t-il aussi des perdants à différentes échelles ?",
+        plan:[
+          {title:"I. Le commerce international génère d'importants effets positifs",subs:["A. Des gains pour les consommateurs : prix plus faibles, plus de diversité et de qualité","B. La baisse des inégalités entre les pays (remontée de filière, ex : Chine)","C. La création d'emplois dans les pays en développement"]},
+          {title:"II. Mais il produit aussi des effets négatifs",subs:["A. La hausse des inégalités de revenus à l'intérieur des pays (courbe de l'éléphant)","B. La polarisation des emplois et les délocalisations","C. L'impact environnemental et la dépendance stratégique (médicaments, énergie)"]},
+          {title:"III. Des gagnants et des perdants clairement identifiables",subs:["A. Les gagnants : classes moyennes asiatiques et top 1 % occidental","B. Les perdants : classes populaires et moyennes occidentales (désindustrialisation)","C. Les nouvelles inégalités territoriales entre métropoles et zones désindustrialisées"]}
+        ]
+      },
+      {
+        titles:["Dans quelle mesure les effets induits par le commerce international justifient-ils le recours au protectionnisme ?"],
+        problematique:"Le retour du protectionnisme observé depuis les années 2010 est-il justifié par les défaillances du libre-échange ?",
+        plan:[
+          {title:"I. Les arguments en faveur du protectionnisme",subs:["A. Protéger les emplois face à la concurrence étrangère","B. Assurer la sécurité nationale et la souveraineté (secteurs stratégiques, alimentation)","C. Se protéger du dumping et de la concurrence déloyale (normes, fiscalité)"]},
+          {title:"II. Les outils du protectionnisme et leurs effets attendus",subs:["A. Le protectionnisme tarifaire (taxes douanières, exemple : « Liberation Day » 2025)","B. Le protectionnisme non tarifaire (quotas, normes, restrictions)","C. Les politiques de soutien aux exportations et aux entreprises nationales"]},
+          {title:"III. Mais le protectionnisme génère aussi des risques majeurs",subs:["A. La hausse des prix pour les consommateurs (estimation +1500 $/ménage US en 2026)","B. Le risque de guerre commerciale et de spirale des représailles","C. La perte des bénéfices du libre-échange (croissance, innovation)"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente les deux types d'échanges commerciaux au XXIe siècle.",expected:[["Le commerce interbranche entre pays différents : exploitation des avantages comparatifs de chaque pays"],["Le commerce intrabranche entre pays comparables : échange de produits du même secteur (représente 50% du commerce international)"]]},
       {q:"Explique la théorie de l'avantage comparatif de Ricardo.",expected:[["Selon Ricardo, un pays doit se spécialiser dans le domaine où sa supériorité est la plus grande, ou si aucune supériorité, dans le domaine où son infériorité est la moins importante (là où il est le moins mauvais)"]]},
@@ -566,6 +760,21 @@ const chapters={
     number:"Chapitre 5",type:"socio",
     title:"Quels sont les caractéristiques contemporaines et les facteurs de mobilité sociale ?",
     details:"Définir, mesurer et comprendre les déterminants de la mobilité sociale.",
+    amorces:[
+      "Le débat sur les « nepo babies » qui agite Hollywood, les médias et désormais le monde politique français — illustré par la médiatisation des héritiers d'acteurs, de chanteurs ou de figures politiques — révèle au grand public ce que la sociologie démontre depuis Bourdieu : la reproduction sociale demeure massive dans les milieux culturels et économiques les mieux dotés en capitaux. Ce constat questionne la promesse méritocratique au cœur du contrat social républicain.",
+      "Le rapport 2025 du Conseil d'évaluation de l'école confirme que la ségrégation scolaire entre établissements publics et privés s'est encore accentuée, les écoles les plus sélectives accueillant aujourd'hui jusqu'à 70 % d'enfants de cadres. Cette concentration sociale au sommet du système éducatif fragilise la promesse d'une école garantissant l'égalité des chances et la mobilité ascendante des enfants des classes populaires."
+    ],
+    sujets:[
+      {
+        titles:["Quels sont les facteurs explicatifs de la mobilité sociale ?","Comment peut-on expliquer la mobilité sociale ?","L'évolution de la structure socioprofessionnelle suffit-elle à expliquer la mobilité sociale ?","Les niveaux de formation sont-ils le seul élément à influencer la mobilité sociale ?","Les ressources et configurations familiales sont-elles les seuls éléments qui contribuent à expliquer la mobilité sociale ?"],
+        problematique:"Quels sont les principaux déterminants de la mobilité sociale dans la France contemporaine et comment s'articulent-ils ?",
+        plan:[
+          {title:"I. L'évolution de la structure socioprofessionnelle (mobilité structurelle)",subs:["A. Les quatre évolutions (salarisation, tertiarisation, qualification, féminisation)","B. Le rôle moteur des Trente Glorieuses dans la création d'emplois qualifiés","C. Mais une mobilité structurelle qui stagne depuis les années 1980"]},
+          {title:"II. Le rôle des niveaux de formation",subs:["A. Le diplôme comme moteur de la mobilité ascendante (logique méritocratique)","B. La démocratisation scolaire et l'allongement des études","C. Mais le paradoxe d'Anderson : dévalorisation des diplômes et déclassement"]},
+          {title:"III. Le rôle des ressources et configurations familiales",subs:["A. Les trois capitaux selon Bourdieu (économique, social, culturel)","B. Les inégalités d'accès à la réussite scolaire (ségrégation scolaire 2025)","C. L'influence des configurations familiales (type de couple, taille de la fratrie, place dans la fratrie)"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente les trois formes de mobilité.",expected:[["la mobilité géographique : changement de lieu"],["la mobilité professionnelle : changement de profession au cours de sa vie"],["la mobilité sociale intergénérationnelle : position sociale différente de celle de ses parents"]]},
       {q:"Distingue mobilité verticale et mobilité horizontale.",expected:[["La mobilité verticale (ascendante ou descendante) correspond à une position sociale supérieure ou inférieure à son origine sociale"],["La mobilité horizontale correspond à un changement de CSP sans modification de la hiérarchie sociale"]]},
@@ -606,6 +815,39 @@ const chapters={
     number:"Chapitre 6",type:"eco",
     title:"Comment lutter contre le chômage ?",
     details:"Analyser le marché du travail, les formes de chômage et les politiques pour y remédier.",
+    amorces:[
+      "L'objectif de plein emploi affiché par les gouvernements français successifs depuis Élisabeth Borne, autour d'un taux de chômage à 5 %, se heurte au paradoxe d'entreprises peinant à recruter dans le BTP, la restauration ou la santé alors que persiste un noyau dur de chômage de longue durée. Cette coexistence d'emplois non pourvus et de chômeurs disponibles illustre la dimension structurelle du chômage français et les problèmes d'appariement qui le caractérisent.",
+      "Les premières grandes vagues de licenciements explicitement liés à l'intelligence artificielle annoncées en 2025 et 2026 par Microsoft, Amazon, IBM ou plus récemment par les grands cabinets de conseil comme PwC relancent un débat ancien : l'innovation technologique crée-t-elle un nouveau chômage structurel par destruction des emplois intermédiaires, ou ne fait-elle que déplacer les emplois comme l'avaient fait les précédentes révolutions industrielles ?"
+    ],
+    sujets:[
+      {
+        titles:["Les politiques macroéconomiques permettent-elles de lutter contre le chômage ?","La lutte contre le chômage passe-t-elle nécessairement par la mise en œuvre de politiques de soutien de la demande globale ?"],
+        problematique:"Les politiques macroéconomiques de soutien de la demande globale suffisent-elles à lutter efficacement contre toutes les formes de chômage ?",
+        plan:[
+          {title:"I. Les politiques macroéconomiques permettent de lutter contre le chômage conjoncturel",subs:["A. La politique budgétaire de relance (hausse des dépenses, baisse des impôts)","B. La politique monétaire de relance (baisse du taux directeur)","C. Le soutien des quatre composantes de la demande globale"]},
+          {title:"II. Mais ces politiques rencontrent d'importantes limites",subs:["A. L'endettement public et le risque d'inflation","B. Les fuites vers l'épargne ou les importations","C. Leur inefficacité face au chômage structurel"]},
+          {title:"III. Elles doivent être complétées par des politiques structurelles",subs:["A. L'allégement du coût du travail","B. La flexibilisation du marché du travail","C. Les politiques de formation initiale et continue"]}
+        ]
+      },
+      {
+        titles:["Les politiques d'allégement du coût du travail sont-elles suffisantes pour lutter contre le chômage ?"],
+        problematique:"L'allégement du coût du travail constitue-t-il un levier suffisant pour faire reculer durablement le chômage ?",
+        plan:[
+          {title:"I. L'allégement du coût du travail répond à certaines causes du chômage",subs:["A. La baisse des cotisations sociales pour les entreprises (exonérations)","B. L'incitation à embaucher les salariés peu qualifiés","C. L'arbitrage autour du SMIC et de ses effets sur l'emploi"]},
+          {title:"II. Mais cette politique ne traite pas toutes les causes du chômage",subs:["A. Elle ne résout pas le chômage conjoncturel (manque de demande globale)","B. Elle n'agit pas sur les problèmes d'appariement (spatiaux, qualifications, frictions)","C. Elle néglige les asymétries d'information (sélection adverse, aléa moral)"]},
+          {title:"III. Une combinaison de politiques est donc nécessaire",subs:["A. Les politiques de formation (initiale et continue)","B. La flexibilisation (quantitative, fonctionnelle, salariale)","C. Les politiques macroéconomiques de soutien à la demande"]}
+        ]
+      },
+      {
+        titles:["Comment peut-on expliquer le chômage structurel ?"],
+        problematique:"Quelles sont les causes structurelles du chômage et en quoi se distinguent-elles du chômage conjoncturel ?",
+        plan:[
+          {title:"I. Les problèmes d'appariement entre offre et demande de travail",subs:["A. Les inadéquations spatiales (lieu d'habitation vs localisation des emplois)","B. Les inadéquations de qualifications","C. Les frictions liées à la recherche d'emploi"]},
+          {title:"II. Les asymétries d'information sur le marché du travail",subs:["A. La sélection adverse avant l'embauche","B. L'aléa moral après l'embauche","C. Le salaire d'efficience comme réponse imparfaite"]},
+          {title:"III. Les rigidités institutionnelles du marché du travail",subs:["A. Le salaire minimum (SMIC) et ses effets ambivalents","B. Les règles de protection de l'emploi","C. Un coût du travail jugé élevé par certains employeurs"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente les trois catégories de la population selon le marché du travail.",expected:[["La population active occupée possède un emploi"],["La population active inoccupée est chômeuse : elle ne possède pas d'emploi mais en recherche un"],["La population inactive ne possède pas d'emploi et n'en recherche pas"]]},
       {q:"Distingue le taux de chômage et le taux d'emploi.",expected:[["Le taux de chômage mesure la part des personnes qui cherchent un emploi parmi la population active"],["Le taux d'emploi mesure la part des personnes qui possèdent un emploi parmi la population en âge de travailler (15-64 ans)"]]},
@@ -656,6 +898,30 @@ const chapters={
     number:"Chapitre 7",type:"socio",
     title:"Quelles mutations du travail et de l'emploi ?",
     details:"Analyser les définitions, l'organisation du travail, les effets du numérique et l'intégration sociale par le travail.",
+    amorces:[
+      "La directive européenne sur les travailleurs des plateformes adoptée en 2024 et transposée en France en 2025 instaure une présomption de salariat pour les livreurs Uber Eats ou Deliveroo, contraignant les plateformes à requalifier des millions de travailleurs indépendants. Cette régulation marque un tournant dans l'encadrement de l'ubérisation et interroge les frontières contemporaines entre salariat et travail indépendant, où le numérique avait brouillé les statuts.",
+      "L'expérimentation de la semaine de quatre jours, menée avec succès au Royaume-Uni et en Belgique avant de se diffuser dans plusieurs entreprises françaises comme LDLC ou Yprema depuis 2024, traduit une recherche d'amélioration de la qualité de l'emploi et d'un nouvel équilibre entre temps de travail et bien-être. Cette évolution prolonge la mutation post-taylorienne de l'organisation du travail et interroge la place du travail comme vecteur d'intégration sociale."
+    ],
+    sujets:[
+      {
+        titles:["Comment l'évolution des modèles d'organisation du travail transforme-t-elle les conditions de travail ?","Quels sont les effets de l'évolution des formes d'organisation du travail sur les conditions de travail ?"],
+        problematique:"En quoi les modèles successifs d'organisation du travail ont-ils transformé les conditions de travail des salariés ?",
+        plan:[
+          {title:"I. Le modèle taylorien et fordien : un travail standardisé et hiérarchisé",subs:["A. La division verticale du travail (conception vs exécution)","B. La division horizontale (parcellisation des tâches)","C. Des conditions marquées par la pénibilité physique et les cadences"]},
+          {title:"II. Le passage au modèle post-taylorien",subs:["A. Le management participatif et la recomposition des tâches","B. La flexibilité des salariés et la polyvalence","C. Une amélioration partielle des conditions de travail"]},
+          {title:"III. De nouveaux défis pour les conditions de travail",subs:["A. L'essor des risques psychosociaux (stress, burn-out)","B. L'impact du numérique (télétravail, droit à la déconnexion)","C. L'ubérisation et la polarisation des emplois"]}
+        ]
+      },
+      {
+        titles:["Le travail est-il encore facteur d'intégration sociale aujourd'hui en France ?","En quelle mesure les évolutions de l'emploi affaiblissent-elles le pouvoir intégrateur du travail ?"],
+        problematique:"Les mutations contemporaines de l'emploi affaiblissent-elles le pouvoir intégrateur du travail dans la société française ?",
+        plan:[
+          {title:"I. Le travail demeure un puissant facteur d'intégration sociale",subs:["A. La rémunération permet l'accès à la consommation et évite la pauvreté","B. Le travail crée des liens sociaux (collègues, sociabilité)","C. Le travail donne un statut social et ouvre des droits sociaux"]},
+          {title:"II. Mais les évolutions de l'emploi fragilisent son pouvoir intégrateur",subs:["A. La persistance d'un chômage de masse et de longue durée","B. La précarisation (CDD, intérim, temps partiel, indépendants)","C. La polarisation de la qualité des emplois"]},
+          {title:"III. Une intégration sociale à plusieurs vitesses",subs:["A. Le CDI : zone d'intégration assurée avec des liens stables","B. Les contrats précaires : zone d'intégration incertaine et intermittente","C. Le chômage : zone de désaffiliation et exclusion"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Distingue le travail au sens économique et au sens social.",expected:[["Le travail au sens économique est une occupation humaine qui permet de produire"],["Le travail au sens social crée des biens et services, constitue une valeur permettant aux individus de se réaliser et donne un statut dans la société en créant des liens sociaux"]]},
       {q:"Présente les trois dimensions sociales du travail.",expected:[["la création de biens et de services"],["une valeur qui permet aux individus de réaliser des choses dans leur vie"],["un statut dans la société avec la création de liens sociaux"]]},
@@ -706,6 +972,39 @@ const chapters={
     number:"Chapitre 8",type:"eco",
     title:"Quelles politiques économiques dans le cadre européen ?",
     details:"Comprendre l'intégration européenne, la politique de la concurrence et les politiques conjoncturelles.",
+    amorces:[
+      "La hausse de l'inflation à 3 % en zone euro en avril 2026, alimentée par la flambée des prix de l'énergie liée au conflit israélo-iranien, place la BCE devant un dilemme typique de stagflation : combattre l'inflation au risque d'aggraver la stagnation, ou soutenir la croissance au risque d'alimenter la hausse des prix. Ce choc asymétrique, qui touche inégalement les économies de la zone selon leur dépendance énergétique, met à l'épreuve la cohérence de la politique monétaire unique gérée depuis Francfort.",
+      "L'accord commercial conclu en 2025 entre Donald Trump et Ursula von der Leyen, fixant à 15 % les droits de douane sur les exportations européennes vers les États-Unis, a été qualifié d' « acte de soumission » par le Premier ministre français François Bayrou et illustre la difficulté pour l'UE à parler d'une seule voix face aux grandes puissances. Le voyage de Friedrich Merz à Pékin en février 2026 pour défendre les intérêts allemands de l'industrie automobile face à la concurrence chinoise révèle les tensions entre stratégies nationales et politique industrielle européenne."
+    ],
+    sujets:[
+      {
+        titles:["Dans quelle mesure la politique européenne de la concurrence est-elle efficace ?"],
+        problematique:"La politique européenne de la concurrence remplit-elle pleinement ses objectifs économiques face aux concurrents mondiaux ?",
+        plan:[
+          {title:"I. Une politique aux objectifs ambitieux",subs:["A. Limiter le pouvoir de marché des entreprises","B. Stimuler l'innovation et la qualité par la concurrence","C. Favoriser la croissance et les échanges intra-européens"]},
+          {title:"II. Une politique qui dispose d'outils variés",subs:["A. Le contrôle des ententes (cartels)","B. La sanction des abus de position dominante","C. Le contrôle des fusions-acquisitions et des aides publiques"]},
+          {title:"III. Mais une efficacité limitée face aux nouveaux défis",subs:["A. La difficulté à faire émerger des champions européens face à la Chine et aux États-Unis","B. Les tensions entre intérêts nationaux et politique européenne (voyage de Merz à Pékin 2026)","C. Le déséquilibre face aux pratiques des GAFAM et de l'industrie chinoise"]}
+        ]
+      },
+      {
+        titles:["Comment les politiques économiques agissent-elles dans le cadre européen ?"],
+        problematique:"Quels sont les principaux instruments d'action économique au sein de l'Union européenne et selon quelle articulation ?",
+        plan:[
+          {title:"I. Les politiques structurelles de long terme",subs:["A. La politique de la concurrence","B. Le marché unique et ses quatre libertés","C. Les politiques industrielles (champions européens, transition verte)"]},
+          {title:"II. Les politiques conjoncturelles de court terme",subs:["A. La politique monétaire unique de la BCE (cible d'inflation à 2 %)","B. Les politiques budgétaires nationales encadrées par le Pacte de stabilité","C. Le policy mix (articulation entre les deux)"]},
+          {title:"III. Mais une articulation difficile entre les États",subs:["A. L'hétérogénéité des situations économiques (Allemagne, France, Italie, Grèce)","B. Les chocs asymétriques (Covid, guerre en Ukraine, conflit israélo-iranien)","C. Le défaut de coordination entre politique monétaire unique et 20 politiques budgétaires"]}
+        ]
+      },
+      {
+        titles:["À quelles difficultés se heurtent les États membres de la zone euro pour conduire les politiques européennes conjoncturelles ?","Comment les politiques conjoncturelles européennes agissent-elles sur la conjoncture économique ?","Comment expliquer les difficultés des politiques économiques qui agissent sur la conjoncture en zone euro ?","Dans quelle mesure les politiques monétaires et budgétaires parviennent-elles à agir sur la conjoncture des pays membres de la zone ?"],
+        problematique:"Dans quelle mesure les politiques monétaire et budgétaire parviennent-elles à agir sur la conjoncture des pays de la zone euro, malgré les difficultés de coordination ?",
+        plan:[
+          {title:"I. La politique monétaire de la BCE agit sur la conjoncture",subs:["A. Le taux directeur comme outil principal","B. L'objectif d'inflation à 2 % à moyen terme","C. Le taux maintenu à 2 % en 2026 malgré la hausse de l'inflation à 3 %"]},
+          {title:"II. Les politiques budgétaires nationales soutiennent l'activité",subs:["A. La hausse des dépenses publiques ou la baisse des impôts","B. Les plans de relance européens (NextGenerationEU)","C. Mais des marges limitées par le Pacte de stabilité (3 % de déficit, 60 % de dette)"]},
+          {title:"III. De fortes difficultés persistent en zone euro",subs:["A. Le défaut de coordination (1 politique monétaire pour 20 politiques budgétaires)","B. L'hétérogénéité des économies de la zone","C. Les chocs asymétriques (conflit israélo-iranien, prix de l'énergie 2026)"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente les trois types d'institutions européennes.",expected:[["les institutions judiciaires (la Cour de justice de l'UE)"],["les institutions économiques (la BCE)"],["les institutions politiques (le triangle institutionnel)"]]},
       {q:"Présente les quatre institutions du triangle institutionnel européen.",expected:[["Le Conseil européen (27 chefs d'États) définit les priorités de l'UE"],["Le Conseil de l'UE (27 ministres) vote les lois"],["Le Parlement européen (750 députés élus) vote les lois et contrôle les autres institutions"],["La Commission européenne propose de nouvelles lois et défend les intérêts de l'UE"]]},
@@ -750,6 +1049,39 @@ const chapters={
     number:"Chapitre 9",type:"cross",
     title:"Quelle action publique pour l'environnement ?",
     details:"Analyser la construction des questions environnementales, les instruments et les contraintes de l'action publique.",
+    amorces:[
+      "La COP30 de Belém, en novembre 2025, marquait les dix ans de l'Accord de Paris : son bilan dressé par le PNUE est sévère, les engagements actuels des États ne permettant qu'une réduction d'environ 10 % des émissions mondiales d'ici 2035, loin des 60 % nécessaires pour limiter le réchauffement à 1,5 °C. Ce constat questionne l'efficacité des accords internationaux fondés sur des engagements volontaires face à une question environnementale par essence globale et urgente.",
+      "Le retrait des États-Unis de l'Accord de Paris décidé par Donald Trump dès son retour au pouvoir en 2025, alors que ce pays demeure le deuxième émetteur mondial de CO2 et l'un des plus gros émetteurs historiques, illustre à grande échelle la stratégie du passager clandestin. Cette défection accentue les inégalités de développement entre pays pollueurs et pays vulnérables au changement climatique, ces derniers réclamant lors de la COP30 un financement annuel de 300 milliards de dollars dont le versement reste largement à concrétiser."
+    ],
+    sujets:[
+      {
+        titles:["Comment les questions environnementales sont-elles devenues un problème public ?"],
+        problematique:"Comment la dégradation de l'environnement s'est-elle progressivement imposée comme problème public puis comme enjeu d'action publique ?",
+        plan:[
+          {title:"I. La construction d'un problème public environnemental",subs:["A. La médiatisation de catastrophes naturelles et industrielles (7e continent, marées noires)","B. Le rôle des experts scientifiques (GIEC, ONU)","C. La mobilisation de la société civile (ONG, mouvements citoyens, Fridays for Future)"]},
+          {title:"II. La mise sur l'agenda politique",subs:["A. L'intervention des partis politiques et des pouvoirs publics","B. La création de ministères dédiés (transition écologique)","C. Les négociations internationales (Sommet de Rio 1992, Kyoto 1997, Paris 2015)"]},
+          {title:"III. La transformation en action publique aux différentes échelles",subs:["A. Les lois nationales (interdiction du plastique en 2040, recyclage)","B. Le pacte vert européen (Green Deal)","C. Les engagements internationaux (COP30 de Belém 2025)"]}
+        ]
+      },
+      {
+        titles:["Dans quelle mesure les instruments utilisés par les pouvoirs publics sont-ils efficaces pour faire face aux externalités négatives sur l'environnement ?","Comment les pouvoirs publics peuvent-ils lutter contre le changement climatique ?","Les instruments dont dispose le pouvoir public pour préserver l'environnement sont-ils efficaces ?","Quels sont les effets et les limites des principaux instruments dont dispose le pouvoir public face aux externalités négatives sur l'environnement ?"],
+        problematique:"Dans quelle mesure les instruments dont disposent les pouvoirs publics sont-ils efficaces pour internaliser les externalités négatives et préserver l'environnement ?",
+        plan:[
+          {title:"I. Les pouvoirs publics disposent de quatre grands instruments",subs:["A. La réglementation (normes d'émission, de procédés, de produits, de qualité)","B. La taxation environnementale (principe pollueur-payeur) et les subventions à l'innovation verte","C. Le marché des quotas d'émission (marché carbone européen)"]},
+          {title:"II. Ces instruments produisent des effets réels",subs:["A. La modification des comportements des agents économiques","B. Le développement de l'innovation verte (énergies renouvelables, captage CO2)","C. L'internalisation partielle des externalités négatives"]},
+          {title:"III. Mais leur efficacité est limitée",subs:["A. Des effets trop tardifs (la France ne respecte pas la norme de 2008 sur la qualité de l'air)","B. Des contournements (fraude Volkswagen, glyphosate, exceptions légales)","C. Des incitations trop faibles (prix des quotas, subventions véhicules électriques)"]}
+        ]
+      },
+      {
+        titles:["À quelles limites l'action publique et les négociations internationales pour la préservation de l'environnement se heurtent-elles ?"],
+        problematique:"Quelles sont les contraintes spécifiques qui pèsent sur l'action publique environnementale, en particulier dans les négociations internationales ?",
+        plan:[
+          {title:"I. L'environnement est un bien commun mondial qui justifie la coopération",subs:["A. Les gaz à effet de serre comme externalités négatives sans valeur monétaire","B. La non-exclusion (l'environnement est gratuit, utilisable par tous)","C. La rivalité (la dégradation par un pays affecte tous les autres)"]},
+          {title:"II. Mais les négociations se heurtent à des contraintes majeures",subs:["A. L'absence d'organisation mondiale dédiée à l'environnement","B. La stratégie du passager clandestin (retrait américain de l'Accord de Paris en 2025)","C. Les inégalités de développement entre pays pollueurs et pays vulnérables"]},
+          {title:"III. Des résultats décevants malgré les engagements",subs:["A. Les engagements actuels ne permettent qu'une baisse de 10 % des émissions d'ici 2035 (PNUE 2025)","B. L'objectif de 1,5 °C de l'Accord de Paris s'éloigne","C. La question du financement Nord/Sud (300 Mds$/an non atteints)"]}
+        ]
+      }
+    ],
     questions:[
       {q:"Présente les trois étapes de la construction d'une action publique environnementale.",expected:[["Le problème public : problème d'une partie de la société qui devient un sujet d'attention grâce à la médiatisation ou à une catastrophe naturelle"],["La mise sur l'agenda politique : prise en compte du problème par les pouvoirs publics qui justifie leur intervention"],["L'action publique : réponse apportée (lois, investissements)"]]},
       {q:"Présente les six acteurs qui participent à la construction des questions environnementales.",expected:[["les ONG (actions chocs, manifestations)"],["les mouvements citoyens (mobilisations collectives)"],["les entreprises (rôle ambivalent : freins ou acteurs engagés)"],["les partis politiques (débattent et votent les lois)"],["les experts scientifiques (ONU, GIEC)"],["les pouvoirs politiques (ministère de la transition écologique)"]]},
@@ -1041,7 +1373,7 @@ function renderChapters(){
           <button class="btn btn-defs" onclick="startDefs('${id}',false)">Définitions</button>
           ${qLearning>0 ? `<button class="btn btn-review" onclick="startQuestions('${id}',true)" title="Réviser uniquement les questions en cours d'apprentissage">⏳ Réviser</button>` : ''}
         ` : `<span style="font-size:0.78rem;color:var(--muted);font-style:italic">À compléter</span>`}
-        <button class="btn btn-secondary" onclick="showDetails('${id}')">Détails</button>
+        <button class="btn btn-secondary" onclick="showDetails('${id}')">Dissertation</button>
       </div>`;
     chaptersDiv.appendChild(card);
   });
@@ -1473,14 +1805,43 @@ function back(){
 function showDetails(id){
   chaptersDiv.style.display='none';
   const c=chapters[id];
+  const amorcesHtml=(c.amorces&&c.amorces.length)?`
+    <div class="diss-section">
+      <div class="diss-section-title">Amorces de dissertation</div>
+      <div class="diss-section-subtitle">Actualité et géopolitique pour ouvrir tes copies</div>
+      ${c.amorces.map((a,i)=>`<div class="amorce-card"><div class="amorce-num">${i+1}</div><p>${a}</p></div>`).join('')}
+    </div>`:'';
+  const sujetsHtml=(c.sujets&&c.sujets.length)?`
+    <div class="diss-section">
+      <div class="diss-section-title">Sujets et plans</div>
+      <div class="diss-section-subtitle">Plans détaillés pour les sujets-clés du chapitre</div>
+      ${c.sujets.map((s,i)=>`
+        <div class="sujet-card">
+          <div class="sujet-titles">
+            ${s.titles.map(t=>`<div class="sujet-title">› ${t}</div>`).join('')}
+          </div>
+          <div class="sujet-pb"><span class="sujet-pb-label">Problématique</span> ${s.problematique}</div>
+          <div class="sujet-plan">
+            ${s.plan.map(p=>`
+              <div class="plan-part">
+                <div class="plan-part-title">${p.title}</div>
+                <ul class="plan-subs">
+                  ${p.subs.map(sub=>`<li>${sub}</li>`).join('')}
+                </ul>
+              </div>`).join('')}
+          </div>
+        </div>`).join('')}
+    </div>`:'';
   document.getElementById('content').innerHTML=`
     <div class="details-card">
       <span style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,0.08);color:var(--muted);display:inline-block;margin-bottom:12px">${c.number}</span>
       <h2>${c.title}</h2>
-      <p style="margin-top:12px;color:var(--muted);line-height:1.65">${c.details||'Aucun détail disponible.'}</p>
-      <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+      <p style="margin-top:12px;color:var(--muted);line-height:1.65">${c.details||''}</p>
+      ${amorcesHtml}
+      ${sujetsHtml}
+      <div style="margin-top:28px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="back()">← Retour</button>
-        ${c.questions.length>0?`<button class="btn btn-secondary" onclick="startQuestions('${id}',false)">Commencer</button>`:''}
+        ${c.questions.length>0?`<button class="btn btn-secondary" onclick="startQuestions('${id}',false)">Commencer une session</button>`:''}
       </div>
     </div>`;
 }
